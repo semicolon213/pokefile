@@ -1,0 +1,59 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+dist-ssr
+*.tsbuildinfo
+
+# Environment variables (비밀 값 커밋 금지 — NFR-06)
+.env
+.env.*
+!.env.example
+*.local
+
+# Test / coverage
+coverage
+test-results
+playwright-report
+blob-report
+playwright/.cache
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Cache
+.cache
+.vite
+.eslintcache
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# AI tools — 개인 로컬 설정만 제외 (공유 설정은 커밋)
+.claude/settings.local.json
+CLAUDE.local.md
+.codex/
+
+# Deploy platform local state
+.vercel
+.netlify

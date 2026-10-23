@@ -1,0 +1,33 @@
+# TEMPLATE — replace placeholders with real GitHub usernames before use.
+# GitHub requires valid users/teams; until replaced these lines do not provide enforceable ownership.
+# 담당자는 기능(feature) 단위로 지정한다. 담당 변경 시 docs/OWNERSHIP.md와 이 파일만 수정하면 된다.
+# Example: /src/features/pokedex/ @actual-github-username
+
+# --- 기능 영역 (feature → 담당자) ---
+/src/features/pokedex/ @OWNER_POKEDEX
+/tests/**/pokedex/ @OWNER_POKEDEX
+
+/src/features/pokemon-detail/ @OWNER_POKEMON_DETAIL
+/tests/**/pokemon-detail/ @OWNER_POKEMON_DETAIL
+
+/src/features/battle-tools/ @OWNER_BATTLE_TOOLS
+/tests/**/battle-tools/ @OWNER_BATTLE_TOOLS
+
+/src/features/favorites/ @OWNER_FAVORITES
+/tests/**/favorites/ @OWNER_FAVORITES
+
+# --- 공통 관리 영역 ---
+/src/shared/ @REPLACE_COMMON_OWNER
+/src/app/ @REPLACE_COMMON_OWNER
+/src/main.tsx @REPLACE_COMMON_OWNER
+/tests/unit/shared/ @REPLACE_COMMON_OWNER
+/tests/integration/app/ @REPLACE_COMMON_OWNER
+/tests/setup/ @REPLACE_COMMON_OWNER
+/package.json @REPLACE_COMMON_OWNER
+/package-lock.json @REPLACE_COMMON_OWNER
+/vite.config.ts @REPLACE_COMMON_OWNER
+/tsconfig*.json @REPLACE_COMMON_OWNER
+/.oxlintrc.json @REPLACE_COMMON_OWNER
+/docs/ @REPLACE_COMMON_OWNER
+/.github/ @REPLACE_COMMON_OWNER
+/scripts/ @REPLACE_COMMON_OWNER
