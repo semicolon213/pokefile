@@ -1,33 +1,28 @@
-import { Link } from 'react-router'
-import { pokemonDetailPath } from '@/features/pokemon-detail'
+import { useMemo } from 'react'
+import { ErrorState } from '@/shared/ui'
+import { GenerationNav } from '../components/GenerationNav'
+import { PokemonGrid } from '../components/PokemonGrid'
+import { SearchForm } from '../components/SearchForm'
+import { SortSelect } from '../components/SortSelect'
+import { TypeFilter } from '../components/TypeFilter'
+import { usePokedexFilters } from '../hooks/usePokedexFilters'
+import { useSearchIndex } from '../hooks/useSearchIndex'
+import { applyFilters, countByGeneration, isDefaultFilters, toSearchParams } from '../model/filters'
 import './PokedexPage.css'
-
-// 필터 영역 미리보기용 정적 목록. 실제 필터 데이터는 TASK-004에서 API 기반으로 교체한다.
-const TYPE_PREVIEW = [
-  { key: 'normal', label: '노말' },
-  { key: 'fire', label: '불꽃' },
-  { key: 'water', label: '물' },
-  { key: 'grass', label: '풀' },
-  { key: 'electric', label: '전기' },
-  { key: 'ice', label: '얼음' },
-  { key: 'fighting', label: '격투' },
-  { key: 'poison', label: '독' },
-  { key: 'ground', label: '땅' },
-  { key: 'flying', label: '비행' },
-  { key: 'psychic', label: '에스퍼' },
-  { key: 'bug', label: '벌레' },
-  { key: 'rock', label: '바위' },
-  { key: 'ghost', label: '고스트' },
-  { key: 'dragon', label: '드래곤' },
-  { key: 'dark', label: '악' },
-  { key: 'steel', label: '강철' },
-  { key: 'fairy', label: '페어리' },
-]
 
 const SKELETON_COUNT = 8
 
-// UI-01 메인/검색·목록 — 검색·필터·카드 목록 동작은 TASK-003, TASK-004에서 구현
+// UI-01 메인/검색·목록 — 검색(TASK-003), 필터·정렬·무한 스크롤·URL 동기화(TASK-004)
 export function PokedexPage() {
+  const index = useSearchIndex()
+  const { filters, update, reset } = usePokedexFilters()
+  const all = index.data
+  const results = useMemo(() => (all ? applyFilters(all, filters) : []), [all, filters])
+  const genCounts = useMemo(() => (all ? countByGeneration(all) : null), [all])
+  const filtered = !isDefaultFilters(filters)
+  // 필터가 바뀌면 목록을 처음(첫 묶음)부터 다시 보여준다
+  const listKey = toSearchParams(filters).toString()
+
   return (
     <section className="pokedex" aria-labelledby="pokedex-title">
       <header className="pokedex-hero">
@@ -39,61 +34,76 @@ export function PokedexPage() {
           <p className="pokedex-hero__lead">
             이름이나 도감 번호로 찾고, 종족값·진화·실전 세팅까지 한 번에 확인하세요.
           </p>
-
-          <form className="pokedex-search" role="search" onSubmit={(e) => e.preventDefault()}>
-            <label htmlFor="pokedex-search-input" className="visually-hidden">
-              포켓몬 검색
-            </label>
-            <input
-              id="pokedex-search-input"
-              className="pokedex-search__input"
-              type="search"
-              placeholder="피카츄, pikachu, 25…"
-              disabled
-              aria-describedby="pokedex-search-hint"
-            />
-            <button type="submit" className="pokedex-search__button" disabled>
-              검색
-            </button>
-          </form>
-          <p id="pokedex-search-hint" className="pokedex-search__hint">
-            검색 기능은 준비 중입니다.
-          </p>
+          {/* 뒤로 가기 등으로 URL의 검색어가 바뀌면 입력창도 맞춘다 */}
+          <SearchForm
+            key={filters.q}
+            initialQuery={filters.q}
+            disabled={!index.isSuccess}
+            onSearch={(q) => update({ q })}
+          />
         </div>
-
         <div className="pokedex-hero__ball" aria-hidden="true" />
       </header>
 
-      <section className="pokedex-filters" aria-labelledby="pokedex-types-title">
-        <h2 id="pokedex-types-title" className="pokedex-section-title">
-          타입
-        </h2>
-        <ul className="pokedex-types">
-          {TYPE_PREVIEW.map((type) => (
-            <li key={type.key} className={`type-chip type-chip--${type.key}`}>
-              {type.label}
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <div className="pokedex-results">
-        <div className="pokedex-results__head">
-          <h2 className="pokedex-section-title">포켓몬 목록</h2>
-          <Link to={pokemonDetailPath(25)} className="pokedex-results__link">
-            상세 페이지 연결 확인용 링크 (#25) →
-          </Link>
+      {index.isPending && (
+        <div className="pokedex-results">
+          <p role="status" aria-live="polite" className="pokedex-results__status">
+            포켓몬을 불러오는 중입니다.
+          </p>
+          <ul className="pokedex-grid" aria-hidden="true">
+            {Array.from({ length: SKELETON_COUNT }, (_, i) => (
+              <li key={i} className="pokedex-card-skeleton">
+                <div className="pokedex-card-skeleton__image" />
+                <div className="pokedex-card-skeleton__line pokedex-card-skeleton__line--short" />
+                <div className="pokedex-card-skeleton__line" />
+              </li>
+            ))}
+          </ul>
         </div>
-        <ul className="pokedex-grid" aria-label="카드 목록 자리 (구현 예정)">
-          {Array.from({ length: SKELETON_COUNT }, (_, i) => (
-            <li key={i} className="pokedex-card-skeleton" aria-hidden="true">
-              <div className="pokedex-card-skeleton__image" />
-              <div className="pokedex-card-skeleton__line pokedex-card-skeleton__line--short" />
-              <div className="pokedex-card-skeleton__line" />
-            </li>
-          ))}
-        </ul>
-      </div>
+      )}
+
+      {index.isError && (
+        <div className="pokedex-results__error">
+          <ErrorState message="포켓몬 정보를 불러오지 못했습니다." />
+          <button type="button" className="pokedex-button" onClick={() => void index.refetch()}>
+            다시 시도
+          </button>
+        </div>
+      )}
+
+      {all && genCounts && (
+        <div className="pokedex-body">
+          <GenerationNav
+            selected={filters.gen}
+            counts={genCounts}
+            total={all.length}
+            onSelect={(gen) => update({ gen })}
+          />
+
+          <div className="pokedex-results">
+            <TypeFilter selected={filters.type} onSelect={(type) => update({ type })} />
+
+            <div className="pokedex-results__head">
+              <h2 className="pokedex-section-title">포켓몬 목록</h2>
+              <p role="status" aria-live="polite" className="pokedex-results__count">
+                {filtered ? `검색 결과 ${results.length}마리` : `전체 ${results.length}마리`}
+              </p>
+              <SortSelect value={filters.sort} onChange={(sort) => update({ sort })} />
+            </div>
+
+            {results.length > 0 ? (
+              <PokemonGrid key={listKey} pokemon={results} />
+            ) : (
+              <div className="pokedex-results__empty">
+                <p>검색 결과가 없습니다. 검색어나 필터를 확인해 주세요.</p>
+                <button type="button" className="pokedex-button" onClick={reset}>
+                  검색어·필터 초기화
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </section>
   )
 }
