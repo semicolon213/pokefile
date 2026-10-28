@@ -33,9 +33,11 @@ describe('parseDexNumberQuery', () => {
 })
 
 describe('normalizeText', () => {
-  it('공백·대소문자·악센트를 무시한다', () => {
+  it('공백·대소문자·악센트·구두점을 무시한다', () => {
     expect(normalizeText('Flabébé')).toBe('flabebe')
-    expect(normalizeText(' Mr. Mime ')).toBe('mr.mime')
+    expect(normalizeText(' Mr. Mime ')).toBe('mrmime')
+    expect(normalizeText('Farfetch’d')).toBe(normalizeText("Farfetch'd"))
+    expect(normalizeText('Porygon-Z')).toBe('porygonz')
     expect(normalizeText('이상 해씨')).toBe('이상해씨')
   })
 })
@@ -52,7 +54,10 @@ describe('matchesQuery / searchPokemon', () => {
     expect(searchPokemon(LIST, 'SAUR').map((x) => x.id)).toEqual([1, 2])
     expect(searchPokemon(LIST, 'flabebe').map((x) => x.id)).toEqual([669])
     expect(searchPokemon(LIST, 'mr. mime').map((x) => x.id)).toEqual([122])
+    expect(searchPokemon(LIST, 'mr mime').map((x) => x.id)).toEqual([122])
+    expect(searchPokemon(LIST, 'mrmime').map((x) => x.id)).toEqual([122])
     expect(searchPokemon(LIST, 'ho-oh').map((x) => x.id)).toEqual([250])
+    expect(searchPokemon(LIST, 'hooh').map((x) => x.id)).toEqual([250])
   })
 
   it('FR-03 도감 번호는 정확히 일치', () => {

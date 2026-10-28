@@ -2,14 +2,18 @@ import type { PokemonSummary } from '@/shared/models'
 
 // FR-01~03: 한국어 이름, 영어 이름(부분 일치), 도감 번호(정확히 일치)로 검색한다.
 
-/** 공백 제거 + 소문자 + 악센트 제거 (Flabébé → flabebe). 한글은 NFC로 다시 합쳐 음절 단위를 유지한다 */
+/**
+ * 소문자 + 악센트 제거 + 글자·숫자 외 문자(공백·구두점·기호) 제거.
+ * Flabébé → flabebe, Mr. Mime → mrmime, Farfetch’d → farfetchd, Ho-Oh → hooh.
+ * 한글은 NFC로 다시 합쳐 음절 단위를 유지한다.
+ */
 export function normalizeText(value: string): string {
   return value
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
     .normalize('NFC')
     .toLowerCase()
-    .replace(/\s+/g, '')
+    .replace(/[^\p{L}\p{N}]/gu, '')
 }
 
 /** '25', '#25', '025', '#0025' → 25. 숫자 검색어가 아니면 null */
