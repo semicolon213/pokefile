@@ -1,25 +1,27 @@
 # 작업 영역 및 소유권 명세서
 
-> **중요: 아래 사람별 역할은 대화에서 제안한 임시 배정이다. 3명이 합의하기 전까지 확정 아님.**
+> 아래 배정은 2026-10-28 팀 결정으로 **확정**되었다(ADR-004).
 > 소유권은 개인에게 귀속되며 Codex/Claude 중 어떤 도구를 사용해도 동일하다.
 
-## 1. 임시 담당표
-| 담당 | 기능 | 기본 수정 가능 경로 |
-|---|---|---|
-| 김형균 | 검색·목록·필터·정렬·무한 스크롤 | `src/features/pokedex/**`, `tests/**/pokedex/**` |
-| 임지섭 | 상세·종족값·진화·출현 장소 | `src/features/pokemon-detail/**`, `tests/**/pokemon-detail/**` |
-| 성윤우 | 실전 세팅·즐겨찾기·선택 기능 | `src/features/battle-tools/**`, `src/features/favorites/**`, 해당 테스트 |
+## 1. 담당표 (확정)
+| 담당 | GitHub | 기능 | 기본 수정 가능 경로 |
+|---|---|---|---|
+| 김형균 | `semicolon213` | 검색·목록·필터·정렬·무한 스크롤 | `src/features/pokedex/**`, `tests/**/pokedex/**` |
+| 임지섭 | `MianShang` | 상세·종족값·진화·출현 장소·메가 폼 전환 | `src/features/pokemon-detail/**`, `tests/**/pokemon-detail/**` |
+| 성윤우 | `yoonwoo2002` | 실전 세팅·즐겨찾기·선택 기능 | `src/features/battle-tools/**`, `src/features/favorites/**`, 해당 테스트 |
+
+저장소: `semicolon213/pokefile`. 세 계정이 존재하는 것은 확인했고(2026-10-28), 공동작업자 등록 여부는 저장소 권한이 있는 계정으로 확인해야 한다.
 
 ## 2. 공통 관리 영역
 | 경로 | 관리 규칙 |
 |---|---|
-| `src/shared/**` | 임시 관리 책임자: 김형균 **(합의 필요)**, 변경 시 영향 담당자 승인 |
-| `src/app/**` | 임시 관리 책임자: 김형균 **(합의 필요)**, 라우팅 변경 시 영향 담당자 승인 |
-| `package.json`, lockfile, Vite/TS 설정 | 영향 팀원에게 사전 공유, 리뷰 필요 |
+| `src/shared/**` | 관리 책임자: **김형균**. 사전 리뷰 없이 병합하고, 병합 후 충돌·영향이 발견되면 이슈로 대응(ADR-004) |
+| `src/app/**` | 관리 책임자: **김형균**. 라우팅 변경은 PR 설명에 영향 담당자를 명시하고 병합 후 대응 |
+| `package.json`, lockfile, Vite/TS 설정 | 관리 책임자: 김형균. 영향 팀원에게 사전 공유 |
 | `docs/SRS.md`, `docs/DESIGN.md` | 3명 합의 후 변경 |
 | `docs/OWNERSHIP.md`, `docs/WORKFLOW.md` | 3명 합의 후 변경 |
 | `docs/TASKS.md` | 작업 상태는 담당자 수정 가능, 담당/범위 변경은 합의 |
-| `.github/**`, `scripts/**` | 공통 관리자 리뷰 필요 |
+| `.github/**`, `scripts/**`, `public/data/**` | 관리 책임자: 김형균 |
 
 ## 3. 작업 규칙
 1. 자기 소유 기능 내부는 할당된 TASK 범위에서 수정한다.
@@ -41,7 +43,8 @@
 `문제 등록 → 영향 범위 표시 → 소유자 간 계약 합의 → 공통 코드 PR 선병합 → 기능 PR 업데이트 → 통합 테스트`
 
 ## 6. 승인 체크
-- [ ] 3인 기능 배정 확정
-- [ ] GitHub 계정 확인 및 CODEOWNERS 교체
-- [ ] 공통 코드 책임자 확정
-- [ ] 교차 리뷰 담당 방식 확정
+- [x] 3인 기능 배정 확정 (ADR-004)
+- [x] GitHub 계정 확인 — semicolon213 / MianShang / yoonwoo2002
+- [ ] 공동작업자 등록 확인 및 CODEOWNERS 작성(`.github/CODEOWNERS`, TASK-001)
+- [x] 공통 코드 책임자 확정 — 김형균 (ADR-004)
+- [x] 교차 리뷰 담당 방식 확정 — 김형균 → 임지섭 → 성윤우 → 김형균 (ADR-014)
