@@ -24,6 +24,7 @@ test.describe('도감 검색', () => {
     await page.getByRole('searchbox', { name: '포켓몬 검색' }).fill('피카츄')
     await page.getByRole('searchbox', { name: '포켓몬 검색' }).press('Enter')
     await page.getByRole('button', { name: '#25 즐겨찾기' }).click({ force: true })
-    await expect(page).toHaveURL(/#\/$/)
+    await expect(page).not.toHaveURL(/#\/pokemon\//)
+    await expect(page.getByRole('heading', { level: 1, name: '포켓몬 도감' })).toBeVisible()
   })
 })
