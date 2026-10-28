@@ -57,3 +57,6 @@ CLAUDE.local.md
 # Deploy platform local state
 .vercel
 .netlify
+
+# Office 잠금 파일
+~$*
