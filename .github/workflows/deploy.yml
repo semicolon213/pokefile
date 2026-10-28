@@ -1,0 +1,46 @@
+name: Deploy to GitHub Pages
+# ADR-005: main 반영 시 빌드 후 GitHub Pages로 배포한다.
+# 최초 1회 저장소 Settings → Pages → Source를 "GitHub Actions"로 설정해야 한다.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Verify (lint · typecheck · test · build)
+        run: bash scripts/verify.sh
+      - name: SPA fallback
+        # HashRouter를 쓰지만 해시 없는 하위 경로로 들어온 경우를 대비해 404.html을 둔다.
+        run: cp dist/index.html dist/404.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

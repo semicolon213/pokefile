@@ -12,8 +12,11 @@
     "preview": "vite preview",
     "lint": "oxlint && node scripts/check-boundaries.mjs",
     "typecheck": "tsc -b",
-    "test": "vitest",
-    "verify": "bash scripts/verify.sh"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "verify": "bash scripts/verify.sh",
+    "verify:api": "node --test scripts/verify-api/verify-api.test.mjs"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.104.5",
@@ -23,6 +26,7 @@
     "recharts": "^3.10.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@types/node": "^24.19.2",

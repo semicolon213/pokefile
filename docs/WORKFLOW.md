@@ -30,10 +30,15 @@
 - TASK/ADR/README 등 필요한 문서 동기화
 
 ## 5. Git 전략
-- `main`: 보호, 직접 push 금지, PR + CI 통과 필수, 필수 승인 리뷰 수 0 (ADR-014)
+```text
+feat/TASK-xxx-…  ──PR──▶  develop  ──PR(릴리스)──▶  main  ──▶  GitHub Pages 자동 배포
+```
+- `develop`: 통합 브랜치. 모든 작업 브랜치는 `develop`에서 따고 `develop`으로 PR을 보낸다.
+- `main`: 배포 브랜치. 보호, 직접 push 금지, PR + CI 통과 필수, 필수 승인 리뷰 수 0 (ADR-014). `develop`이 안정되면 `develop → main` PR로 반영한다.
 - 공통 영역 PR은 사전 리뷰 없이 병합하고, 병합 후 충돌·영향이 발견되면 이슈로 대응한다(ADR-004).
-- `main` 병합 시 GitHub Actions가 GitHub Pages로 자동 배포한다(ADR-005).
-- `feat/TASK-001-search` 등 TASK 기반 브랜치
+- `main` 병합 시 GitHub Actions(`.github/workflows/deploy.yml`)가 GitHub Pages로 자동 배포한다(ADR-005). CI(`ci.yml`)는 모든 PR과 `main`·`develop` push에서 실행된다.
+- 브랜치 이름: `feat/TASK-003-search-index`처럼 TASK 기반으로 짓는다. 문서만 바꾸면 `docs/…`.
+- 작업 시작 전 `git pull origin develop`으로 최신 `develop`을 받는다. 다른 사람의 공통 영역 변경이 병합되면 작업 브랜치에 `develop`을 merge 또는 rebase한다.
 - 팀원별 로컬 디렉터리 또는 git worktree 분리
 - PR은 가능한 한 하나의 기능/계약 변경만 포함
 - 공통 코드와 기능 코드를 함께 수정해야 하면 공통 계약 PR을 먼저 병합

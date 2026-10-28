@@ -43,20 +43,23 @@
 
 ## ADR-007: 테스트 프레임워크와 npm scripts
 - 상태: **승인** (OQ-11)
-- 결정: **Vitest + React Testing Library(jsdom) + Playwright**, 린트는 Vite 템플릿 기본 ESLint
-- npm scripts (TASK-001에서 구성):
+- 결정: **Vitest + React Testing Library(jsdom) + Playwright**, 린트는 **oxlint + 모듈 경계 검사**(`scripts/check-boundaries.mjs`)
+  - 2026-10-28 개정: 처음에 ESLint로 기록했으나, 저장소에 이미 구성된 oxlint를 그대로 쓴다.
+- npm scripts (TASK-001에서 구성 완료):
 
-| script | 명령(기준) | 용도 |
+| script | 명령 | 용도 |
 |---|---|---|
-| `dev` | `vite` | 개발 서버 |
+| `dev` | `vite` | 개발 서버 (`http://localhost:5173/pokefile/`) |
 | `build` | `tsc -b && vite build` | 정적 빌드 |
 | `preview` | `vite preview` | 빌드 결과 확인 |
-| `lint` | `eslint .` | 린트 |
-| `typecheck` | `tsc -b --noEmit` | 타입 검사 |
-| `test` | `vitest run` | Unit/Integration |
-| `test:e2e` | `playwright test` | E2E |
-| `verify:api` | `node --test scripts/verify-api/` | 외부 API 계약 검증(네트워크 필요, CI 기본 미포함) |
-| `build:index` | `node scripts/build-pokedex-index.mjs` | 정적 검색 인덱스 생성(ADR-010) |
+| `lint` | `oxlint && node scripts/check-boundaries.mjs` | 린트 + feature 간 import 경계 검사 |
+| `typecheck` | `tsc -b` | 타입 검사 (tsconfig가 `noEmit`) |
+| `test` | `vitest run` | Unit/Integration 1회 실행 |
+| `test:watch` | `vitest` | 개발 중 감시 모드 |
+| `test:e2e` | `playwright test` | E2E (빌드 후 `vite preview`로 `/pokefile/`에서 실행) |
+| `verify` | `bash scripts/verify.sh` | lint · typecheck · test · build 일괄 실행 (CI와 동일) |
+| `verify:api` | `node --test scripts/verify-api/verify-api.test.mjs` | 외부 API 계약 검증(네트워크 필요, CI 미포함) |
+| `build:index` | `node scripts/build-pokedex-index.mjs` | 정적 검색 인덱스 생성(ADR-010) — **TASK-003에서 추가** |
 
 - 승인자/일자: 팀 결정(semicolon213 전달) / 2026-10-28
 

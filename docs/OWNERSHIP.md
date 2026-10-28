@@ -45,6 +45,7 @@
 ## 6. 승인 체크
 - [x] 3인 기능 배정 확정 (ADR-004)
 - [x] GitHub 계정 확인 — semicolon213 / MianShang / yoonwoo2002
-- [ ] 공동작업자 등록 확인 및 CODEOWNERS 작성(`.github/CODEOWNERS`, TASK-001)
+- [x] CODEOWNERS 작성(`.github/CODEOWNERS`, TASK-001)
+- [ ] 공동작업자 등록 확인 — 등록되지 않은 사용자는 CODEOWNERS 리뷰 요청이 동작하지 않는다
 - [x] 공통 코드 책임자 확정 — 김형균 (ADR-004)
 - [x] 교차 리뷰 담당 방식 확정 — 김형균 → 임지섭 → 성윤우 → 김형균 (ADR-014)
