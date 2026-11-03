@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test'
 test.describe('hash routing', () => {
   for (const [hash, heading] of [
     ['#/', '포켓몬 도감'],
-    ['#/pokemon/25', '포켓몬 #25'],
+    ['#/pokemon/25', '피카츄'],
     ['#/favorites', '즐겨찾기'],
     ['#/unknown', '페이지를 찾을 수 없습니다'],
   ] as const) {

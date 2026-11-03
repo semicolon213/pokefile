@@ -15,7 +15,7 @@ test.describe('도감 검색', () => {
       await expect(page.getByText('검색 결과 1마리')).toBeVisible()
       await page.getByRole('link', { name: /피카츄/ }).click()
       await expect(page).toHaveURL(/#\/pokemon\/25$/)
-      await expect(page.getByRole('heading', { level: 1, name: '포켓몬 #25' })).toBeVisible()
+      await expect(page.getByRole('heading', { level: 1, name: '피카츄' })).toBeVisible()
     })
   }
 
