@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { pokemonDetailRoutes } from '@/features/pokemon-detail'
 import type { PokemonSummary } from '@/shared/models'
 
-// TC-04: 단위·통합 테스트는 외부 API 대신 fixture를 쓴다 (TEST_PLAN §2).
+// TC-04·05: 단위·통합 테스트는 외부 API 대신 fixture를 쓴다 (TEST_PLAN §2).
 const API = 'https://pokeapi.co/api/v2'
 const lang = (name: string) => ({ name, url: '' })
 const res = (name: string) => ({ name, url: '' })
@@ -54,6 +54,27 @@ const FIXTURES: Record<string, unknown> = {
   '/ability/blaze': { name: 'blaze', names: [{ name: '맹화', language: lang('ko') }] },
   '/ability/solar-power': { name: 'solar-power', names: [{ name: '선파워', language: lang('ko') }] },
   '/ability/tough-claws': { name: 'tough-claws', names: [{ name: '단단한발톱', language: lang('ko') }] },
+  '/evolution-chain/2': {
+    id: 2,
+    chain: {
+      species: { name: 'charmander', url: `${API}/pokemon-species/4/` },
+      evolution_details: [],
+      evolves_to: [
+        {
+          species: { name: 'charmeleon', url: `${API}/pokemon-species/5/` },
+          evolution_details: [{ min_level: 16, trigger: res('level-up') }],
+          evolves_to: [
+            {
+              species: { name: 'charizard', url: `${API}/pokemon-species/6/` },
+              evolution_details: [{ min_level: 36, trigger: res('level-up') }],
+              evolves_to: [],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  '/pokemon/6/encounters': [],
 }
 
 type Override = Record<string, Response | (() => Response)>
@@ -87,7 +108,7 @@ function renderAt(path: string) {
 
 const section = (name: string) => screen.getByRole('heading', { level: 2, name }).closest('section')!
 
-describe('PokemonDetailPage (TASK-005)', () => {
+describe('PokemonDetailPage (TASK-005·006)', () => {
   afterEach(() => vi.unstubAllGlobals())
 
   it('기본 정보·분류·타입·특성·도감 설명을 표시한다 (FR-11~13)', async () => {
@@ -166,6 +187,11 @@ describe('PokemonDetailPage (TASK-005)', () => {
         flavor_text_entries: [],
         evolution_chain: { url: `${API}/evolution-chain/58/` },
       }),
+      '/evolution-chain/58': Response.json({
+        id: 58,
+        chain: { species: { name: 'tauros', url: `${API}/pokemon-species/128/` }, evolution_details: [], evolves_to: [] },
+      }),
+      '/pokemon/128/encounters': Response.json([]),
     })
     renderAt('/pokemon/128')
     expect(await screen.findByText('노말')).toBeInTheDocument()
@@ -173,6 +199,46 @@ describe('PokemonDetailPage (TASK-005)', () => {
     // 분류·도감 설명이 없으면 '정보 없음' (DR-06)
     expect(screen.getByText('정보 없음')).toBeInTheDocument()
     expect(screen.getByText('등록된 정보가 없습니다.')).toBeInTheDocument()
+    expect(await within(section('진화')).findByText('진화하지 않는 포켓몬입니다.')).toBeInTheDocument()
+  })
+
+  it('진화 단계를 한국어 이름·레벨 조건과 함께 표시하고 현재 포켓몬을 표시한다 (FR-15)', async () => {
+    mockFetch()
+    renderAt('/pokemon/6')
+    const evolution = section('진화')
+    const link = await within(evolution).findByRole('link', { name: /파이리/ })
+    expect(link).toHaveAttribute('href', '/pokemon/4')
+    expect(within(evolution).getByRole('link', { name: /리자드/ })).toHaveAttribute('href', '/pokemon/5')
+    expect(within(evolution).getByRole('link', { name: /리자몽/ })).toHaveAttribute('aria-current', 'page')
+    expect(within(evolution).getByText('Lv.16')).toBeInTheDocument()
+    expect(within(evolution).getByText('Lv.36')).toBeInTheDocument()
+  })
+
+  it('출현 장소를 게임별로 표시한다 (FR-16)', async () => {
+    mockFetch({
+      '/pokemon/6/encounters': Response.json([
+        {
+          location_area: { name: 'kalos-route-1-area', url: '' },
+          version_details: [
+            { version: res('x'), encounter_details: [{ min_level: 10, max_level: 12, method: res('walk') }] },
+            { version: res('sun'), encounter_details: [{ min_level: 10, max_level: 12, method: res('walk') }] },
+          ],
+        },
+      ]),
+    })
+    renderAt('/pokemon/6')
+    const encounters = section('출현 정보')
+    const x = await within(encounters).findByRole('region', { name: 'X 출현 장소' })
+    expect(within(x).getByText('6세대')).toBeInTheDocument()
+    expect(within(x).getByText('Kalos Route 1')).toBeInTheDocument()
+    expect(within(x).getByText('Lv.10~12')).toBeInTheDocument()
+    expect(within(encounters).queryByRole('region', { name: /썬/ })).not.toBeInTheDocument()
+  })
+
+  it('출현 데이터 없음과 요청 실패를 구분해 안내한다 (FR-18)', async () => {
+    mockFetch()
+    renderAt('/pokemon/6')
+    expect(await within(section('출현 정보')).findByText('6세대 이하 게임에서 야생 출현 정보가 없습니다.')).toBeInTheDocument()
   })
 
   it('특성 이름 요청이 실패해도 나머지 상세는 유지하고 API 식별자를 표시한다 (NFR-07)', async () => {
@@ -181,6 +247,25 @@ describe('PokemonDetailPage (TASK-005)', () => {
     expect(await screen.findByText('선파워')).toBeInTheDocument()
     expect(screen.getByText('blaze')).toBeInTheDocument()
     expect(screen.getByRole('table', { name: '종족값 수치' })).toBeInTheDocument()
+  })
+
+  it('부가 정보 요청이 실패해도 나머지 상세는 유지하고 해당 섹션만 재시도한다 (NFR-07)', async () => {
+    let encounterFails = true
+    mockFetch({
+      '/pokemon/6/encounters': () => (encounterFails ? new Response('', { status: 500 }) : Response.json([])),
+      '/evolution-chain/2': () => new Response('', { status: 503 }),
+    })
+    const user = userEvent.setup()
+    renderAt('/pokemon/6')
+    const encounters = section('출현 정보')
+    expect(await within(encounters).findByRole('alert')).toHaveTextContent('출현 정보를 불러오지 못했습니다.')
+    expect(await within(section('진화')).findByRole('alert')).toHaveTextContent('진화 정보를 불러오지 못했습니다.')
+    expect(screen.getByRole('heading', { level: 1, name: '리자몽' })).toBeInTheDocument()
+    expect(await screen.findByRole('table', { name: '종족값 수치' })).toBeInTheDocument()
+
+    encounterFails = false
+    await user.click(within(encounters).getByRole('button', { name: '다시 시도' }))
+    expect(await within(encounters).findByText('6세대 이하 게임에서 야생 출현 정보가 없습니다.')).toBeInTheDocument()
   })
 
   it('기본 데이터가 모두 실패하면 상세 오류 화면과 재시도·목록 이동을 제공한다', async () => {

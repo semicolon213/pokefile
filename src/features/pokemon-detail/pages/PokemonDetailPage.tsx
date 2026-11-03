@@ -7,6 +7,8 @@ import type { FormKey, PokemonId, PokemonSummary } from '@/shared/models'
 import { ErrorState } from '@/shared/ui'
 import { displayName, formatDexNumber } from '@/shared/utils'
 import { BasicInfoSection } from '../components/BasicInfoSection'
+import { EncountersSection } from '../components/EncountersSection'
+import { EvolutionSection } from '../components/EvolutionSection'
 import { FormTabs } from '../components/FormTabs'
 import { SectionState } from '../components/SectionState'
 import { StatChart } from '../components/StatChart'
@@ -14,7 +16,7 @@ import { useMegaFormName, usePokedexIndex, usePokemonForm, useSpecies } from '..
 import { availableForms, resolveFormKey } from '../model/forms'
 import './PokemonDetailPage.css'
 
-// UI-02 포켓몬 상세 — TASK-005(기본 정보·종족값·메가 폼 탭), 진화·출현 장소는 TASK-006에서 구현
+// UI-02 포켓몬 상세 — TASK-005(기본 정보·종족값·메가 폼 탭), TASK-006(진화·출현 장소)
 export function PokemonDetailPage() {
   const { id } = useParams()
   const pokemonId = parsePokemonId(id)
@@ -135,8 +137,17 @@ function PokemonDetail({ pokemonId }: { pokemonId: PokemonId }) {
         </>
       )}
 
-      <section aria-label="진화">진화 트리 (TASK-006)</section>
-      <section aria-label="출현 장소">출현 장소 (TASK-006)</section>
+      <EvolutionSection
+        currentId={pokemonId}
+        species={{
+          status: speciesQuery.status,
+          chainId: species?.evolutionChainId,
+          retry: () => void speciesQuery.refetch(),
+        }}
+        index={indexById}
+      />
+
+      <EncountersSection pokemonId={pokemonId} />
       {/* TODO(계약): 실전 세팅도 폼 기준으로 바뀌어야 한다(DESIGN §2.2). formKey 전달은 TASK-007 담당과 props 합의 후 연결 */}
       <SmogonSetsSection pokemonId={pokemonId} />
     </article>

@@ -42,6 +42,25 @@ export type RawAbility = {
   names: LocalizedName[]
 }
 
+export type RawEvolutionNode = {
+  species: NamedResource
+  evolution_details: { min_level: number | null; trigger: NamedResource }[]
+  evolves_to: RawEvolutionNode[]
+}
+
+export type RawEvolutionChain = {
+  id: number
+  chain: RawEvolutionNode
+}
+
+export type RawEncounter = {
+  location_area: NamedResource
+  version_details: {
+    version: NamedResource
+    encounter_details: { min_level: number; max_level: number; method: NamedResource }[]
+  }[]
+}
+
 /** 기본 폼은 `/pokemon/{id}`, 메가는 `/pokemon/{species-name}-{formKey}` (ADR-009) */
 export function fetchPokemon(idOrName: number | string) {
   return fetchJson<RawPokemon>(`${POKEAPI_BASE_URL}/pokemon/${idOrName}`)
@@ -59,9 +78,17 @@ export function fetchAbility(name: string) {
   return fetchJson<RawAbility>(`${POKEAPI_BASE_URL}/ability/${name}`)
 }
 
+export function fetchEvolutionChain(chainId: number) {
+  return fetchJson<RawEvolutionChain>(`${POKEAPI_BASE_URL}/evolution-chain/${chainId}`)
+}
+
+export function fetchEncounters(id: number) {
+  return fetchJson<RawEncounter[]>(`${POKEAPI_BASE_URL}/pokemon/${id}/encounters`)
+}
+
 /**
  * 정적 검색 인덱스(public/data/pokedex-index.json, ADR-010).
- * 메가 폼 목록(`megaForms`)에 사용한다.
+ * 메가 폼 목록(`megaForms`)과 진화 트리의 한국어 이름에 사용한다.
  */
 export const POKEDEX_INDEX_URL = `${import.meta.env.BASE_URL}data/pokedex-index.json`
 

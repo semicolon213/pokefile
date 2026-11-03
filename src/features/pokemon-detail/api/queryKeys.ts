@@ -5,6 +5,7 @@ export const pokemonDetailQueryKeys = {
   pokemonForm: (name: string) => ['pokemon-form', name] as const,
   species: (id: PokemonId) => ['species', id] as const,
   ability: (name: string) => ['ability', name] as const,
+  evolutionChain: (chainId: number) => ['evolution-chain', chainId] as const,
   encounters: (id: PokemonId) => ['encounters', id] as const,
   pokedexIndex: () => ['pokemon-detail', 'pokedex-index'] as const,
 }

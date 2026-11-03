@@ -291,6 +291,128 @@
   font-weight: 800;
 }
 
+/* ---------- Evolution ---------- */
+.evolution-tree,
+.evolution-tree__children {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.evolution-tree__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.evolution-tree__children {
+  flex-direction: column;
+  padding-left: 12px;
+  border-left: 2px solid var(--detail-border);
+}
+
+.evolution-tree__condition {
+  order: -1;
+  color: var(--detail-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.evolution-tree__card {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  width: 112px;
+  padding: 8px;
+  border: 1px solid var(--detail-border);
+  border-radius: 12px;
+  color: inherit;
+  text-decoration: none;
+  text-align: center;
+}
+
+.evolution-tree__card:hover {
+  border-color: var(--detail-primary);
+}
+
+.evolution-tree__card[aria-current='page'] {
+  border-color: var(--detail-primary);
+  box-shadow: inset 0 0 0 1px var(--detail-primary);
+}
+
+.evolution-tree__image {
+  height: 56px;
+  max-width: 96px;
+  object-fit: contain;
+}
+
+.evolution-tree__card .detail-image__placeholder {
+  width: 56px;
+  height: 56px;
+}
+
+.evolution-tree__number {
+  color: var(--detail-muted);
+  font-size: 0.75rem;
+}
+
+.evolution-tree__name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  word-break: keep-all;
+}
+
+/* ---------- Encounters ---------- */
+.encounters {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.encounters__version {
+  padding: 12px;
+  border-radius: 10px;
+  background: var(--detail-background);
+}
+
+.encounters__version h3 {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 6px;
+  font-size: 1rem;
+}
+
+.encounters__generation {
+  color: var(--detail-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.encounters__version ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.encounters__version li {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 2px 0;
+  font-size: 0.9rem;
+}
+
+.encounters__level {
+  flex-shrink: 0;
+  color: var(--detail-muted);
+  font-variant-numeric: tabular-nums;
+}
+
 @media (max-width: 767px) {
   .detail-basic,
   .detail-stats {

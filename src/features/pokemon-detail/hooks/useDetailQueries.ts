@@ -1,8 +1,18 @@
 import { useQueries, useQuery } from '@tanstack/react-query'
 import type { FormKey, PokemonId } from '@/shared/models'
-import { fetchAbility, fetchPokedexIndex, fetchPokemon, fetchPokemonForm, fetchSpecies } from '../api/pokeapi'
+import {
+  fetchAbility,
+  fetchEncounters,
+  fetchEvolutionChain,
+  fetchPokedexIndex,
+  fetchPokemon,
+  fetchPokemonForm,
+  fetchSpecies,
+} from '../api/pokeapi'
 import { pokemonDetailQueryKeys } from '../api/queryKeys'
 import { abilityNameKo, formNameKo, toFormDetail, toSpeciesDetail } from '../model/detail'
+import { toVersionEncounters } from '../model/encounters'
+import { toEvolutionTree } from '../model/evolution'
 import { pokemonResourceName } from '../model/forms'
 
 // 각 섹션이 독립적으로 로딩·오류 상태를 갖도록 리소스별로 쿼리를 나눈다 (DR-03, NFR-07).
@@ -57,5 +67,22 @@ export function useAbilityNames(names: readonly string[]) {
       select: abilityNameKo,
       staleTime: Infinity,
     })),
+  })
+}
+
+export function useEvolutionTree(chainId: number | null | undefined) {
+  return useQuery({
+    queryKey: pokemonDetailQueryKeys.evolutionChain(chainId ?? 0),
+    queryFn: () => fetchEvolutionChain(chainId!),
+    select: (raw) => toEvolutionTree(raw.chain),
+    enabled: chainId != null,
+  })
+}
+
+export function useEncounters(id: PokemonId) {
+  return useQuery({
+    queryKey: pokemonDetailQueryKeys.encounters(id),
+    queryFn: () => fetchEncounters(id),
+    select: toVersionEncounters,
   })
 }
