@@ -9,8 +9,8 @@
 | TASK-002 | 김형균 | 공통 모델(`PokemonId`·`FormKey`·`Generation`·`PokemonType`·`PokemonSummary`)과 공통 유틸(`toShowdownId`·`formatDexNumber`·`displayName`) (ADR-009) | DR-01~04 | API 스키마 검증(API_SPEC §5) | SELF_TESTED |
 | TASK-003 | 김형균 | 정적 검색 인덱스 생성 스크립트(`public/data/pokedex-index.json`)·한국어 검색 (ADR-010) | FR-01~03 | TASK-002 | SELF_TESTED |
 | TASK-004 | 김형균 | 타입·세대 필터, 번호·이름 정렬, 무한 스크롤, URL 쿼리 동기화 (ADR-011) | FR-04~09 | TASK-003, OQ-20(제안값 24 적용) | SELF_TESTED |
-| TASK-005 | 임지섭 | 상세 기본 정보·차트, 6세대 메가 폼 탭(`?form=`) | FR-10~14 | TASK-002, OQ-17 | BACKLOG |
-| TASK-006 | 임지섭 | 진화 트리(#722 이후 제외)·출현 장소(6세대 이하 버전만, ADR-008) | FR-15~16,18 | TASK-005, OQ-18 | BACKLOG |
+| TASK-005 | 임지섭 | 상세 기본 정보·차트, 6세대 메가 폼 탭(`?form=`) | FR-10~14 | TASK-002, OQ-17(제안값 x→omega-ruby 적용) | SELF_TESTED |
+| TASK-006 | 임지섭 | 진화 트리(#722 이후 제외)·출현 장소(6세대 이하 버전만, ADR-008) | FR-15~16,18 | TASK-005, OQ-18(결정 전 임시: 장소명 영문 표기) | SELF_TESTED |
 | TASK-007 | 성윤우 | Smogon gen6 실전 세팅·이름 매핑·메가스톤 대응표 (ADR-009) | FR-17~18 | TASK-002, OQ-19 | BACKLOG |
 | TASK-008 | 성윤우 | localStorage 즐겨찾기 (ADR-012) | FR-19~22 | TASK-002 | BACKLOG |
 | TASK-009 | 팀 합의 | 반응형·로딩·오류·캐싱 통합 | NFR-01~04,07~08 | 기능 구현 | BACKLOG |
