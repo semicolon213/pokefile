@@ -36,4 +36,16 @@ test.describe('도감 필터·정렬·무한 스크롤', () => {
     await expect(page).toHaveURL(/#\/\?type=electric$/)
     await expect(page.getByRole('button', { name: '전기' })).toHaveAttribute('aria-pressed', 'true')
   })
+
+  test('지방을 고르면 그 지방 도감 전체를 지방 번호 순으로 보여 준다 (FR-31)', async ({ page }) => {
+    await page.goto('#/?gen=2')
+    // 하트골드·소울실버 성도 도감 256마리 (1세대 포켓몬 포함)
+    await expect(page.getByText('검색 결과 256마리')).toBeVisible()
+    const first = page.getByRole('article').first()
+    await expect(first).toContainText('성도 #001')
+    await expect(first).toContainText('치코리타')
+    await expect(page.getByText(/성도지방 도감 전체 · 하트골드·소울실버 기준/)).toBeVisible()
+    await page.getByRole('combobox', { name: '내 게임' }).selectOption('gold')
+    await expect(page.getByText('검색 결과 251마리')).toBeVisible()
+  })
 })

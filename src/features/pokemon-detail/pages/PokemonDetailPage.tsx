@@ -2,10 +2,12 @@ import { useMemo } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import { SmogonSetsSection } from '@/features/battle-tools'
 import { FavoriteToggle } from '@/features/favorites'
+import { TypeMatchups } from '@/features/type-chart'
 import { parseFormKey, parsePokemonId } from '@/shared/models'
 import type { FormKey, PokemonId, PokemonSummary } from '@/shared/models'
+import { lastListPath } from '@/shared/state'
 import { ArrowLeftIcon, ErrorState, useDocumentTitle } from '@/shared/ui'
-import { displayName, formFullName, formatDexNumber } from '@/shared/utils'
+import { comparePath, displayName, formFullName, formatDexNumber } from '@/shared/utils'
 import { BasicInfoSection } from '../components/BasicInfoSection'
 import { EncountersSection } from '../components/EncountersSection'
 import { EvolutionSection } from '../components/EvolutionSection'
@@ -25,7 +27,7 @@ export function PokemonDetailPage() {
     return (
       <div className="detail-page">
         <ErrorState message="올바르지 않은 포켓몬 번호입니다." />
-        <Link to="/">도감 목록으로</Link>
+        <Link to={lastListPath()}>도감 목록으로</Link>
       </div>
     )
   }
@@ -90,14 +92,15 @@ function PokemonDetail({ pokemonId }: { pokemonId: PokemonId }) {
             void formQuery.refetch()
           }}
         />
-        <Link to="/">도감 목록으로</Link>
+        <Link to={lastListPath()}>도감 목록으로</Link>
       </div>
     )
   }
 
   return (
     <article className="detail-page" aria-labelledby="detail-title">
-      <Link to="/" className="detail-back">
+      {/* 마지막으로 본 목록(필터 포함)으로 돌아가고, 스크롤 위치는 앱 셸의 ScrollRestoration이 되찾는다 */}
+      <Link to={lastListPath()} className="detail-back">
         <ArrowLeftIcon size={18} />
         도감 목록으로
       </Link>
@@ -111,7 +114,13 @@ function PokemonDetail({ pokemonId }: { pokemonId: PokemonId }) {
             </span>
           )}
         </div>
-        <FavoriteToggle pokemonId={pokemonId} />
+        <div className="detail-header__actions">
+          {/* TASK-022: 지금 보는 폼을 포켓몬 A로 두고 비교 화면을 연다 */}
+          <Link to={comparePath({ id: pokemonId, form: formKey ?? 'default' })} className="detail-compare">
+            비교하기
+          </Link>
+          <FavoriteToggle pokemonId={pokemonId} />
+        </div>
       </header>
 
       {forms && formKey && <FormTabs forms={forms} selected={formKey} onSelect={selectForm} />}
@@ -136,6 +145,8 @@ function PokemonDetail({ pokemonId }: { pokemonId: PokemonId }) {
               <SectionState status="empty" />
             )}
           </section>
+          {/* TASK-021: 선택한 폼의 타입 기준 받는 피해 (type-chart 공개 컴포넌트) */}
+          <TypeMatchups types={formQuery.data.types} />
         </>
       )}
 

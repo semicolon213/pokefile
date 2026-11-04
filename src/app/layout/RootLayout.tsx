@@ -2,6 +2,7 @@ import { NavLink, Outlet, useLocation } from 'react-router'
 import { HeaderSearch } from '@/features/pokedex'
 import { BrandMark } from '@/shared/ui'
 import { MyGameSelect } from './MyGameSelect'
+import { ThemeToggle } from './ThemeToggle'
 
 export function RootLayout() {
   // 상세(/pokemon/:id)는 도감의 하위 화면이므로 '포켓몬 도감' 탭을 현재 위치로 표시한다
@@ -18,6 +19,8 @@ export function RootLayout() {
           <NavLink to="/" end className={inPokedex ? 'active' : undefined}>
             포켓몬 도감
           </NavLink>
+          <NavLink to="/types">타입 상성</NavLink>
+          <NavLink to="/compare">포켓몬 비교</NavLink>
           <NavLink to="/favorites">즐겨찾기</NavLink>
         </nav>
         <div className="app-header__tools">
@@ -25,6 +28,7 @@ export function RootLayout() {
           <div className="app-header__search">
             <HeaderSearch />
           </div>
+          <ThemeToggle />
         </div>
       </header>
       <main className="app-main">

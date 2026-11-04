@@ -81,6 +81,20 @@ gen6 세팅 포맷: `ou, uu, ru, nu, pu, zu, lc, ubers, monotype, doublesou, vgc
 | 출현 장소(encounters) | sun·moon·usum·lets-go·sword·shield(+DLC)는 있음. **BDSP·LEGENDS 아르세우스·스칼렛/바이올렛·LEGENDS Z-A는 데이터 없음** |
 | Smogon 세팅 | 키 수 gen7 830, gen8 624, gen9 656. 종 커버: gen9 508, gen8 504, gen7 705, gen6 639, **어느 세대든 911종**, 없음 114종. 리전폼은 `Raichu-Alola` 같은 키로 존재 |
 
+### 5.3 지방 도감 실측 (2026-11-04, ADR-017 근거)
+
+| 항목 | 결과 |
+|---|---|
+| 본편 지방 도감 | `/pokedex` 35개 중 national·conquest-gallery·champions를 뺀 지방 도감. 사용하는 24개는 `scope.json pokedexes` |
+| 판·크기 | kanto 151, letsgo-kanto 153, original-johto 251, updated-johto 256, hoenn 202, updated-hoenn 211, original-sinnoh 151(DP·BDSP), extended-sinnoh 210(Pt), original-unova 156, updated-unova 301, kalos-central 153·coastal 153·mountain 151(XY), lumiose-city 232·hyperspace 132(Z-A), original-alola 302, updated-alola 403(알로라 섬 도감 8개는 사용 안 함), galar 400·isle-of-armor 211·crown-tundra 210, hisui 242, paldea 400·kitakami 200·blueberry 243 |
+| 번호 | 대부분 1부터. **하나 도감 2개는 0(비크티니)부터** 시작. 모든 도감이 시작 번호부터 빠짐없이 이어짐(인덱스 생성 시 검사) |
+| 한국어 이름 | 지방 도감 `names`에 ko 없음 → 화면 표기는 `scope.json`에 둔다(OQ-27) |
+| 범위 | 모든 도감의 종이 #1~#1025 안 |
+
+### 5.4 타입 상성 (2026-11-04, TASK-021)
+
+`/type/{name}`의 `damage_relations`(double/half/no_damage_to)로 18×18 상성표를 만든다. 1배가 아닌 칸 120개. 6세대 이후 바뀐 상성이 없어 현재 값을 그대로 쓴다(과거 값은 `past_damage_relations`, 사용 안 함). `verify-api`의 "타입 상성표가 damage_relations와 일치" 테스트로 저장된 표를 확인한다.
+
 ## 6. 보안
 프론트엔드 빌드 결과물은 공개되므로 비밀 키/토큰을 저장하지 않는다.
 API 출처 변경이나 프록시 서버 추가는 팀 승인 및 SRS/설계 변경을 요구한다.

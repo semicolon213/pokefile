@@ -104,6 +104,24 @@ async function main() {
     }
   })
 
+  // 지방 도감 (TASK-019, ADR-017): 도감마다 시작 번호와 지방 번호 순서의 전국도감 번호 목록
+  console.log(`지방 도감 ${scope.pokedexes.length}개 조회`)
+  const regionalDexes = {}
+  for (const { name } of scope.pokedexes) {
+    const dex = await getJson(`${POKEAPI}/pokedex/${name}`)
+    const sorted = [...dex.pokemon_entries].sort((a, b) => a.entry_number - b.entry_number)
+    // 하나 도감은 #000(비크티니)부터 시작한다. 시작 번호는 0 또는 1이고 그 뒤로는 빠짐없이 이어져야 한다.
+    const start = sorted[0].entry_number
+    if (start !== 0 && start !== 1) throw new Error(`${name}: 시작 번호 ${start}`)
+    sorted.forEach((e, i) => {
+      if (e.entry_number !== start + i) throw new Error(`${name}: 지방 번호가 이어지지 않음 (${e.entry_number})`)
+    })
+    const ids = sorted.map((e) => Number(e.pokemon_species.url.match(/\/(\d+)\/?$/)[1]))
+    const outside = ids.filter((id) => id > MAX_ID)
+    if (outside.length) throw new Error(`${name}: 지원 범위 밖 종 ${outside.join(', ')}`)
+    regionalDexes[name] = { start, ids }
+  }
+
   for (const e of entries) {
     const keys = e.forms.map((f) => f.key)
     if (new Set(keys).size !== keys.length) throw new Error(`폼 키 중복: #${e.id}`)
@@ -124,10 +142,12 @@ async function main() {
     source: 'PokéAPI (https://pokeapi.co)',
     count: entries.length,
     pokemon: entries,
+    regionalDexes,
   }
   mkdirSync(dirname(outFile), { recursive: true })
   writeFileSync(outFile, JSON.stringify(index) + '\n')
   console.log(`완료: ${entries.length}종, 폼 ${allForms.length}개(${formSummary}), 한국어 이름 누락 ${missingKo}건 → ${outFile}`)
+  console.log('지방 도감:', Object.entries(regionalDexes).map(([n, d]) => `${n} ${d.ids.length}`).join(', '))
   console.log(`한국어 폼 이름 없음(영문 표시) ${formsWithoutKo.length}개:`, formsWithoutKo.join(', ') || '없음')
 }
 

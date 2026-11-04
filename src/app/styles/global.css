@@ -1,7 +1,8 @@
 /* 전역 스타일: 디자인 토큰, 기본 요소, 앱 셸. feature 전용 스타일은 각 feature 폴더에 둔다.
    모든 색·간격·모서리는 여기 토큰만 참조한다 (DESIGN.md). */
 :root {
-  /* 색 — 대비는 흰 바탕 기준 WCAG AA 이상 */
+  /* 색 — 대비는 흰 바탕 기준 WCAG AA 이상. 다크 값은 아래 다크 테마 블록 */
+  color-scheme: light;
   --color-bg: #ffffff;
   --color-surface: #ffffff;
   --color-surface-muted: #f6f8fa;
@@ -17,6 +18,8 @@
   --color-focus: #2563eb;
   --color-warning-soft: #fff6e0;
   --color-warning-ink: #7a4b00;
+  /* 타입 색(파스텔) 위 글자는 두 테마 모두 진한 잉크 — 18종 모두 AA (FR-32) */
+  --color-on-type: #1f2328;
 
   /* 타입: --t-* 은 배지 바탕(잉크 글자 AA), --t-*-strong 은 점·선 */
   --t-normal: #e3e1d6;   --t-normal-strong: #9a9886;
@@ -61,6 +64,47 @@
   caret-color: var(--color-primary);
   scrollbar-color: var(--color-border-strong) transparent;
   accent-color: var(--color-primary);
+}
+
+/* ---------- 다크 테마 (FR-32, TASK-020) ----------
+   시스템 설정이면 prefers-color-scheme을 따르고(사용자가 라이트를 고른 경우 제외), 다크를 고르면 항상 적용한다.
+   두 블록은 같은 값이다. 대비: 본문 글자 #e6e8eb/#181b20 약 14:1, 보조 글자 약 7:1, 링크 #ff8c69 약 7:1. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --color-bg: #111317;
+    --color-surface: #181b20;
+    --color-surface-muted: #20242a;
+    --color-plate: #262b32;
+    --color-text: #e6e8eb;
+    --color-text-muted: #a2abb6;
+    --color-border: #2d3239;
+    --color-border-strong: #464e58;
+    --color-primary-soft: #3a1c15;
+    --color-primary-ink: #ff8c69;
+    --color-focus: #6ea8fe;
+    --color-warning-soft: #332810;
+    --color-warning-ink: #f0c36a;
+    --shadow-raise: 0 6px 16px -8px rgb(0 0 0 / 70%);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-bg: #111317;
+  --color-surface: #181b20;
+  --color-surface-muted: #20242a;
+  --color-plate: #262b32;
+  --color-text: #e6e8eb;
+  --color-text-muted: #a2abb6;
+  --color-border: #2d3239;
+  --color-border-strong: #464e58;
+  --color-primary-soft: #3a1c15;
+  --color-primary-ink: #ff8c69;
+  --color-focus: #6ea8fe;
+  --color-warning-soft: #332810;
+  --color-warning-ink: #f0c36a;
+  --shadow-raise: 0 6px 16px -8px rgb(0 0 0 / 70%);
 }
 
 * {
@@ -139,6 +183,10 @@ img {
   border-color: var(--color-text-muted);
 }
 
+.button {
+  white-space: nowrap;
+}
+
 .button--primary {
   border-color: var(--color-primary);
   background: var(--color-primary);
@@ -156,7 +204,7 @@ img {
   align-items: center;
   border-radius: 4px;
   background: var(--type-bg);
-  color: var(--color-text);
+  color: var(--color-on-type);
   font-weight: 600;
   line-height: 1.4;
   white-space: nowrap;
@@ -225,6 +273,7 @@ img {
   display: inline-flex;
   align-items: center;
   min-height: 40px;
+  white-space: nowrap;
   padding: 0 var(--space-4);
   border-radius: var(--radius-control);
   color: var(--color-text-muted);
@@ -248,6 +297,38 @@ img {
   align-items: center;
   gap: var(--space-4);
   margin-left: auto;
+}
+
+/* 화면 테마 선택 (FR-32): 아이콘 3개 분할 버튼. 선택은 흰(표면) 면 + 약한 그림자 + 진한 아이콘, aria-pressed */
+.theme-toggle {
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--color-surface-muted);
+}
+
+.theme-toggle__button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.theme-toggle__button:hover {
+  color: var(--color-text);
+}
+
+.theme-toggle__button[aria-pressed='true'] {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 18%);
 }
 
 /* 내 게임 선택 (FR-26) */
@@ -286,6 +367,25 @@ img {
   padding: var(--space-5);
 }
 
+/* 768~1279px: 메뉴 4개와 도구(내 게임·검색·테마)가 한 줄에 들어가지 않으므로 도구를 둘째 줄 오른쪽으로 내린다.
+   상단 바 높이 토큰도 함께 바꿔 사이드바 sticky 위치가 맞게 한다. */
+@media (min-width: 768px) and (max-width: 1279px) {
+  :root {
+    --header-height: 112px;
+  }
+
+  .app-header {
+    flex-wrap: wrap;
+    align-content: center;
+    row-gap: var(--space-2);
+  }
+
+  .app-header__tools {
+    flex-basis: 100%;
+    justify-content: flex-end;
+  }
+}
+
 @media (max-width: 767px) {
   /* 모바일은 헤더가 여러 줄이라 고정하지 않는다 (화면 높이 확보) */
   .app-header {
@@ -318,4 +418,15 @@ img {
   .app-main {
     padding: var(--space-4);
   }
+}
+
+/* 상자보다 커서 줄인 스프라이트(fitSprite)는 최근접 보간이면 픽셀 굵기가 들쭉날쭉해지므로 부드럽게 줄인다.
+   feature CSS의 'img { image-rendering: pixelated }'보다 우선하도록 :root를 붙인다 */
+:root img[data-downscaled='true'] {
+  image-rendering: auto;
+}
+
+/* 종족값 차트(Recharts) 축 글자도 테마 색을 따른다 */
+.recharts-cartesian-axis-tick-value {
+  fill: var(--color-text-muted);
 }

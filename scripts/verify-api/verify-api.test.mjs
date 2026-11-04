@@ -253,3 +253,16 @@ test('data.pkmn.cc: 실전 세팅 추출 — 기본 폼과 메가(메가스톤) 
   assert.equal(cx.stone, 'Charizardite X');
   assert.ok(cx.count > 0);
 });
+
+// TASK-021: 저장소에 둔 타입 상성표(scripts/build-type-chart.mjs 생성)가 PokéAPI 현재 값과 같은지
+test('PokéAPI: 타입 상성표가 damage_relations와 일치 (FR-24)', async () => {
+  const chart = JSON.parse(readFileSync(new URL('../../src/features/type-chart/data/type-chart.json', import.meta.url), 'utf8')).attack;
+  for (const [type, row] of Object.entries(chart)) {
+    const { damage_relations: rel } = await getJson(`${POKEAPI}/type/${type}`);
+    const live = {};
+    for (const [key, value] of [['double_damage_to', 2], ['half_damage_to', 0.5], ['no_damage_to', 0]]) {
+      for (const { name } of rel[key]) if (name in chart) live[name] = value;
+    }
+    assert.deepEqual(row, live, type);
+  }
+});

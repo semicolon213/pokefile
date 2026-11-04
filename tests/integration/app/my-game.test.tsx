@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen } from '@testing-library/react'
+import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider } from 'react-router'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -51,6 +51,44 @@ describe('상단 바 내 게임 선택 (FR-26)', () => {
     const router = renderAt('/favorites')
     expect(await screen.findByRole('combobox', { name: '내 게임' })).toHaveValue('red')
     await vi.waitFor(() => expect(search(router)).toBe('?game=red'))
+  })
+
+  it('뒤로 가기로 예전 game 주소에 돌아와도 직접 고른 선택을 유지하고 주소를 맞춘다 (QA D-014-01)', async () => {
+    const user = userEvent.setup()
+    const router = renderAt('/favorites')
+    const select = await screen.findByRole('combobox', { name: '내 게임' })
+    await user.selectOptions(select, 'red')
+    await vi.waitFor(() => expect(search(router)).toBe('?game=red'))
+
+    await act(() => router.navigate('/types?game=red'))
+    await user.selectOptions(screen.getByRole('combobox', { name: '내 게임' }), 'x')
+    await vi.waitFor(() => expect(search(router)).toBe('?game=x'))
+
+    await act(() => router.navigate(-1))
+    expect(router.state.location.pathname).toBe('/favorites')
+    await vi.waitFor(() => expect(search(router)).toBe('?game=x'))
+    expect(localStorage.getItem(MY_GAME_STORAGE_KEY)).toBe('x')
+    expect(screen.getByRole('combobox', { name: '내 게임' })).toHaveValue('x')
+  })
+
+  it('앱 안 링크에 예전 game이 붙어 있어도 선택을 되돌리지 않는다', async () => {
+    localStorage.setItem(MY_GAME_STORAGE_KEY, 'x')
+    const router = renderAt('/favorites')
+    await vi.waitFor(() => expect(search(router)).toBe('?game=x'))
+    await act(() => router.navigate('/types?type=fire&game=red'))
+    await vi.waitFor(() => expect(search(router)).toBe('?type=fire&game=x'))
+    expect(localStorage.getItem(MY_GAME_STORAGE_KEY)).toBe('x')
+  })
+
+  it('전체 게임으로 바꾼 뒤 뒤로 가면 주소의 game을 지운다', async () => {
+    const user = userEvent.setup()
+    const router = renderAt('/favorites?game=red')
+    expect(await screen.findByRole('combobox', { name: '내 게임' })).toHaveValue('red')
+    await act(() => router.navigate('/types?game=red'))
+    await user.selectOptions(screen.getByRole('combobox', { name: '내 게임' }), '')
+    await act(() => router.navigate(-1))
+    await vi.waitFor(() => expect(search(router)).toBe(''))
+    expect(localStorage.getItem(MY_GAME_STORAGE_KEY)).toBeNull()
   })
 
   it('지원 범위 밖의 game 값은 무시한다', async () => {

@@ -60,3 +60,45 @@ export function BrandMark({ size = 26 }: { size?: number }) {
     </svg>
   )
 }
+
+/** 테마: 시스템 설정 따르기 */
+export function MonitorIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <rect x="3.5" y="4.5" width="17" height="11.5" rx="1.5" />
+      <path d="M9 20h6" />
+      <path d="M12 16v4" />
+    </Icon>
+  )
+}
+
+/** 테마: 라이트 */
+export function SunIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4" />
+    </Icon>
+  )
+}
+
+/** 테마: 다크 */
+export function MoonIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" />
+    </Icon>
+  )
+}
+
+/** 두 값 바꾸기 (포켓몬 비교 A↔B) */
+export function SwapIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M7 7h12" />
+      <path d="m15 3 4 4-4 4" />
+      <path d="M17 17H5" />
+      <path d="m9 13-4 4 4 4" />
+    </Icon>
+  )
+}

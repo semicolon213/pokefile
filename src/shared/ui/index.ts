@@ -1,6 +1,6 @@
-export { ArrowLeftIcon, BrandMark, SearchIcon, StarIcon } from './icons'
+export { ArrowLeftIcon, BrandMark, MonitorIcon, MoonIcon, SearchIcon, StarIcon, SunIcon, SwapIcon } from './icons'
 export { EmptyState, ErrorState, LoadingState } from './StatusMessage'
 export { TypeBadge } from './TypeBadge'
 export { GENERATION_LABELS, TYPE_LABELS } from './typeLabels'
-export { fitPixelArt, prefersReducedMotion } from './pixelArt'
+export { fitSprite, prefersReducedMotion } from './pixelArt'
 export { useDocumentTitle } from './useDocumentTitle'

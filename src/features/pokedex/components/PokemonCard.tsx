@@ -3,12 +3,13 @@ import { Link } from 'react-router'
 import { FavoriteToggle } from '@/features/favorites'
 import { pokemonDetailPath } from '@/features/pokemon-detail'
 import type { PokemonSummary } from '@/shared/models'
-import { TypeBadge } from '@/shared/ui'
+import { TypeBadge, fitSprite } from '@/shared/ui'
 import { displayName, formatDexNumber } from '@/shared/utils'
 import { pokemonImageUrls } from '../model/image'
 import './PokemonCard.css'
 
-type Props = { pokemon: PokemonSummary }
+/** regionalNumber: 지방을 골랐을 때 지방 번호('성도 #010', FR-31) */
+type Props = { pokemon: PokemonSummary; regionalNumber?: string }
 
 /**
  * 스프라이트 원판(104px) 안의 상자. 목록에서는 키우지 않고 원본 크기(1배)로 보여 포켓몬끼리 크기 비율을 지킨다.
@@ -17,7 +18,7 @@ type Props = { pokemon: PokemonSummary }
 const SPRITE_BOX = 96
 
 // DESIGN.md §5.1: 카드 본문은 상세로 이동, 즐겨찾기 버튼은 이동하지 않는다.
-export function PokemonCard({ pokemon }: Props) {
+export function PokemonCard({ pokemon, regionalNumber }: Props) {
   const name = displayName(pokemon)
   const urls = pokemonImageUrls(pokemon.id)
   const [imageIndex, setImageIndex] = useState(0)
@@ -26,7 +27,16 @@ export function PokemonCard({ pokemon }: Props) {
   return (
     <article className="pokemon-card">
       <Link to={pokemonDetailPath(pokemon.id)} className="pokemon-card__link">
-        <span className="pokemon-card__number tabular">{formatDexNumber(pokemon.id)}</span>
+        <span className="pokemon-card__number tabular">
+          {regionalNumber ? (
+            <>
+              <span className="pokemon-card__regional">{regionalNumber}</span>
+              <span className="pokemon-card__national">{formatDexNumber(pokemon.id)}</span>
+            </>
+          ) : (
+            formatDexNumber(pokemon.id)
+          )}
+        </span>
         <span className="pokemon-card__plate" aria-hidden="true">
           {imageUrl ? (
             // 이름이 링크 텍스트로 이미 있으므로 이미지는 장식으로 둔다 (이름 중복 낭독 방지)
@@ -35,10 +45,7 @@ export function PokemonCard({ pokemon }: Props) {
               alt=""
               loading="lazy"
               decoding="async"
-              onLoad={(e) => {
-                const img = e.currentTarget
-                img.dataset.downscaled = String(Math.max(img.naturalWidth, img.naturalHeight) > SPRITE_BOX)
-              }}
+              onLoad={(e) => fitSprite(e.currentTarget, SPRITE_BOX, { upscale: false })}
               onError={() => setImageIndex((i) => i + 1)}
             />
           ) : (
