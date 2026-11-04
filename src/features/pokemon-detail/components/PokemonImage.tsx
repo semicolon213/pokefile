@@ -1,11 +1,14 @@
 import { useState } from 'react'
-import { fitPixelArt } from '@/shared/ui'
+import { fitSprite } from '@/shared/ui'
 
-/** box: 픽셀 아트를 정수배로 키울 상자 크기(px). 원본이 더 크면 다음 이미지로 넘어간다. */
-type Props = { urls: readonly string[]; alt: string; className?: string; box: number }
+/**
+ * box: 스프라이트를 맞출 상자 크기(px). 원본이 더 크면 줄이고(GIF 유지), 작으면 upscale일 때 정수배로 키운다.
+ * upscale=false는 진화 트리처럼 포켓몬끼리 크기를 비교하는 곳에서 원본 크기를 지킨다.
+ */
+type Props = { urls: readonly string[]; alt: string; className?: string; box: number; upscale?: boolean }
 
 // ADR-013 대체 순서: showdown GIF → PNG → 대체 아이콘
-export function PokemonImage({ urls, alt, className, box }: Props) {
+export function PokemonImage({ urls, alt, className, box, upscale = true }: Props) {
   const [failed, setFailed] = useState(0)
   const key = urls.join('|')
   const [lastKey, setLastKey] = useState(key)
@@ -25,9 +28,7 @@ export function PokemonImage({ urls, alt, className, box }: Props) {
       src={url}
       alt={alt}
       decoding="async"
-      onLoad={(e) => {
-        if (!fitPixelArt(e.currentTarget, box)) setFailed((i) => i + 1)
-      }}
+      onLoad={(e) => fitSprite(e.currentTarget, box, { upscale })}
       onError={() => setFailed((i) => i + 1)}
     />
   )
