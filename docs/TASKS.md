@@ -18,7 +18,7 @@
 | TASK-011 | 성윤우 | [난이도 하] 이로치 이미지 전환·울음소리 재생 (상세 이미지 영역에 공개 컴포넌트로 제공) | FR-23 | TASK-013 | READY |
 | TASK-012 | 김형균 | 외부 API 계약 검증 테스트 (`scripts/verify-api/`) | DR-01~05 | — | MERGED |
 | TASK-013 | 김형균 | 지원 범위 설정 일원화: 세대·최대 번호·메가 판별·게임 버전·도감 설명 버전·Smogon 세대를 `src/shared/config/scope.json` 한 곳으로 (세대 확장 대비, ADR-015) | DR-01~08 | — | MERGED |
-| TASK-014 | 김형균 | [난이도 중] 내 게임 선택: 게임 버전 선택·저장(URL+localStorage), 출현 장소 필터 연동 | FR-26 | TASK-013 | SELF_TESTED |
+| TASK-014 | 김형균 | [난이도 중] 내 게임 선택: 게임 버전 선택·저장(URL+localStorage), 출현 장소 필터 연동 | FR-26 | TASK-013 | MERGED |
 | TASK-015 | 임지섭 | [난이도 상] 기술 표: 게임 버전별 레벨업·기술머신 기술, 내 게임 연동 | FR-27 | TASK-014, TASK-023, OQ-23 | BACKLOG |
 | TASK-016 | 임지섭 | [난이도 중] 진화 조건 상세(돌·교환·친밀도·시간대·장소) | FR-28 | — | BACKLOG |
 | TASK-017 | 성윤우 | [난이도 중] 도감 완성 체크리스트·세대별 완성률 (localStorage, 즐겨찾기 구조 재사용) | FR-29 | TASK-013 | BACKLOG |
@@ -38,7 +38,7 @@
 
 ### 상태 메모 (2026-11-04)
 - **독립 QA (2026-11-04, develop 7c469bc, 구현 세션과 별도 QA 세션)**: TASK-012·013·019·020·021·022·023 PASS → MERGED. 보고서 `docs/qa/QA_TASK-0XX.md`. 하(下) 결함·남은 위험은 각 보고서 §4·§5.
-- **TASK-014 QA FAIL**(D-014-01, 중): 상세에서 내 게임을 바꾼 뒤 뒤로 가기를 하면 이전 `game` 값이 다시 저장된다. 공유 링크 우선 규칙(ADR-011)을 방문 기록 이동에도 적용해서 생기는 문제 — 의도(주소의 game이 항상 우선)인지 사람 결정 후 수정·재검증. 상태 SELF_TESTED 유지. 함께 발견: D-014-02 출현 데이터 없는 게임·확장팩 처리 누락(`hasEncounters`·`includes` 미사용, TASK-024 범위와 겹침).
+- **TASK-014**: 1차 QA FAIL(D-014-01, 중: 상세에서 내 게임을 바꾼 뒤 뒤로 가기를 하면 이전 `game` 값이 다시 저장됨) → 팀 결정 "저장된 선택 유지"로 수정(`fix/my-game-keep-choice` `2e38546`, ADR-011 개정) → **재검증 PASS → MERGED**(수정 PR 병합 기준). 별도 추적: D-014-02(중, 출현 데이터 없는 게임·확장팩 처리 누락 — TASK-024 범위, 그때까지 해당 게임을 내 게임 목록에 둘지 김형균·임지섭 결정 필요), D-014-04(하, 개발 서버에서 잘못된 `?game=` 값이 드물게 남음). 보고서 `docs/qa/QA_TASK-014.md` §6.
 - TASK-001~004: develop 반영(PR #1, 직접 push). QA는 구현과 같은 Claude가 수행해 교차 QA 미충족.
 - TASK-005·006: develop 반영(PR #2). 1차 QA FAIL(E2E 회귀) → 테스트 수정 후 병합, 재검증 기록 없음.
 - TASK-007·008: Codex 구현, Claude 독립 QA 1차 FAIL(M-1) → PR #6에서 수정·재검증 PASS. PR #6 병합 시 MERGED.
