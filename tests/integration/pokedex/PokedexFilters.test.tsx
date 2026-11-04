@@ -201,6 +201,24 @@ describe('무한 스크롤 (FR-08)', () => {
     expect(screen.queryByText('포켓몬을 더 불러오는 중입니다.')).not.toBeInTheDocument()
   })
 
+  it('상세에 갔다 돌아오면 펼쳐 두었던 카드 수만큼 다시 그린다 (스크롤 위치 복원용)', async () => {
+    stubIndex(many)
+    stubIntersectionObserver()
+    const first = renderAt('/?sort=name')
+    await findCount('검색 결과 50마리')
+    act(() => trigger?.())
+    expect(screen.getAllByRole('article')).toHaveLength(48)
+    first.unmount()
+    // 같은 목록 주소로 다시 들어오면 48장, 다른 주소면 처음 24장
+    const again = renderAt('/?sort=name')
+    await findCount('검색 결과 50마리')
+    expect(screen.getAllByRole('article')).toHaveLength(48)
+    again.unmount()
+    renderAt('/')
+    await findCount('50마리의 포켓몬')
+    expect(screen.getAllByRole('article')).toHaveLength(24)
+  })
+
   it('필터가 바뀌면 처음 묶음부터 다시 보여준다', async () => {
     stubIndex(many)
     stubIntersectionObserver()

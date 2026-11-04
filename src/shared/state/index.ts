@@ -15,3 +15,10 @@ export {
   useThemePreference,
   type ThemePreference,
 } from './theme'
+export {
+  lastListPath,
+  rememberListSearch,
+  rememberVisibleCount,
+  resetListReturnForTest,
+  savedVisibleCount,
+} from './listReturn'
