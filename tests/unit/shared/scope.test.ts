@@ -6,7 +6,11 @@ import { GENERATION_LABELS } from '@/shared/ui'
 
 // 지원 범위 설정(scope.json)과 검색 인덱스·파생 값이 서로 맞는지 확인한다.
 // 세대를 늘릴 때 scope.json만 고치고 인덱스를 다시 만들지 않으면 여기서 실패한다 (TASK-013).
-const index = JSON.parse(indexJson) as { count: number; pokemon: PokemonSummary[] }
+const index = JSON.parse(indexJson) as {
+  count: number
+  pokemon: PokemonSummary[]
+  regionalDexes: Record<string, { start: number; ids: number[] }>
+}
 
 describe('지원 범위 설정 (scope.json)', () => {
   it('세대 id가 겹치지 않고, 게임 버전은 지원 세대에만 속한다', () => {
@@ -28,5 +32,20 @@ describe('지원 범위 설정 (scope.json)', () => {
     expect(index.pokemon.map((p) => p.id)).toEqual(Array.from({ length: SCOPE.maxPokemonId }, (_, i) => i + 1))
     const gens = new Set(index.pokemon.map((p) => p.generation))
     expect([...gens].sort()).toEqual([...GENERATIONS].sort())
+  })
+
+  it('지방 도감 설정이 서로 맞고, 검색 인덱스에 모든 도감이 있다 (TASK-019, ADR-017)', () => {
+    const names = SCOPE.pokedexes.map((d) => d.name)
+    expect(new Set(names).size).toBe(names.length)
+    for (const g of SCOPE.generations) for (const d of g.defaultDexes) expect(names).toContain(d)
+    for (const v of SCOPE.gameVersions) {
+      expect(v.dexes.length).toBeGreaterThan(0)
+      for (const d of v.dexes) expect(names).toContain(d)
+    }
+    expect(Object.keys(index.regionalDexes).sort()).toEqual([...names].sort())
+    for (const { start, ids } of Object.values(index.regionalDexes)) {
+      expect([0, 1]).toContain(start)
+      expect(ids.every((id) => id >= 1 && id <= SCOPE.maxPokemonId)).toBe(true)
+    }
   })
 })

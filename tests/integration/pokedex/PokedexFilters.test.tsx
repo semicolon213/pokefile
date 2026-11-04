@@ -15,10 +15,10 @@ const BASE: PokemonSummary[] = [
   { id: 700, nameEn: 'Sylveon', nameKo: '님피아', types: ['fairy'], generation: 'generation-vi', forms: [] },
 ]
 
-function stubIndex(pokemon: PokemonSummary[]) {
+function stubIndex(pokemon: PokemonSummary[], regionalDexes?: Record<string, { start: number; ids: number[] }>) {
   vi.stubGlobal(
     'fetch',
-    vi.fn(async () => new Response(JSON.stringify({ version: 2, generatedAt: '2026-10-28', count: pokemon.length, pokemon }))),
+    vi.fn(async () => new Response(JSON.stringify({ version: 2, generatedAt: '2026-10-28', count: pokemon.length, pokemon, regionalDexes }))),
   )
 }
 
@@ -211,5 +211,37 @@ describe('무한 스크롤 (FR-08)', () => {
     expect(screen.getAllByRole('article')).toHaveLength(48)
     await user.selectOptions(screen.getByRole('combobox', { name: '정렬' }), 'name')
     expect(screen.getAllByRole('article')).toHaveLength(24)
+  })
+})
+
+describe('지방 도감 (FR-31, TASK-019)', () => {
+  afterEach(() => vi.unstubAllGlobals())
+  // 성도 도감은 다른 세대 포켓몬(리자몽·파이리)도 포함한다
+  const DEXES = {
+    'updated-johto': { start: 1, ids: [155, 6, 4] },
+    'original-johto': { start: 1, ids: [155, 25] },
+  }
+
+  it('지방을 고르면 그 지방 도감 전체를 지방 번호 순으로 보여 주고 카드에 지방 번호를 표시한다', async () => {
+    stubIndex(BASE, DEXES)
+    const user = userEvent.setup()
+    renderAt()
+    await findCount('5마리의 포켓몬')
+    const nav = screen.getByRole('navigation', { name: '세대별 보기' })
+    await user.click(within(nav).getByRole('button', { name: /2세대.*성도지방.*3/ }))
+    expect(names()).toEqual(['브케인', '리자몽', '파이리'])
+    expect(screen.getAllByRole('article')[1]).toHaveTextContent('성도 #002#0006')
+    expect(screen.getByText(/성도지방 도감 전체 · 하트골드·소울실버 기준/)).toBeInTheDocument()
+    await user.selectOptions(screen.getByRole('combobox', { name: '정렬' }), 'national')
+    expect(search()).toBe('?gen=2&sort=national')
+    expect(names()).toEqual(['파이리', '리자몽', '브케인'])
+  })
+
+  it('내 게임이 그 지방 게임이면 그 게임의 도감으로 바뀐다', async () => {
+    localStorage.setItem('pokefile:my-game', 'gold')
+    stubIndex(BASE, DEXES)
+    renderAt('/?gen=2')
+    expect(await screen.findByText(/성도지방 도감 전체 · 골드·실버·크리스탈 기준/)).toBeInTheDocument()
+    expect(names()).toEqual(['브케인', '피카츄'])
   })
 })

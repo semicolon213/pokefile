@@ -1,12 +1,15 @@
 import { useMemo } from 'react'
-import { ErrorState, useDocumentTitle } from '@/shared/ui'
+import { GENERATIONS } from '@/shared/models'
+import { useMyGame } from '@/shared/state'
+import { ErrorState, GENERATION_LABELS, useDocumentTitle } from '@/shared/ui'
 import { GenerationNav } from '../components/GenerationNav'
 import { PokemonGrid } from '../components/PokemonGrid'
 import { SortSelect } from '../components/SortSelect'
 import { TypeFilter } from '../components/TypeFilter'
 import { usePokedexFilters } from '../hooks/usePokedexFilters'
-import { useSearchIndex } from '../hooks/useSearchIndex'
+import { useRegionalDexes, useSearchIndex } from '../hooks/useSearchIndex'
 import { applyFilters, countByGeneration, isDefaultFilters, toSearchParams } from '../model/filters'
+import { dexesFor, editionLabel, regionalOrder } from '../model/regional'
 import './PokedexPage.css'
 
 const SKELETON_COUNT = 12
@@ -17,8 +20,18 @@ export function PokedexPage() {
   const index = useSearchIndex()
   const { filters, update, reset } = usePokedexFilters()
   const all = index.data
-  const results = useMemo(() => (all ? applyFilters(all, filters) : []), [all, filters])
-  const genCounts = useMemo(() => (all ? countByGeneration(all) : null), [all])
+  const dexData = useRegionalDexes().data
+  const myGame = useMyGame()
+  // 지방을 고르면 그 지방 도감 전체를 지방 번호 순으로 (FR-31, ADR-017). 판은 내 게임을 따른다.
+  const dexes = filters.gen ? dexesFor(filters.gen, myGame) : null
+  const regional = useMemo(() => (dexes && dexData ? regionalOrder(dexes, dexData) : undefined), [dexes, dexData])
+  const results = useMemo(() => (all ? applyFilters(all, filters, regional) : []), [all, filters, regional])
+  const genCounts = useMemo(() => {
+    if (!all) return null
+    if (!dexData) return countByGeneration(all)
+    return Object.fromEntries(GENERATIONS.map((g) => [g, regionalOrder(dexesFor(g, myGame), dexData).size]))
+  }, [all, dexData, myGame])
+  const edition = dexes && regional ? editionLabel(dexes) : ''
   const filtered = !isDefaultFilters(filters)
   // 필터가 바뀌면 목록을 처음(첫 묶음)부터 다시 보여준다
   const listKey = toSearchParams(filters).toString()
@@ -74,11 +87,17 @@ export function PokedexPage() {
                 <b className="tabular">{results.length}</b>
                 {filtered ? '마리' : '마리의 포켓몬'}
               </p>
-              <SortSelect value={filters.sort} onChange={(sort) => update({ sort })} />
+              <SortSelect value={filters.sort} regional={!!regional} onChange={(sort) => update({ sort })} />
             </div>
+            {filters.gen && regional && (
+              <p className="pokedex-edition">
+                {GENERATION_LABELS[filters.gen].region} 도감 전체 · {edition ? `${edition} 기준` : '지방 도감 기준'}
+                {!myGame || !myGame.dexes.every((d) => dexes?.includes(d)) ? ' (내 게임을 고르면 그 게임의 도감으로 바뀝니다)' : ''}
+              </p>
+            )}
 
             {results.length > 0 ? (
-              <PokemonGrid key={listKey} pokemon={results} />
+              <PokemonGrid key={listKey} pokemon={results} regional={regional} />
             ) : (
               <div className="pokedex-empty">
                 <p>검색 결과가 없습니다. 검색어나 필터를 확인해 주세요.</p>

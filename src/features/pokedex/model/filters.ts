@@ -1,11 +1,14 @@
 import { GENERATIONS, POKEMON_TYPES, type Generation, type PokemonSummary, type PokemonType } from '@/shared/models'
 import { displayName } from '@/shared/utils'
+import type { RegionalEntry } from './regional'
 import { matchesQuery } from './search'
 
 // ADR-011: 검색어 AND 타입 AND 세대, 정렬은 도감 번호순(기본)·이름순. 상태는 URL 쿼리와 동기화한다.
+// ADR-017: 세대(지방)를 고르면 그 지방 도감 전체를 보여 주고, 도감 번호순은 지방 번호 순이 된다(전국 번호순은 sort=national).
 // 타입은 최대 2개까지 고르며, 고른 타입을 모두 가진 포켓몬만 남긴다(타입 조합). URL: type=fire&type=flying
 
-export type SortKey = 'id' | 'name'
+/** id = 도감 번호순(지방을 고르면 지방 번호 순), national = 전국 도감 번호순, name = 이름순 */
+export type SortKey = 'id' | 'national' | 'name'
 
 export type PokedexFilters = {
   q: string
@@ -35,6 +38,8 @@ const paramToGen = (value: string | null): Generation | null => {
   return Number.isInteger(n) && n >= 1 && n <= GENERATIONS.length ? GENERATIONS[n - 1] : null
 }
 
+const parseSort = (value: string | null): SortKey => (value === 'name' || value === 'national' ? value : 'id')
+
 /** 잘못된 값은 무시하고 기본값을 쓴다 */
 export function parseFilters(params: URLSearchParams): PokedexFilters {
   return {
@@ -42,7 +47,7 @@ export function parseFilters(params: URLSearchParams): PokedexFilters {
     // type=fire&type=flying (쉼표 구분 type=fire,flying도 읽는다)
     types: normalizeTypes(params.getAll('type').flatMap((v) => v.split(','))),
     gen: paramToGen(params.get('gen')),
-    sort: params.get('sort') === 'name' ? 'name' : 'id',
+    sort: parseSort(params.get('sort')),
   }
 }
 
@@ -62,16 +67,26 @@ export function isDefaultFilters(filters: PokedexFilters): boolean {
 
 const nameCollator = new Intl.Collator('ko')
 
-export function applyFilters(list: PokemonSummary[], filters: PokedexFilters): PokemonSummary[] {
+/**
+ * regional: 고른 지방의 도감 순서(지방 도감 데이터가 있을 때). 없으면 세대(처음 나온 세대)로 거른다.
+ */
+export function applyFilters(
+  list: PokemonSummary[],
+  filters: PokedexFilters,
+  regional?: ReadonlyMap<number, RegionalEntry>,
+): PokemonSummary[] {
+  const inScope = (p: PokemonSummary) =>
+    !filters.gen || (regional ? regional.has(p.id) : p.generation === filters.gen)
   const filtered = list.filter(
-    (p) =>
-      matchesQuery(p, filters.q) &&
-      filters.types.every((t) => p.types.includes(t)) &&
-      (!filters.gen || p.generation === filters.gen),
+    (p) => inScope(p) && matchesQuery(p, filters.q) && filters.types.every((t) => p.types.includes(t)),
   )
-  return filters.sort === 'name'
-    ? filtered.sort((a, b) => nameCollator.compare(displayName(a), displayName(b)) || a.id - b.id)
-    : filtered.sort((a, b) => a.id - b.id)
+  if (filters.sort === 'name') {
+    return filtered.sort((a, b) => nameCollator.compare(displayName(a), displayName(b)) || a.id - b.id)
+  }
+  if (filters.sort === 'id' && filters.gen && regional) {
+    return filtered.sort((a, b) => regional.get(a.id)!.order - regional.get(b.id)!.order)
+  }
+  return filtered.sort((a, b) => a.id - b.id)
 }
 
 export function countByGeneration(list: PokemonSummary[]): Record<Generation, number> {

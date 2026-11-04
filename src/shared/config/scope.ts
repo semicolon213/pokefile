@@ -1,8 +1,14 @@
 import scope from './scope.json'
 
-// 지원 범위 설정 (TASK-013·023, ADR-015·016). 값은 scope.json 한 곳에서만 정한다 — 이 파일은 타입을 붙여 내보내기만 한다.
+// 지원 범위 설정 (TASK-013·019·023, ADR-015·016·017). 값은 scope.json 한 곳에서만 정한다 — 이 파일은 타입을 붙여 내보내기만 한다.
 
-export type GenerationInfo = { id: string; name: string; region: string }
+export type GenerationInfo = {
+  id: string
+  name: string
+  region: string
+  /** 내 게임이 없을 때 이 지방을 고르면 쓰는 지방 도감(가장 많이 수록한 판, ADR-017) */
+  defaultDexes: readonly string[]
+}
 export type GameVersionInfo = {
   version: string
   label: string
@@ -11,7 +17,12 @@ export type GameVersionInfo = {
   includes?: readonly string[]
   /** false면 PokéAPI에 출현 장소 데이터가 없는 게임 — 출현 정보에서 안내한다 (ADR-016) */
   hasEncounters?: boolean
+  /** 이 게임의 지방 도감. 여러 개면 이 순서로 이어 붙인다 (ADR-017) */
+  dexes: readonly string[]
 }
+
+/** 지방 도감 (PokéAPI pokedex 이름, 화면 표기, 지방) */
+export type PokedexInfo = { name: string; label: string; region: string }
 
 export type Scope = {
   /** 지원하는 마지막 전국도감 번호 */
@@ -22,6 +33,8 @@ export type Scope = {
   gameVersions: readonly GameVersionInfo[]
   /** 한국어 도감 설명을 고르는 게임 버전 우선순위 */
   flavorTextVersions: readonly string[]
+  /** 지방 도감 목록 (TASK-019) */
+  pokedexes: readonly PokedexInfo[]
   /** 실전 세팅에 쓰는 Smogon 세대 (data.pkmn.cc sets/gen{N}.json) */
   smogon: { generation: number }
 }
