@@ -17,7 +17,8 @@
     "test:e2e": "playwright test",
     "verify": "bash scripts/verify.sh",
     "verify:api": "node --test scripts/verify-api/verify-api.test.mjs",
-    "build:index": "node scripts/build-pokedex-index.mjs"
+    "build:index": "node scripts/build-pokedex-index.mjs",
+    "build:type-chart": "node scripts/build-type-chart.mjs"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.104.5",

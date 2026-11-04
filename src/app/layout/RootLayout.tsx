@@ -18,6 +18,7 @@ export function RootLayout() {
           <NavLink to="/" end className={inPokedex ? 'active' : undefined}>
             포켓몬 도감
           </NavLink>
+          <NavLink to="/types">타입 상성</NavLink>
           <NavLink to="/favorites">즐겨찾기</NavLink>
         </nav>
         <div className="app-header__tools">

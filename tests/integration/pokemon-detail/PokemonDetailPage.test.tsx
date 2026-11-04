@@ -107,6 +107,8 @@ function renderAt(path: string) {
 }
 
 const section = (name: string) => screen.getByRole('heading', { level: 2, name }).closest('section')!
+// 타입 이름은 타입 상성 섹션(TASK-021)에도 나오므로 기본 정보 섹션 안에서 찾는다
+const basic = () => within(section('기본 정보'))
 
 describe('PokemonDetailPage (TASK-005·006)', () => {
   afterEach(() => vi.unstubAllGlobals())
@@ -119,8 +121,8 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
     expect(screen.getByText('Charizard')).toBeInTheDocument()
     expect(await screen.findByRole('img', { name: '리자몽' })).toHaveAttribute('src', 'charizard.gif')
     expect(screen.getByText('화염포켓몬')).toBeInTheDocument()
-    expect(screen.getByText('불꽃')).toBeInTheDocument()
-    expect(screen.getByText('비행')).toBeInTheDocument()
+    expect(basic().getByText('불꽃')).toBeInTheDocument()
+    expect(basic().getByText('비행')).toBeInTheDocument()
     expect(await screen.findByText('맹화')).toBeInTheDocument()
     expect(await screen.findByText('선파워')).toBeInTheDocument()
     expect(screen.getByText('(숨겨진 특성)')).toBeInTheDocument()
@@ -147,8 +149,8 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
     await user.click(within(tabs).getByRole('button', { name: '메가X' }))
     expect(router.state.location.search).toBe('?form=mega-x')
     expect(within(tabs).getByRole('button', { name: '메가X' })).toHaveAttribute('aria-pressed', 'true')
-    expect(await screen.findByText('드래곤')).toBeInTheDocument()
-    expect(screen.queryByText('비행')).not.toBeInTheDocument()
+    expect(await basic().findByText('드래곤')).toBeInTheDocument()
+    expect(basic().queryByText('비행')).not.toBeInTheDocument()
     expect(await screen.findByText('단단한발톱')).toBeInTheDocument()
     expect(await screen.findByRole('img', { name: '메가리자몽X' })).toHaveAttribute('src', 'charizard-mega-x.gif')
     expect(screen.getByRole('row', { name: '공격 130' })).toBeInTheDocument()
@@ -158,13 +160,14 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
 
     await user.click(within(tabs).getByRole('button', { name: '기본' }))
     expect(router.state.location.search).toBe('')
-    expect(await screen.findByText('비행')).toBeInTheDocument()
+    expect(await basic().findByText('비행')).toBeInTheDocument()
   })
 
   it('URL ?form=mega-x로 바로 진입하면 메가 폼을 보여준다', async () => {
     mockFetch()
     renderAt('/pokemon/6?form=mega-x')
-    expect(await screen.findByText('드래곤')).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 2, name: '기본 정보' })).toBeInTheDocument()
+    expect(await basic().findByText('드래곤')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: '메가X' })).toHaveAttribute('aria-pressed', 'true')
   })
 

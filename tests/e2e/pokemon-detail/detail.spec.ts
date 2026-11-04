@@ -13,14 +13,15 @@ test.describe('포켓몬 상세', () => {
     await page.getByRole('button', { name: '메가X' }).click()
     await expect(page).toHaveURL(/#\/pokemon\/6\?form=mega-x$/)
     await expect(page.getByText('메가리자몽X')).toBeVisible()
-    await expect(page.getByText('드래곤')).toBeVisible()
+    // 타입 이름은 타입 상성 섹션에도 나오므로 기본 정보 섹션 안에서 확인한다
+    await expect(page.getByRole('region', { name: '기본 정보' }).getByText('드래곤')).toBeVisible()
     await expect(page.getByRole('row', { name: '공격 130', exact: true })).toBeVisible()
   })
 
   test('잘못된 ?form= 값은 기본 폼을 보여준다', async ({ page }) => {
     await page.goto('#/pokemon/6?form=wrong')
     await expect(page.getByRole('button', { name: '기본' })).toHaveAttribute('aria-pressed', 'true')
-    await expect(page.getByText('비행')).toBeVisible()
+    await expect(page.getByRole('region', { name: '기본 정보' }).getByText('비행')).toBeVisible()
   })
 
   test('출현 장소를 지원 게임별로 표시한다', async ({ page }) => {

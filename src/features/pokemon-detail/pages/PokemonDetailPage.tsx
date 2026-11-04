@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router'
 import { SmogonSetsSection } from '@/features/battle-tools'
 import { FavoriteToggle } from '@/features/favorites'
+import { TypeMatchups } from '@/features/type-chart'
 import { parseFormKey, parsePokemonId } from '@/shared/models'
 import type { FormKey, PokemonId, PokemonSummary } from '@/shared/models'
 import { ArrowLeftIcon, ErrorState, useDocumentTitle } from '@/shared/ui'
@@ -136,6 +137,8 @@ function PokemonDetail({ pokemonId }: { pokemonId: PokemonId }) {
               <SectionState status="empty" />
             )}
           </section>
+          {/* TASK-021: 선택한 폼의 타입 기준 받는 피해 (type-chart 공개 컴포넌트) */}
+          <TypeMatchups types={formQuery.data.types} />
         </>
       )}
 
