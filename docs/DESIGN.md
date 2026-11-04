@@ -295,6 +295,7 @@ Browser
  ├─ features/battle-tools/ (실전 세팅, 선택: 상성/비교)
  ├─ features/favorites/ (localStorage 즐겨찾기)
  └─ shared/
+    ├─ config/ (지원 범위 scope.json — 세대·최대 번호·메가·게임 버전·Smogon 세대, ADR-015)
     ├─ api/ (PokéAPI, data.pkmn.cc 호출)
     ├─ models/ (정규화 모델)
     ├─ ui/ (공통 UI·디자인 토큰)
@@ -307,7 +308,7 @@ Browser
 src/
   app/{router,providers,layout}/
   features/{pokedex,pokemon-detail,battle-tools,favorites}/
-  shared/{api,models,ui,utils}/
+  shared/{config,api,models,ui,utils}/
   styles/{tokens,global}/
 tests/{unit,integration,e2e}/
 ```

@@ -1,17 +1,19 @@
 #!/usr/bin/env node
 // 정적 검색 인덱스 생성 (ADR-010)
-// PokéAPI에서 #1~#721과 6세대 메가 정보를 모아 public/data/pokedex-index.json을 만든다.
+// 지원 범위(src/shared/config/scope.json)의 포켓몬과 메가 정보를 PokéAPI에서 모아 public/data/pokedex-index.json을 만든다.
 // 실행: npm run build:index  (네트워크 필요, 결과 파일은 저장소에 커밋한다)
-import { mkdirSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const POKEAPI = 'https://pokeapi.co/api/v2'
-const MAX_ID = 721 // ADR-008
-const MEGA_VERSION_GROUPS = ['x-y', 'omega-ruby-alpha-sapphire'] // 6세대에 도입된 메가만
 const CONCURRENCY = 12
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+// 지원 범위는 앱과 같은 설정 파일을 읽는다 (TASK-013, ADR-015)
+const scope = JSON.parse(readFileSync(join(root, 'src', 'shared', 'config', 'scope.json'), 'utf8'))
+const MAX_ID = scope.maxPokemonId
+const MEGA_VERSION_GROUPS = scope.megaVersionGroups
 const outFile = join(root, 'public', 'data', 'pokedex-index.json')
 
 async function getJson(url, attempt = 1) {
@@ -83,7 +85,9 @@ async function main() {
 
   const megaCount = entries.reduce((n, e) => n + e.megaForms.length, 0)
   const missingKo = entries.filter((e) => !e.nameKo).length
-  if (megaCount !== 48) throw new Error(`6세대 메가 수가 48이 아님: ${megaCount}`)
+  const gens = new Set(entries.map((e) => e.generation))
+  const unknownGen = [...gens].filter((g) => !scope.generations.some((s) => s.id === g))
+  if (unknownGen.length) throw new Error(`scope.json generations에 없는 세대: ${unknownGen.join(', ')}`)
 
   const index = {
     version: 1,

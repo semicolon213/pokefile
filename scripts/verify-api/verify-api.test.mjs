@@ -3,18 +3,15 @@
 // 외부 네트워크를 실제로 호출한다. 의존성 없음(Node 18+ 내장 fetch, node:test).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 
 const POKEAPI = 'https://pokeapi.co/api/v2';
 const PKMN = 'https://data.pkmn.cc';
-const MAX_ID = 721; // 6세대까지 (ADR-008)
-const MEGA_VERSION_GROUPS = ['x-y', 'omega-ruby-alpha-sapphire']; // 6세대에 도입된 메가진화만
-const SUPPORTED_VERSIONS = [
-  'red', 'blue', 'yellow', 'gold', 'silver', 'crystal',
-  'ruby', 'sapphire', 'emerald', 'firered', 'leafgreen',
-  'diamond', 'pearl', 'platinum', 'heartgold', 'soulsilver',
-  'black', 'white', 'black-2', 'white-2',
-  'x', 'y', 'omega-ruby', 'alpha-sapphire',
-];
+// 지원 범위는 앱과 같은 설정 파일을 읽는다 (TASK-013, ADR-015)
+const scope = JSON.parse(readFileSync(new URL('../../src/shared/config/scope.json', import.meta.url), 'utf8'));
+const MAX_ID = scope.maxPokemonId;
+const MEGA_VERSION_GROUPS = scope.megaVersionGroups;
+const SUPPORTED_VERSIONS = scope.gameVersions.map((g) => g.version);
 
 const getJson = async (url, init) => {
   const res = await fetch(url, init);
@@ -54,7 +51,7 @@ test('PokéAPI: 1~721 species의 세대가 generation-i~vi 범위', async () => 
   const species = await allSpecies();
   const gens = new Set(species.map((s) => s.generation.name));
   console.log('  generations:', [...gens].join(', '));
-  assert.deepEqual([...gens].sort(), ['generation-i', 'generation-ii', 'generation-iii', 'generation-iv', 'generation-v', 'generation-vi']);
+  assert.deepEqual([...gens].sort(), scope.generations.map((g) => g.id).sort());
   assert.equal(species[MAX_ID - 1].name, 'volcanion');
 });
 
@@ -154,7 +151,7 @@ test('PokéAPI: 진화 체인 분기와 6세대 이후 진화 포함 여부 (FR-
 });
 
 test('data.pkmn.cc: CORS 및 리다이렉트', async () => {
-  const res = await fetch(`${PKMN}/sets/gen6.json`, { headers: { Origin: 'https://example.github.io' } });
+  const res = await fetch(`${PKMN}/sets/gen${scope.smogon.generation}.json`, { headers: { Origin: 'https://example.github.io' } });
   assert.equal(res.status, 200);
   console.log('  최종 URL:', res.url);
   console.log('  access-control-allow-origin:', res.headers.get('access-control-allow-origin'));
@@ -162,7 +159,7 @@ test('data.pkmn.cc: CORS 및 리다이렉트', async () => {
 });
 
 test('data.pkmn.cc: gen6 세팅 스키마와 PokéAPI 이름 매핑 (FR-17, DR-04)', async () => {
-  const sets = await getJson(`${PKMN}/sets/gen6.json`);
+  const sets = await getJson(`${PKMN}/sets/gen${scope.smogon.generation}.json`);
   const keys = Object.keys(sets);
   const formats = new Set(keys.flatMap((k) => Object.keys(sets[k])));
   console.log(`  세팅 보유 키: ${keys.length}, 포맷:`, [...formats].join(', '));
@@ -195,7 +192,7 @@ test('data.pkmn.cc: gen6 세팅 스키마와 PokéAPI 이름 매핑 (FR-17, DR-0
 const NON_STANDARD_FORMATS = new Set(['balancedhackmons', 'purehackmons', 'almostanyability', 'stabmons', 'cap']);
 
 test('data.pkmn.cc: 실전 세팅 추출 — 기본 폼과 메가(메가스톤) (FR-17)', async () => {
-  const sets = await getJson(`${PKMN}/sets/gen6.json`);
+  const sets = await getJson(`${PKMN}/sets/gen${scope.smogon.generation}.json`);
   const entry = (name) => sets[Object.keys(sets).find((k) => toId(k) === toId(name))];
   const items = (s) => [].concat(s.item ?? []);
 

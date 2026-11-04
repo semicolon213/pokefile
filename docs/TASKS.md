@@ -17,7 +17,7 @@
 | TASK-010 | 팀 합의 | 통합 테스트·배포 URL 확인 | NFR-05~06 | TASK-003~009 | BACKLOG |
 | TASK-011 | 성윤우 | 이로치/울음소리·타입 상성·두 포켓몬 능력치 비교 (ADR-015) | FR-23~25 | TASK-013 | READY |
 | TASK-012 | 김형균 | 외부 API 계약 검증 테스트 (`scripts/verify-api/`) | DR-01~05 | — | SELF_TESTED |
-| TASK-013 | 김형균 | 지원 범위 설정 일원화: 세대·최대 번호·메가 판별·게임 버전·Smogon 세대를 `shared` 설정 한 곳으로 (세대 확장 대비, ADR-015) | DR-01~08 | — | READY |
+| TASK-013 | 김형균 | 지원 범위 설정 일원화: 세대·최대 번호·메가 판별·게임 버전·도감 설명 버전·Smogon 세대를 `src/shared/config/scope.json` 한 곳으로 (세대 확장 대비, ADR-015) | DR-01~08 | — | SELF_TESTED |
 | TASK-014 | 김형균(제안) | 내 게임 선택: 게임 버전 선택·저장(URL+localStorage), 출현 장소 필터 연동 | FR-26 | TASK-013 | BACKLOG |
 | TASK-015 | 임지섭(제안) | 기술 표: 게임 버전별 레벨업·기술머신 기술, 내 게임 연동 | FR-27 | TASK-014, OQ-23 | BACKLOG |
 | TASK-016 | 임지섭(제안) | 진화 조건 상세(돌·교환·친밀도·시간대·장소) | FR-28 | — | BACKLOG |

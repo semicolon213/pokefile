@@ -158,6 +158,8 @@
     | FR-32 | 다크 모드 | TASK-020 |
   - **제외**: 설치형 앱(PWA)·오프라인 지원
   - **선행 작업**: 이후 7세대 이상 확장에 대비해 지원 범위(세대 목록·최대 도감 번호·메가 판별 버전 그룹·출현 장소 게임 버전·진화 상한·Smogon 세대)를 `src/shared` 설정 한 곳으로 모은다 (TASK-013). 세대를 늘릴 때는 이 설정 변경 + 검색 인덱스 재생성으로 끝나는 것을 목표로 한다.
+    - 구현: `src/shared/config/scope.json`(값) + `scope.ts`(타입). 앱과 `scripts/build-pokedex-index.mjs`·`scripts/verify-api`가 같은 파일을 읽는다. `tests/unit/shared/scope.test.ts`가 설정과 검색 인덱스의 일치를 검사한다.
+    - 설정만으로 끝나지 않는 것: 리전폼·거다이맥스 등 새 폼 종류, 세대별 Smogon 파일 선택 방식, 최신 게임의 출현 장소 데이터 공백은 확장 시 별도 결정이 필요하다.
 - 구현 전 확인 필요(데이터 실측): 울음소리 `cries` 필드, 기술 표 데이터량·버전 그룹 매핑, 지방 도감(`/pokedex`) 번호, 특성 한국어 설명(`flavor_text_entries`), 진화 조건 필드 — `scripts/verify-api`에 항목을 추가해 확인한다.
 - 남은 결정: 담당 확정(OQ-22), 기술 표 범위(OQ-23), 다크 모드 기본값(OQ-24)
 - 영향받는 파일/담당: SRS §1.3·§3.4, TASKS(TASK-011, 013~020), DESIGN §1.2·§2.4·§13, TEST_PLAN TC-11~16

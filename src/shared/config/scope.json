@@ -1,0 +1,41 @@
+{
+  "$comment": "PokeFile 지원 범위의 유일한 기준 (ADR-008·015, TASK-013). 세대를 늘릴 때는 이 파일을 고치고 npm run build:index 로 검색 인덱스를 다시 만든다. 앱(TS)과 scripts(Node)가 모두 이 파일을 읽는다.",
+  "maxPokemonId": 721,
+  "generations": [
+    { "id": "generation-i", "name": "1세대", "region": "관동지방" },
+    { "id": "generation-ii", "name": "2세대", "region": "성도지방" },
+    { "id": "generation-iii", "name": "3세대", "region": "호연지방" },
+    { "id": "generation-iv", "name": "4세대", "region": "신오지방" },
+    { "id": "generation-v", "name": "5세대", "region": "하나지방" },
+    { "id": "generation-vi", "name": "6세대", "region": "칼로스지방" }
+  ],
+  "megaVersionGroups": ["x-y", "omega-ruby-alpha-sapphire"],
+  "gameVersions": [
+    { "version": "red", "label": "레드", "generation": "generation-i" },
+    { "version": "blue", "label": "블루", "generation": "generation-i" },
+    { "version": "yellow", "label": "피카츄", "generation": "generation-i" },
+    { "version": "gold", "label": "골드", "generation": "generation-ii" },
+    { "version": "silver", "label": "실버", "generation": "generation-ii" },
+    { "version": "crystal", "label": "크리스탈", "generation": "generation-ii" },
+    { "version": "ruby", "label": "루비", "generation": "generation-iii" },
+    { "version": "sapphire", "label": "사파이어", "generation": "generation-iii" },
+    { "version": "emerald", "label": "에메랄드", "generation": "generation-iii" },
+    { "version": "firered", "label": "파이어레드", "generation": "generation-iii" },
+    { "version": "leafgreen", "label": "리프그린", "generation": "generation-iii" },
+    { "version": "diamond", "label": "디아루가", "generation": "generation-iv" },
+    { "version": "pearl", "label": "펄기아", "generation": "generation-iv" },
+    { "version": "platinum", "label": "기라티나", "generation": "generation-iv" },
+    { "version": "heartgold", "label": "하트골드", "generation": "generation-iv" },
+    { "version": "soulsilver", "label": "소울실버", "generation": "generation-iv" },
+    { "version": "black", "label": "블랙", "generation": "generation-v" },
+    { "version": "white", "label": "화이트", "generation": "generation-v" },
+    { "version": "black-2", "label": "블랙 2", "generation": "generation-v" },
+    { "version": "white-2", "label": "화이트 2", "generation": "generation-v" },
+    { "version": "x", "label": "X", "generation": "generation-vi" },
+    { "version": "y", "label": "Y", "generation": "generation-vi" },
+    { "version": "omega-ruby", "label": "오메가루비", "generation": "generation-vi" },
+    { "version": "alpha-sapphire", "label": "알파사파이어", "generation": "generation-vi" }
+  ],
+  "flavorTextVersions": ["x", "omega-ruby", "y", "alpha-sapphire"],
+  "smogon": { "generation": 6 }
+}
