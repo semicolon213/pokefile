@@ -1,6 +1,6 @@
+import { TypeBadge } from '@/shared/ui'
 import { useAbilityNames } from '../hooks/useDetailQueries'
 import type { PokemonFormDetail, SpeciesDetail } from '../model/detail'
-import { TYPE_LABELS } from '../model/labels'
 import { PokemonImage } from './PokemonImage'
 
 type Props = {
@@ -22,7 +22,7 @@ export function BasicInfoSection({ form, species, name }: Props) {
         기본 정보
       </h2>
       <div className="detail-basic__image">
-        <PokemonImage urls={form.imageUrls} alt={name} />
+        <PokemonImage urls={form.imageUrls} alt={name} box={192} />
       </div>
       <dl className="detail-basic__facts">
         <div>
@@ -33,9 +33,7 @@ export function BasicInfoSection({ form, species, name }: Props) {
           <dt>타입</dt>
           <dd className="detail-basic__types">
             {form.types.map((type) => (
-              <span key={type} className={`detail-type-chip detail-type-chip--${type}`}>
-                {TYPE_LABELS[type]}
-              </span>
+              <TypeBadge key={type} type={type} />
             ))}
           </dd>
         </div>

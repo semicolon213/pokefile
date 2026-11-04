@@ -1,6 +1,6 @@
 import type { Generation, PokemonType } from '@/shared/models'
 
-// 화면 표기는 한국어 (DESIGN.md §3.4). API 식별자는 그대로 두고 표시할 때만 변환한다.
+// 화면 표기는 한국어 (DESIGN.md §3.4). API 식별자는 그대로 두고 표시할 때만 변환한다. 모든 feature가 이 표 하나를 쓴다.
 export const TYPE_LABELS: Record<PokemonType, string> = {
   normal: '노말',
   fire: '불꽃',

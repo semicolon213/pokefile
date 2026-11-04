@@ -4,7 +4,7 @@ import { SmogonSetsSection } from '@/features/battle-tools'
 import { FavoriteToggle } from '@/features/favorites'
 import { parseFormKey, parsePokemonId } from '@/shared/models'
 import type { FormKey, PokemonId, PokemonSummary } from '@/shared/models'
-import { ErrorState } from '@/shared/ui'
+import { ArrowLeftIcon, ErrorState, useDocumentTitle } from '@/shared/ui'
 import { displayName, formatDexNumber } from '@/shared/utils'
 import { BasicInfoSection } from '../components/BasicInfoSection'
 import { EncountersSection } from '../components/EncountersSection'
@@ -61,6 +61,7 @@ function PokemonDetail({ pokemonId }: { pokemonId: PokemonId }) {
   const species = speciesQuery.data
   const baseName = species ? displayName(species) : summary ? displayName(summary) : `포켓몬 #${pokemonId}`
   const formName = isMega ? (megaNameQuery.data ?? baseName) : baseName
+  useDocumentTitle(baseName)
 
   const selectForm = (form: FormKey) => {
     setSearchParams(
@@ -97,7 +98,8 @@ function PokemonDetail({ pokemonId }: { pokemonId: PokemonId }) {
   return (
     <article className="detail-page" aria-labelledby="detail-title">
       <Link to="/" className="detail-back">
-        ← 도감 목록으로
+        <ArrowLeftIcon size={18} />
+        도감 목록으로
       </Link>
       <header className="detail-header">
         <div className="detail-header__title">
@@ -126,7 +128,7 @@ function PokemonDetail({ pokemonId }: { pokemonId: PokemonId }) {
       ) : (
         <>
           <BasicInfoSection form={formQuery.data} species={species} name={formName} />
-          <section className="detail-section" aria-labelledby="detail-stats-title">
+          <section className="detail-section detail-stats-section" aria-labelledby="detail-stats-title">
             <h2 id="detail-stats-title">종족값</h2>
             {formQuery.data.stats.length > 0 ? (
               <StatChart stats={formQuery.data.stats} />

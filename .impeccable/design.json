@@ -1,0 +1,1402 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-04T04:31:04.278Z",
+  "title": "Design System: PokeFile",
+  "source": {
+    "tokens": "src/app/styles/global.css",
+    "spec": "docs/DESIGN.md (§2~§5, v0.5)",
+    "note": "docs/DESIGN.md is the team-owned Korean spec merged in place without YAML frontmatter, so token primitives are carried here under \"tokens\". global.css is normative."
+  },
+  "tokens": {
+    "colors": {
+      "color-bg": "#ffffff",
+      "color-surface": "#ffffff",
+      "color-surface-muted": "#f6f8fa",
+      "color-plate": "#eef1f4",
+      "color-text": "#1f2328",
+      "color-text-muted": "#57606a",
+      "color-border": "#e3e6ea",
+      "color-border-strong": "#c8d0d8",
+      "color-primary": "#d1300a",
+      "color-primary-hover": "#b42a0a",
+      "color-primary-soft": "#fdece8",
+      "color-primary-ink": "#b42a0a",
+      "color-focus": "#2563eb",
+      "color-warning-soft": "#fff6e0",
+      "color-warning-ink": "#7a4b00"
+    },
+    "typeColors": {
+      "normal": {
+        "label": "노말",
+        "bg": "#e3e1d6",
+        "strong": "#9a9886"
+      },
+      "fire": {
+        "label": "불꽃",
+        "bg": "#fbcaa3",
+        "strong": "#e2622a"
+      },
+      "water": {
+        "label": "물",
+        "bg": "#bcd3f7",
+        "strong": "#3f7ee0"
+      },
+      "grass": {
+        "label": "풀",
+        "bg": "#c2e6ab",
+        "strong": "#4b9a2d"
+      },
+      "electric": {
+        "label": "전기",
+        "bg": "#f9e391",
+        "strong": "#c99a00"
+      },
+      "ice": {
+        "label": "얼음",
+        "bg": "#c4ecf3",
+        "strong": "#3aa9c4"
+      },
+      "fighting": {
+        "label": "격투",
+        "bg": "#f3bfae",
+        "strong": "#c4502a"
+      },
+      "poison": {
+        "label": "독",
+        "bg": "#e0c0ed",
+        "strong": "#9145c4"
+      },
+      "ground": {
+        "label": "땅",
+        "bg": "#ead4a8",
+        "strong": "#a77a2e"
+      },
+      "flying": {
+        "label": "비행",
+        "bg": "#d3ddf8",
+        "strong": "#6c8fe0"
+      },
+      "psychic": {
+        "label": "에스퍼",
+        "bg": "#f8c1d5",
+        "strong": "#df4a7f"
+      },
+      "bug": {
+        "label": "벌레",
+        "bg": "#dbe6a3",
+        "strong": "#879a1c"
+      },
+      "rock": {
+        "label": "바위",
+        "bg": "#dfd7b0",
+        "strong": "#a39457"
+      },
+      "ghost": {
+        "label": "고스트",
+        "bg": "#d3c7e6",
+        "strong": "#6c579c"
+      },
+      "dragon": {
+        "label": "드래곤",
+        "bg": "#c9c3f6",
+        "strong": "#5a4fd6"
+      },
+      "dark": {
+        "label": "악",
+        "bg": "#d3cac3",
+        "strong": "#5f4e44"
+      },
+      "steel": {
+        "label": "강철",
+        "bg": "#d0dbe2",
+        "strong": "#5f8597"
+      },
+      "fairy": {
+        "label": "페어리",
+        "bg": "#f8cfe8",
+        "strong": "#d76bb2"
+      }
+    },
+    "typography": {
+      "headline-detail": {
+        "fontFamily": "'Pretendard Variable', Pretendard, 'Noto Sans KR', system-ui, -apple-system, 'Segoe UI', sans-serif",
+        "fontSize": "32px",
+        "fontWeight": 800,
+        "lineHeight": 1.25,
+        "letterSpacing": "-0.02em"
+      },
+      "headline-page": {
+        "fontFamily": "'Pretendard Variable', Pretendard, 'Noto Sans KR', system-ui, -apple-system, 'Segoe UI', sans-serif",
+        "fontSize": "28px",
+        "fontWeight": 800,
+        "lineHeight": 1.25
+      },
+      "brand": {
+        "fontFamily": "'Pretendard Variable', Pretendard, 'Noto Sans KR', system-ui, -apple-system, 'Segoe UI', sans-serif",
+        "fontSize": "20px",
+        "fontWeight": 800,
+        "letterSpacing": "-0.01em"
+      },
+      "title-section": {
+        "fontFamily": "'Pretendard Variable', Pretendard, 'Noto Sans KR', system-ui, -apple-system, 'Segoe UI', sans-serif",
+        "fontSize": "18px",
+        "fontWeight": 700,
+        "lineHeight": 1.25
+      },
+      "title-card": {
+        "fontFamily": "'Pretendard Variable', Pretendard, 'Noto Sans KR', system-ui, -apple-system, 'Segoe UI', sans-serif",
+        "fontSize": "16px",
+        "fontWeight": 700
+      },
+      "label-nav": {
+        "fontFamily": "'Pretendard Variable', Pretendard, 'Noto Sans KR', system-ui, -apple-system, 'Segoe UI', sans-serif",
+        "fontSize": "15px",
+        "fontWeight": 600
+      },
+      "body": {
+        "fontFamily": "'Pretendard Variable', Pretendard, 'Noto Sans KR', system-ui, -apple-system, 'Segoe UI', sans-serif",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": 1.5
+      },
+      "body-sm": {
+        "fontFamily": "'Pretendard Variable', Pretendard, 'Noto Sans KR', system-ui, -apple-system, 'Segoe UI', sans-serif",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": 1.5
+      },
+      "label": {
+        "fontFamily": "'Pretendard Variable', Pretendard, 'Noto Sans KR', system-ui, -apple-system, 'Segoe UI', sans-serif",
+        "fontSize": "13px",
+        "fontWeight": 400
+      },
+      "label-xs": {
+        "fontFamily": "'Pretendard Variable', Pretendard, 'Noto Sans KR', system-ui, -apple-system, 'Segoe UI', sans-serif",
+        "fontSize": "12px",
+        "fontWeight": 600
+      }
+    },
+    "rounded": {
+      "control": "8px",
+      "card": "12px",
+      "badge": "4px",
+      "chip": "999px",
+      "circle": "50%"
+    },
+    "spacing": {
+      "space-1": "4px",
+      "space-2": "8px",
+      "space-3": "12px",
+      "space-4": "16px",
+      "space-5": "24px",
+      "space-6": "32px"
+    },
+    "layout": {
+      "header-height": "64px",
+      "sidebar-width": "248px",
+      "main-max-width": "1440px",
+      "detail-max-width": "1200px",
+      "card-min-width": "168px",
+      "header-search-width": "320px"
+    }
+  },
+  "extensions": {
+    "colorMeta": {
+      "color-bg": {
+        "role": "neutral",
+        "displayName": "Page White",
+        "cssVar": "--color-bg",
+        "canonical": "#ffffff",
+        "oklch": "oklch(100.0% 0.000 89.9)",
+        "purpose": "페이지 배경",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#262626",
+          "#454545",
+          "#666666",
+          "#898989",
+          "#aeaeae",
+          "#d1d1d1",
+          "#eeeeee"
+        ]
+      },
+      "color-surface": {
+        "role": "neutral",
+        "displayName": "Surface White",
+        "cssVar": "--color-surface",
+        "canonical": "#ffffff",
+        "oklch": "oklch(100.0% 0.000 89.9)",
+        "purpose": "카드·입력창·섹션·상단 바",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#262626",
+          "#454545",
+          "#666666",
+          "#898989",
+          "#aeaeae",
+          "#d1d1d1",
+          "#eeeeee"
+        ]
+      },
+      "color-surface-muted": {
+        "role": "neutral",
+        "displayName": "Mist Gray",
+        "cssVar": "--color-surface-muted",
+        "canonical": "#f6f8fa",
+        "oklch": "oklch(97.8% 0.003 247.9)",
+        "purpose": "hover 면, 폼 탭 바탕, 출현·실전 세팅 안쪽 카드",
+        "tonalRamp": [
+          "#0b0b0c",
+          "#262627",
+          "#444547",
+          "#646668",
+          "#88898b",
+          "#acaeb0",
+          "#d0d1d2",
+          "#eeeeef"
+        ]
+      },
+      "color-plate": {
+        "role": "neutral",
+        "displayName": "Sprite Plate Gray",
+        "cssVar": "--color-plate",
+        "canonical": "#eef1f4",
+        "oklch": "oklch(95.7% 0.005 247.9)",
+        "purpose": "스프라이트 원판, 스켈레톤 광택",
+        "tonalRamp": [
+          "#0b0b0c",
+          "#252728",
+          "#434547",
+          "#646669",
+          "#87898c",
+          "#acaeb0",
+          "#cfd1d3",
+          "#edeeef"
+        ]
+      },
+      "color-text": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "cssVar": "--color-text",
+        "canonical": "#1f2328",
+        "oklch": "oklch(25.4% 0.011 254.0)",
+        "purpose": "본문·제목, 선택된 타입 칩 채움",
+        "tonalRamp": [
+          "#0a0b0d",
+          "#24272a",
+          "#41454a",
+          "#62676c",
+          "#858a90",
+          "#aaaeb4",
+          "#ced1d5",
+          "#edeff1"
+        ]
+      },
+      "color-text-muted": {
+        "role": "neutral",
+        "displayName": "Slate Ink",
+        "cssVar": "--color-text-muted",
+        "canonical": "#57606a",
+        "oklch": "oklch(48.5% 0.020 251.0)",
+        "purpose": "보조 정보, 도감 번호, 라벨",
+        "tonalRamp": [
+          "#090b0e",
+          "#22272d",
+          "#3e464e",
+          "#5e6771",
+          "#818a95",
+          "#a7afb8",
+          "#cbd2d9",
+          "#ebeff3"
+        ]
+      },
+      "color-border": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "cssVar": "--color-border",
+        "canonical": "#e3e6ea",
+        "oklch": "oklch(92.4% 0.006 255.5)",
+        "purpose": "카드·섹션 테두리, 구분선",
+        "tonalRamp": [
+          "#0b0b0c",
+          "#252728",
+          "#434548",
+          "#64666a",
+          "#87898d",
+          "#acaeb1",
+          "#cfd1d3",
+          "#edeef0"
+        ]
+      },
+      "color-border-strong": {
+        "role": "neutral",
+        "displayName": "Control Line",
+        "cssVar": "--color-border-strong",
+        "canonical": "#c8d0d8",
+        "oklch": "oklch(85.4% 0.014 248.0)",
+        "purpose": "입력·버튼·칩 테두리, 카드 hover 테두리",
+        "tonalRamp": [
+          "#0a0b0d",
+          "#23272b",
+          "#40464c",
+          "#60676e",
+          "#838a91",
+          "#a8afb5",
+          "#cdd2d6",
+          "#eceff1"
+        ]
+      },
+      "color-primary": {
+        "role": "primary",
+        "displayName": "Dex Red",
+        "cssVar": "--color-primary",
+        "canonical": "#d1300a",
+        "oklch": "oklch(56.3% 0.202 33.2)",
+        "purpose": "주 버튼, 저장된 즐겨찾기 별, 현재 진화 카드 테두리, 마크 위 반원",
+        "tonalRamp": [
+          "#200000",
+          "#560000",
+          "#8c0000",
+          "#bd1a00",
+          "#e74d2f",
+          "#ff8166",
+          "#ffb49e",
+          "#ffdfd2"
+        ]
+      },
+      "color-primary-hover": {
+        "role": "primary",
+        "displayName": "Dex Red Deep",
+        "cssVar": "--color-primary-hover",
+        "canonical": "#b42a0a",
+        "oklch": "oklch(50.5% 0.179 33.3)",
+        "purpose": "주 버튼 hover",
+        "tonalRamp": [
+          "#1e0100",
+          "#520000",
+          "#860500",
+          "#b52d0e",
+          "#de583c",
+          "#fd876e",
+          "#ffb7a4",
+          "#ffe1d5"
+        ]
+      },
+      "color-primary-soft": {
+        "role": "primary",
+        "displayName": "Selection Blush",
+        "cssVar": "--color-primary-soft",
+        "canonical": "#fdece8",
+        "oklch": "oklch(95.5% 0.019 33.4)",
+        "purpose": "선택 상태 면(현재 탭, 선택 세대, 현재 진화 카드), 텍스트 선택",
+        "tonalRamp": [
+          "#0e0a09",
+          "#2c2422",
+          "#4e423f",
+          "#71625f",
+          "#948582",
+          "#b8aba7",
+          "#d8cecc",
+          "#f3edec"
+        ]
+      },
+      "color-primary-ink": {
+        "role": "primary",
+        "displayName": "Selection Ink",
+        "cssVar": "--color-primary-ink",
+        "canonical": "#b42a0a",
+        "oklch": "oklch(50.5% 0.179 33.3)",
+        "purpose": "선택 상태 글자, 링크 글자",
+        "tonalRamp": [
+          "#1e0100",
+          "#520000",
+          "#860500",
+          "#b52d0e",
+          "#de583c",
+          "#fd876e",
+          "#ffb7a4",
+          "#ffe1d5"
+        ]
+      },
+      "color-focus": {
+        "role": "tertiary",
+        "displayName": "Focus Blue",
+        "cssVar": "--color-focus",
+        "canonical": "#2563eb",
+        "oklch": "oklch(54.6% 0.215 262.9)",
+        "purpose": "키보드 포커스 윤곽선 2px",
+        "tonalRamp": [
+          "#010826",
+          "#001c66",
+          "#0737a2",
+          "#225ad5",
+          "#4681fd",
+          "#74aaff",
+          "#a7d1ff",
+          "#d7efff"
+        ]
+      },
+      "color-warning-soft": {
+        "role": "secondary",
+        "displayName": "Notice Cream",
+        "cssVar": "--color-warning-soft",
+        "canonical": "#fff6e0",
+        "oklch": "oklch(97.4% 0.030 88.4)",
+        "purpose": "저장 불가·저장 정보 정리 안내 면",
+        "tonalRamp": [
+          "#0d0b07",
+          "#2b261b",
+          "#4b4434",
+          "#6d6553",
+          "#908975",
+          "#b4ad9c",
+          "#d6d1c4",
+          "#f1eee7"
+        ]
+      },
+      "color-warning-ink": {
+        "role": "secondary",
+        "displayName": "Notice Umber",
+        "cssVar": "--color-warning-ink",
+        "canonical": "#7a4b00",
+        "oklch": "oklch(45.6% 0.099 69.1)",
+        "purpose": "위 안내 글자",
+        "tonalRamp": [
+          "#140800",
+          "#3b1f00",
+          "#633a00",
+          "#8a5a1b",
+          "#af7e44",
+          "#d0a574",
+          "#ebcba8",
+          "#fdebd8"
+        ]
+      },
+      "t-normal": {
+        "role": "type",
+        "displayName": "노말 (normal) 배지 바탕",
+        "cssVar": "--t-normal",
+        "canonical": "#e3e1d6",
+        "oklch": "oklch(90.8% 0.015 98.3)",
+        "purpose": "타입 배지 바탕, 잉크 글자와 함께 AA",
+        "tonalRamp": [
+          "#0c0b09",
+          "#282721",
+          "#47453d",
+          "#68665d",
+          "#8b8980",
+          "#b0aea5",
+          "#d2d1cb",
+          "#efeeeb"
+        ]
+      },
+      "t-normal-strong": {
+        "role": "type",
+        "displayName": "노말 (normal) 강조",
+        "cssVar": "--t-normal-strong",
+        "canonical": "#9a9886",
+        "oklch": "oklch(67.6% 0.026 101.9)",
+        "purpose": "점·선 등 글자가 아닌 타입 표시",
+        "tonalRamp": [
+          "#0c0b07",
+          "#28271d",
+          "#474637",
+          "#696756",
+          "#8c8a79",
+          "#b0af9f",
+          "#d3d1c6",
+          "#efefe8"
+        ]
+      },
+      "t-fire": {
+        "role": "type",
+        "displayName": "불꽃 (fire) 배지 바탕",
+        "cssVar": "--t-fire",
+        "canonical": "#fbcaa3",
+        "oklch": "oklch(87.3% 0.076 60.1)",
+        "purpose": "타입 배지 바탕, 잉크 글자와 함께 AA",
+        "tonalRamp": [
+          "#130903",
+          "#382009",
+          "#5f3c1c",
+          "#865b38",
+          "#ab7f5b",
+          "#cca586",
+          "#e8cbb4",
+          "#fcebde"
+        ]
+      },
+      "t-fire-strong": {
+        "role": "type",
+        "displayName": "불꽃 (fire) 강조",
+        "cssVar": "--t-fire-strong",
+        "canonical": "#e2622a",
+        "oklch": "oklch(64.8% 0.173 41.7)",
+        "purpose": "점·선 등 글자가 아닌 타입 표시",
+        "tonalRamp": [
+          "#1d0200",
+          "#500100",
+          "#831300",
+          "#b13500",
+          "#da5e28",
+          "#f98c62",
+          "#ffbb9c",
+          "#ffe3d1"
+        ]
+      },
+      "t-water": {
+        "role": "type",
+        "displayName": "물 (water) 배지 바탕",
+        "cssVar": "--t-water",
+        "canonical": "#bcd3f7",
+        "oklch": "oklch(86.2% 0.056 259.3)",
+        "purpose": "타입 배지 바탕, 잉크 글자와 함께 AA",
+        "tonalRamp": [
+          "#070b13",
+          "#1b2739",
+          "#354660",
+          "#536786",
+          "#768aab",
+          "#9dafcc",
+          "#c4d2e8",
+          "#e7effb"
+        ]
+      },
+      "t-water-strong": {
+        "role": "type",
+        "displayName": "물 (water) 강조",
+        "cssVar": "--t-water-strong",
+        "canonical": "#3f7ee0",
+        "oklch": "oklch(60.2% 0.163 259.0)",
+        "purpose": "점·선 등 글자가 아닌 타입 표시",
+        "tonalRamp": [
+          "#010a21",
+          "#00225a",
+          "#054091",
+          "#2462c0",
+          "#4a87e7",
+          "#78aeff",
+          "#abd3ff",
+          "#d9f0ff"
+        ]
+      },
+      "t-grass": {
+        "role": "type",
+        "displayName": "풀 (grass) 배지 바탕",
+        "cssVar": "--t-grass",
+        "canonical": "#c2e6ab",
+        "oklch": "oklch(88.4% 0.087 133.5)",
+        "purpose": "타입 배지 바탕, 잉크 글자와 함께 AA",
+        "tonalRamp": [
+          "#070e03",
+          "#1a2c0c",
+          "#344e20",
+          "#52713c",
+          "#74955f",
+          "#9cb889",
+          "#c4d9b6",
+          "#e7f3e0"
+        ]
+      },
+      "t-grass-strong": {
+        "role": "type",
+        "displayName": "풀 (grass) 강조",
+        "cssVar": "--t-grass-strong",
+        "canonical": "#4b9a2d",
+        "oklch": "oklch(61.3% 0.163 138.5)",
+        "purpose": "점·선 등 글자가 아닌 타입 표시",
+        "tonalRamp": [
+          "#011000",
+          "#003100",
+          "#0a5500",
+          "#2b7a00",
+          "#529f37",
+          "#81c26c",
+          "#b1e1a3",
+          "#ddf8d5"
+        ]
+      },
+      "t-electric": {
+        "role": "type",
+        "displayName": "전기 (electric) 배지 바탕",
+        "cssVar": "--t-electric",
+        "canonical": "#f9e391",
+        "oklch": "oklch(91.6% 0.105 94.9)",
+        "purpose": "타입 배지 바탕, 잉크 글자와 함께 AA",
+        "tonalRamp": [
+          "#100b00",
+          "#312500",
+          "#554300",
+          "#796502",
+          "#9d8839",
+          "#bfae6d",
+          "#ded1a3",
+          "#f5efd5"
+        ]
+      },
+      "t-electric-strong": {
+        "role": "type",
+        "displayName": "전기 (electric) 강조",
+        "cssVar": "--t-electric-strong",
+        "canonical": "#c99a00",
+        "oklch": "oklch(71.1% 0.145 86.6)",
+        "purpose": "점·선 등 글자가 아닌 타입 표시",
+        "tonalRamp": [
+          "#140900",
+          "#3b2000",
+          "#633c00",
+          "#8a5d00",
+          "#ae8100",
+          "#cfa84a",
+          "#eace8f",
+          "#fdedcb"
+        ]
+      },
+      "t-ice": {
+        "role": "type",
+        "displayName": "얼음 (ice) 배지 바탕",
+        "cssVar": "--t-ice",
+        "canonical": "#c4ecf3",
+        "oklch": "oklch(91.7% 0.043 209.4)",
+        "purpose": "타입 배지 바탕, 잉크 글자와 함께 AA",
+        "tonalRamp": [
+          "#050d0e",
+          "#152a2e",
+          "#2c4b50",
+          "#496d73",
+          "#6c9097",
+          "#95b5ba",
+          "#bfd6da",
+          "#e4f1f4"
+        ]
+      },
+      "t-ice-strong": {
+        "role": "type",
+        "displayName": "얼음 (ice) 강조",
+        "cssVar": "--t-ice-strong",
+        "canonical": "#3aa9c4",
+        "oklch": "oklch(68.4% 0.105 217.4)",
+        "purpose": "점·선 등 글자가 아닌 타입 표시",
+        "tonalRamp": [
+          "#000e15",
+          "#002e3d",
+          "#005066",
+          "#00748d",
+          "#2998b2",
+          "#68bcd2",
+          "#a3dcec",
+          "#d6f5fe"
+        ]
+      },
+      "t-fighting": {
+        "role": "type",
+        "displayName": "격투 (fighting) 배지 바탕",
+        "cssVar": "--t-fighting",
+        "canonical": "#f3bfae",
+        "oklch": "oklch(84.7% 0.065 38.9)",
+        "purpose": "타입 배지 바탕, 잉크 글자와 함께 AA",
+        "tonalRamp": [
+          "#130805",
+          "#381f16",
+          "#603a2e",
+          "#86594b",
+          "#ab7c6d",
+          "#cda395",
+          "#e9c9bf",
+          "#fceae4"
+        ]
+      },
+      "t-fighting-strong": {
+        "role": "type",
+        "displayName": "격투 (fighting) 강조",
+        "cssVar": "--t-fighting-strong",
+        "canonical": "#c4502a",
+        "oklch": "oklch(57.8% 0.157 38.0)",
+        "purpose": "점·선 등 글자가 아닌 타입 표시",
+        "tonalRamp": [
+          "#1c0300",
+          "#4d0600",
+          "#7f1b00",
+          "#ac3b11",
+          "#d4623e",
+          "#f48f6f",
+          "#ffbca4",
+          "#ffe3d6"
+        ]
+      },
+      "t-poison": {
+        "role": "type",
+        "displayName": "독 (poison) 배지 바탕",
+        "cssVar": "--t-poison",
+        "canonical": "#e0c0ed",
+        "oklch": "oklch(84.9% 0.070 316.2)",
+        "purpose": "타입 배지 바탕, 잉크 글자와 함께 AA",
+        "tonalRamp": [
+          "#0f0812",
+          "#2f1f36",
+          "#523a5c",
+          "#765a81",
+          "#9a7da5",
+          "#bda3c7",
+          "#dcc9e4",
+          "#f5eaf9"
+        ]
+      },
+      "t-poison-strong": {
+        "role": "type",
+        "displayName": "독 (poison) 강조",
+        "cssVar": "--t-poison-strong",
+        "canonical": "#9145c4",
+        "oklch": "oklch(54.6% 0.194 308.9)",
+        "purpose": "점·선 등 글자가 아닌 타입 표시",
+        "tonalRamp": [
+          "#13021f",
+          "#390455",
+          "#601989",
+          "#863ab8",
+          "#aa62de",
+          "#cc8ffb",
+          "#e7bcff",
+          "#fbe4ff"
+        ]
+      },
+      "t-ground": {
+        "role": "type",
+        "displayName": "땅 (ground) 배지 바탕",
+        "cssVar": "--t-ground",
+        "canonical": "#ead4a8",
+        "oklch": "oklch(87.7% 0.063 84.5)",
+        "purpose": "타입 배지 바탕, 잉크 글자와 함께 AA",
+        "tonalRamp": [
+          "#0f0a03",
+          "#30250c",
+          "#53421f",
+          "#77633b",
+          "#9a875e",
+          "#bdac89",
+          "#dcd0b6",
+          "#f5eedf"
+        ]
+      },
+      "t-ground-strong": {
+        "role": "type",
+        "displayName": "땅 (ground) 강조",
+        "cssVar": "--t-ground-strong",
+        "canonical": "#a77a2e",
+        "oklch": "oklch(61.0% 0.107 77.1)",
+        "purpose": "점·선 등 글자가 아닌 타입 표시",
+        "tonalRamp": [
+          "#130900",
+          "#392000",
+          "#613c00",
+          "#885d01",
+          "#ac8038",
+          "#cea76c",
+          "#e9cca2",
+          "#fcecd5"
+        ]
+      },
+      "t-flying": {
+        "role": "type",
+        "displayName": "비행 (flying) 배지 바탕",
+        "cssVar": "--t-flying",
+        "canonical": "#d3ddf8",
+        "oklch": "oklch(89.8% 0.039 269.4)",
+        "purpose": "타입 배지 바탕, 잉크 글자와 함께 AA",
+        "tonalRamp": [
+          "#090b11",
+          "#212633",
+          "#3d4458",
+          "#5d657d",
+          "#8089a1",
+          "#a6aec3",
+          "#cbd1e1",
+          "#ebeef7"
+        ]
+      },
+      "t-flying-strong": {
+        "role": "type",
+        "displayName": "비행 (flying) 강조",
+        "cssVar": "--t-flying-strong",
+        "canonical": "#6c8fe0",
+        "oklch": "oklch(65.9% 0.127 265.4)",
+        "purpose": "점·선 등 글자가 아닌 타입 표시",
+        "tonalRamp": [
+          "#040a1d",
+          "#122350",
+          "#274081",
+          "#4262ae",
+          "#6586d4",
+          "#8eadf2",
+          "#b9d1ff",
+          "#e1efff"
+        ]
+      },
+      "t-psychic": {
+        "role": "type",
+        "displayName": "에스퍼 (psychic) 배지 바탕",
+        "cssVar": "--t-psychic",
+        "canonical": "#f8c1d5",
+        "oklch": "oklch(86.6% 0.068 354.9)",
+        "purpose": "타입 배지 바탕, 잉크 글자와 함께 AA",
+        "tonalRamp": [
+          "#13070c",
+          "#381d28",
+          "#5e3747",
+          "#855668",
+          "#aa798b",
+          "#cca0b0",
+          "#e8c7d2",
+          "#fce9ef"
+        ]
+      },
+      "t-psychic-strong": {
+        "role": "type",
+        "displayName": "에스퍼 (psychic) 강조",
+        "cssVar": "--t-psychic-strong",
+        "canonical": "#df4a7f",
+        "oklch": "oklch(62.9% 0.189 2.5)",
+        "purpose": "점·선 등 글자가 아닌 타입 표시",
+        "tonalRamp": [
+          "#1e0009",
+          "#520021",
+          "#85003d",
+          "#b41e5d",
+          "#dd4d7f",
+          "#fd7fa5",
+          "#ffb2ca",
+          "#ffdeeb"
+        ]
+      },
+      "t-bug": {
+        "role": "type",
+        "displayName": "벌레 (bug) 배지 바탕",
+        "cssVar": "--t-bug",
+        "canonical": "#dbe6a3",
+        "oklch": "oklch(90.1% 0.088 115.8)",
+        "purpose": "타입 배지 바탕, 잉크 글자와 함께 AA",
+        "tonalRamp": [
+          "#0b0d01",
+          "#252a02",
+          "#434a11",
+          "#646c2d",
+          "#879052",
+          "#abb47f",
+          "#cfd6af",
+          "#edf1dc"
+        ]
+      },
+      "t-bug-strong": {
+        "role": "type",
+        "displayName": "벌레 (bug) 강조",
+        "cssVar": "--t-bug-strong",
+        "canonical": "#879a1c",
+        "oklch": "oklch(64.9% 0.143 118.4)",
+        "purpose": "점·선 등 글자가 아닌 타입 표시",
+        "tonalRamp": [
+          "#0a0d00",
+          "#232b00",
+          "#404d00",
+          "#5f7000",
+          "#81941a",
+          "#a7b85d",
+          "#cbd999",
+          "#ebf3d0"
+        ]
+      },
+      "t-rock": {
+        "role": "type",
+        "displayName": "바위 (rock) 배지 바탕",
+        "cssVar": "--t-rock",
+        "canonical": "#dfd7b0",
+        "oklch": "oklch(87.6% 0.052 97.7)",
+        "purpose": "타입 배지 바탕, 잉크 글자와 함께 AA",
+        "tonalRamp": [
+          "#0d0b04",
+          "#2b2712",
+          "#4c4527",
+          "#6e6744",
+          "#918a66",
+          "#b5af8f",
+          "#d6d2bb",
+          "#f1efe2"
+        ]
+      },
+      "t-rock-strong": {
+        "role": "type",
+        "displayName": "바위 (rock) 강조",
+        "cssVar": "--t-rock-strong",
+        "canonical": "#a39457",
+        "oklch": "oklch(66.6% 0.083 96.0)",
+        "purpose": "점·선 등 글자가 아닌 타입 표시",
+        "tonalRamp": [
+          "#0f0b01",
+          "#2f2600",
+          "#51440b",
+          "#746629",
+          "#98894e",
+          "#bbae7c",
+          "#dad1ad",
+          "#f4efdb"
+        ]
+      },
+      "t-ghost": {
+        "role": "type",
+        "displayName": "고스트 (ghost) 배지 바탕",
+        "cssVar": "--t-ghost",
+        "canonical": "#d3c7e6",
+        "oklch": "oklch(84.9% 0.044 303.0)",
+        "purpose": "타입 배지 바탕, 잉크 글자와 함께 AA",
+        "tonalRamp": [
+          "#0c0a10",
+          "#292333",
+          "#494057",
+          "#6b607b",
+          "#8e839f",
+          "#b2a9c2",
+          "#d4cde0",
+          "#f0ecf7"
+        ]
+      },
+      "t-ghost-strong": {
+        "role": "type",
+        "displayName": "고스트 (ghost) 강조",
+        "cssVar": "--t-ghost-strong",
+        "canonical": "#6c579c",
+        "oklch": "oklch(50.9% 0.108 296.4)",
+        "purpose": "점·선 등 글자가 아닌 타입 표시",
+        "tonalRamp": [
+          "#0d0818",
+          "#2a1d45",
+          "#4b3872",
+          "#6c589c",
+          "#8f7bc1",
+          "#b3a2e1",
+          "#d4c9f7",
+          "#f0eaff"
+        ]
+      },
+      "t-dragon": {
+        "role": "type",
+        "displayName": "드래곤 (dragon) 배지 바탕",
+        "cssVar": "--t-dragon",
+        "canonical": "#c9c3f6",
+        "oklch": "oklch(83.9% 0.071 290.2)",
+        "purpose": "타입 배지 바탕, 잉크 글자와 함께 AA",
+        "tonalRamp": [
+          "#0b0914",
+          "#26223c",
+          "#453f65",
+          "#655f8c",
+          "#8882b0",
+          "#ada8d1",
+          "#d0cdec",
+          "#eeecfe"
+        ]
+      },
+      "t-dragon-strong": {
+        "role": "type",
+        "displayName": "드래곤 (dragon) 강조",
+        "cssVar": "--t-dragon-strong",
+        "canonical": "#5a4fd6",
+        "oklch": "oklch(51.9% 0.199 280.6)",
+        "purpose": "점·선 등 글자가 아닌 타입 표시",
+        "tonalRamp": [
+          "#080525",
+          "#201264",
+          "#3b2b9f",
+          "#584cd2",
+          "#7874fa",
+          "#9c9fff",
+          "#c2c8ff",
+          "#e6eaff"
+        ]
+      },
+      "t-dark": {
+        "role": "type",
+        "displayName": "악 (dark) 배지 바탕",
+        "cssVar": "--t-dark",
+        "canonical": "#d3cac3",
+        "oklch": "oklch(84.4% 0.014 60.5)",
+        "purpose": "타입 배지 바탕, 잉크 글자와 함께 AA",
+        "tonalRamp": [
+          "#0d0b09",
+          "#2a2522",
+          "#4a443e",
+          "#6c645e",
+          "#908781",
+          "#b4aca7",
+          "#d5d0cc",
+          "#f1eeeb"
+        ]
+      },
+      "t-dark-strong": {
+        "role": "type",
+        "displayName": "악 (dark) 강조",
+        "cssVar": "--t-dark-strong",
+        "canonical": "#5f4e44",
+        "oklch": "oklch(43.8% 0.028 52.2)",
+        "purpose": "점·선 등 글자가 아닌 타입 표시",
+        "tonalRamp": [
+          "#0e0a08",
+          "#2e241e",
+          "#504239",
+          "#746258",
+          "#97857a",
+          "#bbaaa1",
+          "#dacec7",
+          "#f4ede9"
+        ]
+      },
+      "t-steel": {
+        "role": "type",
+        "displayName": "강철 (steel) 배지 바탕",
+        "cssVar": "--t-steel",
+        "canonical": "#d0dbe2",
+        "oklch": "oklch(88.5% 0.015 235.4)",
+        "purpose": "타입 배지 바탕, 잉크 글자와 함께 AA",
+        "tonalRamp": [
+          "#090c0d",
+          "#22272b",
+          "#3e464b",
+          "#5e686e",
+          "#818b91",
+          "#a7afb5",
+          "#ccd2d6",
+          "#ebeff1"
+        ]
+      },
+      "t-steel-strong": {
+        "role": "type",
+        "displayName": "강철 (steel) 강조",
+        "cssVar": "--t-steel-strong",
+        "canonical": "#5f8597",
+        "oklch": "oklch(59.5% 0.050 228.9)",
+        "purpose": "점·선 등 글자가 아닌 타입 표시",
+        "tonalRamp": [
+          "#050d11",
+          "#132a34",
+          "#2a4a58",
+          "#476c7d",
+          "#6a8fa1",
+          "#93b4c3",
+          "#bed5e1",
+          "#e4f1f7"
+        ]
+      },
+      "t-fairy": {
+        "role": "type",
+        "displayName": "페어리 (fairy) 배지 바탕",
+        "cssVar": "--t-fairy",
+        "canonical": "#f8cfe8",
+        "oklch": "oklch(89.7% 0.056 341.1)",
+        "purpose": "타입 배지 바탕, 잉크 글자와 함께 AA",
+        "tonalRamp": [
+          "#11080d",
+          "#331f2c",
+          "#583a4d",
+          "#7d5a70",
+          "#a17c93",
+          "#c3a3b7",
+          "#e1c9d7",
+          "#f8eaf2"
+        ]
+      },
+      "t-fairy-strong": {
+        "role": "type",
+        "displayName": "페어리 (fairy) 강조",
+        "cssVar": "--t-fairy-strong",
+        "canonical": "#d76bb2",
+        "oklch": "oklch(67.6% 0.159 342.1)",
+        "purpose": "점·선 등 글자가 아닌 타입 표시",
+        "tonalRamp": [
+          "#190211",
+          "#460634",
+          "#73195a",
+          "#9f387f",
+          "#c65ea3",
+          "#e78bc5",
+          "#fdb9e2",
+          "#ffe1f8"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline-detail": {
+        "displayName": "headline-detail",
+        "purpose": "상세 h1 포켓몬 이름 (모바일 26px)"
+      },
+      "headline-page": {
+        "displayName": "headline-page",
+        "purpose": "즐겨찾기 h1"
+      },
+      "brand": {
+        "displayName": "brand",
+        "purpose": "상단 바 PokeFile"
+      },
+      "title-section": {
+        "displayName": "title-section",
+        "purpose": "상세 섹션 h2, 메가 폼 이름, 상세 도감 번호"
+      },
+      "title-card": {
+        "displayName": "title-card",
+        "purpose": "카드 이름 (결과 수 숫자는 16px/800)"
+      },
+      "label-nav": {
+        "displayName": "label-nav",
+        "purpose": "상단 탭, 세대 항목"
+      },
+      "body": {
+        "displayName": "body",
+        "purpose": "기본 본문"
+      },
+      "body-sm": {
+        "displayName": "body-sm",
+        "purpose": "검색 입력, 정렬, 결과 수 문장, 종족값 표, 출현·실전 세팅"
+      },
+      "label": {
+        "displayName": "label",
+        "purpose": "타입 칩, 배지 md, dt 라벨, 지방 이름, 세대 수, 초기화"
+      },
+      "label-xs": {
+        "displayName": "label-xs",
+        "purpose": "카드 도감 번호, 배지 sm(600), 진화 조건·번호, 즐겨찾기 안내"
+      }
+    },
+    "numerals": "font-variant-numeric: tabular-nums for dex numbers, counts, stats, height/weight, levels",
+    "fonts": [
+      {
+        "family": "Pretendard Variable",
+        "version": "1.3.9",
+        "license": "SIL OFL 1.1",
+        "source": "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+      }
+    ],
+    "shadows": [
+      {
+        "name": "shadow-raise",
+        "value": "0 6px 16px -8px rgb(31 35 40 / 22%)",
+        "purpose": "카드·진화 카드 hover 시에만"
+      },
+      {
+        "name": "form-tab-selected",
+        "value": "0 1px 3px rgb(31 35 40 / 16%)",
+        "purpose": "선택된 폼 탭 (일회성 리터럴, 토큰 아님)"
+      }
+    ],
+    "motion": [
+      {
+        "name": "card-border",
+        "value": "border-color 150ms ease-out",
+        "purpose": "카드 hover 테두리"
+      },
+      {
+        "name": "card-shadow",
+        "value": "box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "카드 hover 그림자"
+      },
+      {
+        "name": "favorite-toggle",
+        "value": "color 120ms ease-out, background-color 120ms ease-out",
+        "purpose": "즐겨찾기 별 상태 전환"
+      },
+      {
+        "name": "skeleton-shimmer",
+        "value": "1.4s ease-in-out infinite",
+        "purpose": "목록 최초 로딩 스켈레톤"
+      },
+      {
+        "name": "reduced-motion",
+        "value": "prefers-reduced-motion: reduce",
+        "purpose": "전환·스켈레톤 애니메이션 끔, 정적 PNG를 GIF보다 먼저"
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile",
+        "value": "767px",
+        "query": "max-width",
+        "effect": "상단 바 줄바꿈·검색 전체 폭, 카드 2열(12px), 타입 칩 가로 스크롤, 상세 한 열, 상세 h1 26px"
+      },
+      {
+        "name": "tablet",
+        "value": "1023px",
+        "query": "max-width",
+        "effect": "세대 사이드바 → 목록 위 가로 스크롤 메뉴, 지방 이름 숨김"
+      },
+      {
+        "name": "detail-wide",
+        "value": "1100px",
+        "query": "min-width",
+        "effect": "상세 기본 정보 | 종족값 7:5 두 열"
+      }
+    ],
+    "icons": {
+      "grid": 24,
+      "strokeWidth": 1.75,
+      "linecap": "round",
+      "color": "currentColor",
+      "set": [
+        "SearchIcon",
+        "ArrowLeftIcon",
+        "StarIcon (empty / filled)",
+        "BrandMark"
+      ],
+      "rule": "SVG only; no unicode glyph icons"
+    },
+    "pixelArt": {
+      "rule": "fitPixelArt(img, box): integer-only upscale with image-rendering: pixelated; a source larger than the box falls through to the next URL (no fractional scaling)",
+      "boxes": {
+        "card": {
+          "plate": "104px",
+          "box": "96px",
+          "fallback": "static PNG at 1x"
+        },
+        "detailHero": {
+          "plate": "216px",
+          "box": "192px"
+        },
+        "evolution": {
+          "slot": "96px",
+          "box": "96px"
+        }
+      },
+      "reducedMotion": "static PNG before animated showdown GIF"
+    },
+    "statChartColors": {
+      "note": "Hardcoded constants in StatChart.tsx, not tokens; shown alongside a text table",
+      "gte120": "#2e9e5b",
+      "gte90": "#7cb342",
+      "gte60": "#f2b01e",
+      "lt60": "#e8743b"
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": ".button--primary",
+      "description": "주 버튼: 헤더 검색, 즐겨찾기 빈 상태의 도감으로 이동.",
+      "html": "<button class=\"ds-btn-primary\">검색</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 16px;border:1px solid var(--color-primary,#d1300a);border-radius:8px;background:var(--color-primary,#d1300a);color:#fff;font-weight:600;cursor:pointer}.ds-btn-primary:hover{border-color:var(--color-primary-hover,#b42a0a);background:var(--color-primary-hover,#b42a0a)}.ds-btn-primary:focus-visible{outline:2px solid var(--color-focus,#2563eb);outline-offset:2px}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": ".button",
+      "description": "보조 버튼: 다시 시도, 검색어·필터 초기화.",
+      "html": "<button class=\"ds-btn\">다시 시도</button>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 16px;border:1px solid var(--color-border-strong,#c8d0d8);border-radius:8px;background:var(--color-surface,#fff);color:var(--color-text,#1f2328);font-weight:600;cursor:pointer}.ds-btn:hover{border-color:var(--color-text-muted,#57606a)}.ds-btn:focus-visible{outline:2px solid var(--color-focus,#2563eb);outline-offset:2px}"
+    },
+    {
+      "name": "Header Search",
+      "kind": "input",
+      "refersTo": "HeaderSearch / SearchForm",
+      "description": "상단 바 검색: 320px 입력(돋보기 아이콘) + 빨간 검색 버튼. 제출 시 URL q.",
+      "html": "<form class=\"ds-search\" role=\"search\"><span class=\"ds-search__field\"><span class=\"ds-search__icon\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"6.5\"/><path d=\"m20 20-4.4-4.4\"/></svg></span><input class=\"ds-search__input\" type=\"search\" placeholder=\"포켓몬 이름 또는 도감 번호\" aria-label=\"포켓몬 검색\"></span><button class=\"ds-search__btn\" type=\"submit\">검색</button></form>",
+      "css": ".ds-search{display:flex;gap:8px}.ds-search__field{position:relative;display:flex;align-items:center;width:320px}.ds-search__icon{position:absolute;left:12px;display:flex;color:var(--color-text-muted,#57606a);pointer-events:none}.ds-search__input{width:100%;height:40px;padding:0 72px 0 38px;border:1px solid var(--color-border-strong,#c8d0d8);border-radius:8px;background:var(--color-surface,#fff);color:var(--color-text,#1f2328);font:inherit;font-size:14px}.ds-search__input::placeholder{color:var(--color-text-muted,#57606a)}.ds-search__input:hover{border-color:var(--color-text-muted,#57606a)}.ds-search__input:focus-visible{border-color:var(--color-focus,#2563eb);outline:2px solid var(--color-focus,#2563eb);outline-offset:-1px}.ds-search__btn{min-height:40px;padding:0 16px;border:1px solid var(--color-primary,#d1300a);border-radius:8px;background:var(--color-primary,#d1300a);color:#fff;font:inherit;font-weight:600;cursor:pointer}.ds-search__btn:hover{border-color:var(--color-primary-hover,#b42a0a);background:var(--color-primary-hover,#b42a0a)}.ds-search__btn:focus-visible{outline:2px solid var(--color-focus,#2563eb);outline-offset:2px}"
+    },
+    {
+      "name": "Top Navigation Tabs",
+      "kind": "nav",
+      "refersTo": "RootLayout .app-nav",
+      "description": "상단 바 탭: 현재 위치(상세 포함)는 옅은 빨강 면 + 진한 빨강 글자.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"주요 메뉴\"><a class=\"ds-nav__a is-active\" href=\"#\" aria-current=\"page\">포켓몬 도감</a><a class=\"ds-nav__a\" href=\"#\">즐겨찾기</a></nav>",
+      "css": ".ds-nav{display:flex;gap:4px}.ds-nav__a{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:8px;color:var(--color-text-muted,#57606a);font-size:15px;font-weight:600;text-decoration:none}.ds-nav__a:hover{background:var(--color-surface-muted,#f6f8fa);color:var(--color-text,#1f2328)}.ds-nav__a.is-active{background:var(--color-primary-soft,#fdece8);color:var(--color-primary-ink,#b42a0a)}.ds-nav__a:focus-visible{outline:2px solid var(--color-focus,#2563eb);outline-offset:2px}"
+    },
+    {
+      "name": "Generation Sidebar Item",
+      "kind": "nav",
+      "refersTo": "GenerationNav",
+      "description": "세대 사이드바 항목(최소 44px): 이름 + 지방, 오른쪽 수. 선택은 aria-pressed + 옅은 빨강 면 + 굵게.",
+      "html": "<div class=\"ds-gens\"><button class=\"ds-gen\" aria-pressed=\"true\"><span>1세대 <span class=\"ds-gen__region\">관동지방</span></span><span class=\"ds-gen__count\">151</span></button><button class=\"ds-gen\" aria-pressed=\"false\"><span>2세대 <span class=\"ds-gen__region\">성도지방</span></span><span class=\"ds-gen__count\">100</span></button></div>",
+      "css": ".ds-gens{display:flex;flex-direction:column;gap:2px;width:248px}.ds-gen{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:8px 12px;border:0;border-radius:8px;background:transparent;color:var(--color-text,#1f2328);font:inherit;font-size:15px;text-align:left;cursor:pointer}.ds-gen:hover{background:var(--color-surface-muted,#f6f8fa)}.ds-gen[aria-pressed=true]{background:var(--color-primary-soft,#fdece8);color:var(--color-primary-ink,#b42a0a);font-weight:700}.ds-gen__region,.ds-gen__count{color:var(--color-text-muted,#57606a);font-size:13px;font-weight:400}.ds-gen__count{font-variant-numeric:tabular-nums}.ds-gen[aria-pressed=true] .ds-gen__region,.ds-gen[aria-pressed=true] .ds-gen__count{color:var(--color-primary-ink,#b42a0a)}.ds-gen:focus-visible{outline:2px solid var(--color-focus,#2563eb);outline-offset:2px}"
+    },
+    {
+      "name": "Type Filter Chip",
+      "kind": "chip",
+      "refersTo": "TypeFilter",
+      "description": "알약형 필터 칩. 선택은 잉크 채움 + 흰 글자 + aria-pressed (색 외 구분).",
+      "html": "<div class=\"ds-chips\" role=\"group\" aria-label=\"타입 필터\"><button class=\"ds-chip\" aria-pressed=\"false\">전체 타입</button><button class=\"ds-chip\" aria-pressed=\"true\">불꽃</button><button class=\"ds-chip\" aria-pressed=\"false\">물</button></div>",
+      "css": ".ds-chips{display:flex;flex-wrap:wrap;gap:6px}.ds-chip{display:inline-flex;align-items:center;min-height:32px;padding:0 12px;border:1px solid var(--color-border-strong,#c8d0d8);border-radius:999px;background:var(--color-surface,#fff);color:var(--color-text,#1f2328);font:inherit;font-size:13px;cursor:pointer}.ds-chip:hover{border-color:var(--color-text-muted,#57606a)}.ds-chip[aria-pressed=true]{border-color:var(--color-text,#1f2328);background:var(--color-text,#1f2328);color:#fff;font-weight:600}.ds-chip:focus-visible{outline:2px solid var(--color-focus,#2563eb);outline-offset:2px}"
+    },
+    {
+      "name": "Type Badge",
+      "kind": "chip",
+      "refersTo": "TypeBadge (shared/ui)",
+      "description": "옅은 타입 색 바탕 + 잉크 글자, 4px 모서리. sm 12px(카드) / md 13px(상세).",
+      "html": "<span class=\"ds-badge ds-badge--fire\">불꽃</span> <span class=\"ds-badge ds-badge--dragon\">드래곤</span> <span class=\"ds-badge ds-badge--sm ds-badge--electric\">전기</span>",
+      "css": ".ds-badge{display:inline-flex;align-items:center;padding:2px 10px;border-radius:4px;background:var(--type-bg);color:var(--color-text,#1f2328);font-size:13px;font-weight:600;line-height:1.4;white-space:nowrap}.ds-badge--sm{padding:1px 8px;font-size:12px}.ds-badge--fire{--type-bg:var(--t-fire,#fbcaa3)}.ds-badge--dragon{--type-bg:var(--t-dragon,#c9c3f6)}.ds-badge--electric{--type-bg:var(--t-electric,#f9e391)}"
+    },
+    {
+      "name": "Pokemon Card",
+      "kind": "card",
+      "refersTo": "PokemonCard",
+      "description": "흰 카드(12px 모서리, 1px 선): 번호, 104px 회색 원판 위 정수배 스프라이트, 이름, 배지, 오른쪽 위 44px 별. hover 시 shadow-raise.",
+      "html": "<article class=\"ds-card\"><a class=\"ds-card__link\" href=\"#\"><span class=\"ds-card__num\">#0025</span><span class=\"ds-card__plate\" aria-hidden=\"true\"><span class=\"ds-card__ph\"></span></span><span class=\"ds-card__name\">피카츄</span><span class=\"ds-card__types\"><span class=\"ds-card__badge\">전기</span></span></a><button class=\"ds-card__fav\" aria-pressed=\"false\" aria-label=\"#0025 즐겨찾기 추가\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m12 3.6 2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z\"/></svg></button></article>",
+      "css": ".ds-card{position:relative;width:180px;border:1px solid var(--color-border,#e3e6ea);border-radius:12px;background:var(--color-surface,#fff);transition:border-color 150ms ease-out,box-shadow 200ms cubic-bezier(0.16,1,0.3,1)}.ds-card:hover{border-color:var(--color-border-strong,#c8d0d8);box-shadow:var(--shadow-raise,0 6px 16px -8px rgb(31 35 40 / 22%))}.ds-card:focus-within{border-color:var(--color-focus,#2563eb)}.ds-card__link{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 12px;border-radius:inherit;color:inherit;text-decoration:none}.ds-card__link:focus-visible{outline:2px solid var(--color-focus,#2563eb);outline-offset:2px}.ds-card__num{align-self:flex-start;color:var(--color-text-muted,#57606a);font-size:12px;font-weight:600;line-height:20px;font-variant-numeric:tabular-nums}.ds-card__plate{display:grid;place-items:center;width:104px;height:104px;border-radius:50%;background:var(--color-plate,#eef1f4)}.ds-card__ph{width:40px;height:40px;border:3px solid var(--color-border-strong,#c8d0d8);border-radius:50%}.ds-card__name{margin-top:4px;font-size:16px;font-weight:700}.ds-card__types{display:flex;gap:4px}.ds-card__badge{padding:1px 8px;border-radius:4px;background:var(--t-electric,#f9e391);font-size:12px;font-weight:600}.ds-card__fav{position:absolute;top:4px;right:4px;display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;border-radius:50%;background:transparent;color:var(--color-text-muted,#57606a);cursor:pointer;transition:color 120ms ease-out,background-color 120ms ease-out}.ds-card__fav:hover{background:var(--color-surface-muted,#f6f8fa);color:var(--color-text,#1f2328)}.ds-card__fav[aria-pressed=true]{color:var(--color-primary,#d1300a)}.ds-card__fav[aria-pressed=true] svg{fill:currentColor}@media (prefers-reduced-motion:reduce){.ds-card,.ds-card__fav{transition:none}}"
+    },
+    {
+      "name": "Form Tabs",
+      "kind": "custom",
+      "refersTo": "FormTabs",
+      "description": "메가 폼 분할 버튼: 회색 바탕 안에서 선택 탭만 흰 면 + 약한 그림자.",
+      "html": "<div class=\"ds-seg\" role=\"group\" aria-label=\"폼 선택\"><button class=\"ds-seg__b\" aria-pressed=\"false\">기본</button><button class=\"ds-seg__b\" aria-pressed=\"true\">메가X</button><button class=\"ds-seg__b\" aria-pressed=\"false\">메가Y</button></div>",
+      "css": ".ds-seg{display:inline-flex;gap:2px;padding:3px;border-radius:10px;background:var(--color-surface-muted,#f6f8fa)}.ds-seg__b{min-height:40px;min-width:72px;padding:0 16px;border:0;border-radius:8px;background:transparent;color:var(--color-text-muted,#57606a);font:inherit;font-weight:600;cursor:pointer}.ds-seg__b:hover{color:var(--color-text,#1f2328)}.ds-seg__b[aria-pressed=true]{background:var(--color-surface,#fff);color:var(--color-text,#1f2328);box-shadow:0 1px 3px rgb(31 35 40 / 16%)}.ds-seg__b:focus-visible{outline:2px solid var(--color-focus,#2563eb);outline-offset:2px}"
+    },
+    {
+      "name": "Detail Section",
+      "kind": "card",
+      "refersTo": ".detail-section",
+      "description": "상세 섹션 틀: 흰 면, 1px 선, 12px 모서리, 24px 안쪽 여백, 18px/700 제목.",
+      "html": "<section class=\"ds-section\"><h2>종족값</h2><p>HP 78 · 공격 130 · 합계 634</p></section>",
+      "css": ".ds-section{padding:24px;border:1px solid var(--color-border,#e3e6ea);border-radius:12px;background:var(--color-surface,#fff)}.ds-section h2{margin:0 0 16px;font-size:18px;font-weight:700;line-height:1.25}.ds-section p{margin:0;font-size:14px;font-variant-numeric:tabular-nums}"
+    }
+  ],
+  "narrative": {
+    "northStar": "카테고리 표준 도감 사이트",
+    "overview": "흰 바탕, 1px 선, 절제된 빨강(주 버튼·저장된 별·선택 상태)으로 된 정보 탐색형 도감. 소개 배너·히어로 없이 첫 화면부터 목록을 보여준다. 도감다운 인상은 회색 원판 위 정수배 픽셀 스프라이트, 타입 배지, 도감 번호, 자체 몬스터볼형 마크가 만든다.",
+    "keyCharacteristics": [
+      "64px sticky 상단 바 + 248px 세대 사이드바 + auto-fill 카드 격자(최소 168px)",
+      "빨강은 주 버튼·저장된 별·선택 상태에만",
+      "타입 배지는 옅은 타입 색 바탕 + 잉크 글자(18종 AA)",
+      "평면 기본, 그림자는 hover 반응에만",
+      "스프라이트는 정수배로만 확대",
+      "Pretendard 단일 서체, 숫자는 tabular"
+    ],
+    "rules": [
+      {
+        "name": "Integer Sprite",
+        "body": "픽셀 아트는 fitPixelArt로 정수배로만 키우고, 상자보다 큰 원본은 줄이지 않고 다음 이미지로 넘긴다.",
+        "section": "shapes"
+      },
+      {
+        "name": "Selection Red",
+        "body": "옅은 빨강 면과 진한 빨강 글자는 선택·현재 위치에만 쓴다. 타입 칩 선택은 잉크 채움으로 구분한다.",
+        "section": "colors"
+      },
+      {
+        "name": "Flat At Rest",
+        "body": "카드와 섹션은 흰 면 + 1px 선으로 평면이고, shadow-raise는 hover 반응에만 나타난다.",
+        "section": "elevation"
+      },
+      {
+        "name": "Name Not Color",
+        "body": "타입은 항상 한국어 이름을 함께 표시한다. 색만으로 구분하지 않는다.",
+        "section": "colors"
+      }
+    ],
+    "dos": [
+      "Do 화면별 CSS에서 global.css의 토큰 변수만 참조한다.",
+      "Do 선택 상태를 aria-pressed와 색 외 표시(굵기·채움)로 함께 나타낸다.",
+      "Do 아이콘은 24 그리드·선 1.75 SVG로 그린다.",
+      "Do 움직임 줄이기 설정에서 전환을 끄고 정적 PNG를 먼저 쓴다."
+    ],
+    "donts": [
+      "Don't 승인되지 않은 메뉴(타입 상성·포켓몬 비교)를 상단 바에 노출하지 않는다.",
+      "Don't 유니코드 기호를 아이콘으로 쓰지 않는다.",
+      "Don't 스프라이트를 소수배로 키우거나 줄이지 않는다.",
+      "Don't 공식 로고·게임 UI를 복제하지 않는다."
+    ]
+  }
+}

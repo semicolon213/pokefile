@@ -1,5 +1,5 @@
 import { GENERATIONS, type Generation } from '@/shared/models'
-import { GENERATION_LABELS } from '../model/labels'
+import { GENERATION_LABELS } from '@/shared/ui'
 
 type Props = {
   selected: Generation | null

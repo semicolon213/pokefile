@@ -1,7 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MemoryRouter, useLocation } from 'react-router'
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router'
+import { RootLayout } from '@/app/layout/RootLayout'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { PokedexPage } from '@/features/pokedex/pages/PokedexPage'
 import type { PokemonSummary } from '@/shared/models'
@@ -31,7 +32,12 @@ function renderAt(path = '/') {
   return render(
     <QueryClientProvider client={client}>
       <MemoryRouter initialEntries={[path]}>
-        <PokedexPage />
+        {/* 검색창은 상단 바(RootLayout)에 있다 */}
+        <Routes>
+          <Route element={<RootLayout />}>
+            <Route index element={<PokedexPage />} />
+          </Route>
+        </Routes>
         <LocationProbe />
       </MemoryRouter>
     </QueryClientProvider>,
@@ -41,13 +47,19 @@ function renderAt(path = '/') {
 const names = () => screen.getAllByRole('article').map((a) => within(a).getByRole('link').querySelector('.pokemon-card__name')?.textContent)
 const search = () => decodeURIComponent(screen.getByTestId('location').textContent ?? '')
 
+// 결과 수 문구는 숫자를 <b>로 강조해 여러 노드로 나뉜다. 결과 수 영역의 전체 문구로 비교한다.
+const countMatcher = (text: string) => (_: string, el: Element | null) =>
+  !!el?.classList.contains('pokedex-count') && el.textContent === text
+const findCount = (text: string) => screen.findByText(countMatcher(text))
+const getCount = (text: string) => screen.getByText(countMatcher(text))
+
 describe('PokedexPage 필터·정렬·URL 동기화 (TASK-004)', () => {
   afterEach(() => vi.unstubAllGlobals())
 
   it('URL 쿼리로 필터·정렬 상태를 복원한다', async () => {
     stubIndex(BASE)
     renderAt('/?type=fire&gen=1&sort=name')
-    expect(await screen.findByText('검색 결과 2마리')).toBeInTheDocument()
+    expect(await findCount('검색 결과 2마리')).toBeInTheDocument()
     expect(names()).toEqual(['리자몽', '파이리'])
     expect(screen.getByRole('button', { name: '불꽃' })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByRole('button', { name: /1세대/ })).toHaveAttribute('aria-pressed', 'true')
@@ -58,7 +70,7 @@ describe('PokedexPage 필터·정렬·URL 동기화 (TASK-004)', () => {
     stubIndex(BASE)
     const user = userEvent.setup()
     renderAt()
-    await screen.findByText('전체 5마리')
+    await findCount('5마리의 포켓몬')
     const nav = screen.getByRole('navigation', { name: '세대별 보기' })
     expect(within(nav).getByRole('button', { name: /전체\s*5/ })).toHaveAttribute('aria-pressed', 'true')
     await user.click(within(nav).getByRole('button', { name: /2세대.*성도지방.*1/ }))
@@ -70,20 +82,20 @@ describe('PokedexPage 필터·정렬·URL 동기화 (TASK-004)', () => {
     stubIndex(BASE)
     const user = userEvent.setup()
     renderAt()
-    await screen.findByText('전체 5마리')
+    await findCount('5마리의 포켓몬')
     await user.click(screen.getByRole('button', { name: '비행' }))
     expect(search()).toBe('?type=flying')
     expect(names()).toEqual(['리자몽'])
     await user.click(screen.getByRole('button', { name: '비행' }))
     expect(search()).toBe('')
-    expect(screen.getByText('전체 5마리')).toBeInTheDocument()
+    expect(getCount('5마리의 포켓몬')).toBeInTheDocument()
   })
 
   it('검색어는 제출할 때 URL에 반영되고 다른 필터와 AND로 조합된다', async () => {
     stubIndex(BASE)
     const user = userEvent.setup()
     renderAt('/?type=fire')
-    await screen.findByText('검색 결과 3마리')
+    await findCount('검색 결과 3마리')
     await user.type(screen.getByRole('searchbox', { name: '포켓몬 검색' }), '리{Enter}')
     expect(search()).toBe('?q=리&type=fire')
     expect(names()).toEqual(['파이리', '리자몽'])
@@ -93,7 +105,7 @@ describe('PokedexPage 필터·정렬·URL 동기화 (TASK-004)', () => {
     stubIndex(BASE)
     const user = userEvent.setup()
     renderAt()
-    await screen.findByText('전체 5마리')
+    await findCount('5마리의 포켓몬')
     await user.selectOptions(screen.getByRole('combobox', { name: '정렬' }), 'name')
     expect(search()).toBe('?sort=name')
     expect(names()).toEqual(['님피아', '리자몽', '브케인', '파이리', '피카츄'])
@@ -106,7 +118,7 @@ describe('PokedexPage 필터·정렬·URL 동기화 (TASK-004)', () => {
     expect(await screen.findByText('검색 결과가 없습니다. 검색어나 필터를 확인해 주세요.')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: '검색어·필터 초기화' }))
     expect(search()).toBe('')
-    expect(screen.getByText('전체 5마리')).toBeInTheDocument()
+    expect(getCount('5마리의 포켓몬')).toBeInTheDocument()
     expect(screen.getByRole('searchbox', { name: '포켓몬 검색' })).toHaveValue('')
   })
 })
@@ -148,7 +160,7 @@ describe('무한 스크롤 (FR-08)', () => {
     stubIndex(many)
     stubIntersectionObserver()
     renderAt()
-    await screen.findByText('전체 50마리')
+    await findCount('50마리의 포켓몬')
     expect(screen.getAllByRole('article')).toHaveLength(24)
     expect(screen.queryByRole('button', { name: /더 보기/ })).not.toBeInTheDocument()
 
@@ -164,7 +176,7 @@ describe('무한 스크롤 (FR-08)', () => {
     stubIntersectionObserver()
     const user = userEvent.setup()
     renderAt()
-    await screen.findByText('전체 50마리')
+    await findCount('50마리의 포켓몬')
     act(() => trigger?.())
     expect(screen.getAllByRole('article')).toHaveLength(48)
     await user.selectOptions(screen.getByRole('combobox', { name: '정렬' }), 'name')

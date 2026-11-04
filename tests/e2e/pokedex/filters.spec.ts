@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test'
 test.describe('도감 필터·정렬·무한 스크롤', () => {
   test('필터·정렬이 URL에 저장되고 새로고침 후에도 유지된다', async ({ page }) => {
     await page.goto('#/')
-    await expect(page.getByText('전체 721마리')).toBeVisible()
+    await expect(page.getByText('721마리의 포켓몬')).toBeVisible()
 
     await page.getByRole('navigation', { name: '세대별 보기' }).getByRole('button', { name: /6세대/ }).click()
     await page.getByRole('button', { name: '페어리' }).click()

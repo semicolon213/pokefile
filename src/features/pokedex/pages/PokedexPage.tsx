@@ -1,8 +1,7 @@
 import { useMemo } from 'react'
-import { ErrorState } from '@/shared/ui'
+import { ErrorState, useDocumentTitle } from '@/shared/ui'
 import { GenerationNav } from '../components/GenerationNav'
 import { PokemonGrid } from '../components/PokemonGrid'
-import { SearchForm } from '../components/SearchForm'
 import { SortSelect } from '../components/SortSelect'
 import { TypeFilter } from '../components/TypeFilter'
 import { usePokedexFilters } from '../hooks/usePokedexFilters'
@@ -10,10 +9,11 @@ import { useSearchIndex } from '../hooks/useSearchIndex'
 import { applyFilters, countByGeneration, isDefaultFilters, toSearchParams } from '../model/filters'
 import './PokedexPage.css'
 
-const SKELETON_COUNT = 8
+const SKELETON_COUNT = 12
 
-// UI-01 메인/검색·목록 — 검색(TASK-003), 필터·정렬·무한 스크롤·URL 동기화(TASK-004)
+// UI-01 메인/검색·목록 — 검색어는 상단 바(HeaderSearch)에서, 필터·정렬·무한 스크롤은 이 화면에서 (TASK-003·004)
 export function PokedexPage() {
+  useDocumentTitle('포켓몬 도감')
   const index = useSearchIndex()
   const { filters, update, reset } = usePokedexFilters()
   const all = index.data
@@ -24,38 +24,20 @@ export function PokedexPage() {
   const listKey = toSearchParams(filters).toString()
 
   return (
-    <section className="pokedex" aria-labelledby="pokedex-title">
-      <header className="pokedex-hero">
-        <div className="pokedex-hero__text">
-          <p className="pokedex-hero__eyebrow">PokeFile Pokédex</p>
-          <h1 id="pokedex-title" className="pokedex-hero__title">
-            포켓몬 도감
-          </h1>
-          <p className="pokedex-hero__lead">
-            이름이나 도감 번호로 찾고, 종족값·진화·실전 세팅까지 한 번에 확인하세요.
-          </p>
-          {/* 뒤로 가기 등으로 URL의 검색어가 바뀌면 입력창도 맞춘다 */}
-          <SearchForm
-            key={filters.q}
-            initialQuery={filters.q}
-            disabled={!index.isSuccess}
-            onSearch={(q) => update({ q })}
-          />
-        </div>
-        <div className="pokedex-hero__ball" aria-hidden="true" />
-      </header>
+    <div className="pokedex">
+      <h1 className="visually-hidden">포켓몬 도감</h1>
 
       {index.isPending && (
-        <div className="pokedex-results">
-          <p role="status" aria-live="polite" className="pokedex-results__status">
+        <div className="pokedex-loading">
+          <p role="status" aria-live="polite" className="pokedex-status">
             포켓몬을 불러오는 중입니다.
           </p>
           <ul className="pokedex-grid" aria-hidden="true">
             {Array.from({ length: SKELETON_COUNT }, (_, i) => (
               <li key={i} className="pokedex-card-skeleton">
-                <div className="pokedex-card-skeleton__image" />
-                <div className="pokedex-card-skeleton__line pokedex-card-skeleton__line--short" />
+                <div className="pokedex-card-skeleton__plate" />
                 <div className="pokedex-card-skeleton__line" />
+                <div className="pokedex-card-skeleton__line pokedex-card-skeleton__line--short" />
               </li>
             ))}
           </ul>
@@ -63,16 +45,16 @@ export function PokedexPage() {
       )}
 
       {index.isError && (
-        <div className="pokedex-results__error">
+        <div className="pokedex-error">
           <ErrorState message="포켓몬 정보를 불러오지 못했습니다." />
-          <button type="button" className="pokedex-button" onClick={() => void index.refetch()}>
+          <button type="button" className="button" onClick={() => void index.refetch()}>
             다시 시도
           </button>
         </div>
       )}
 
       {all && genCounts && (
-        <div className="pokedex-body">
+        <div className="pokedex-layout">
           <GenerationNav
             selected={filters.gen}
             counts={genCounts}
@@ -80,13 +62,17 @@ export function PokedexPage() {
             onSelect={(gen) => update({ gen })}
           />
 
-          <div className="pokedex-results">
+          <section className="pokedex-results" aria-labelledby="pokedex-results-title">
+            <h2 id="pokedex-results-title" className="visually-hidden">
+              포켓몬 목록
+            </h2>
             <TypeFilter selected={filters.type} onSelect={(type) => update({ type })} />
 
-            <div className="pokedex-results__head">
-              <h2 className="pokedex-section-title">포켓몬 목록</h2>
-              <p role="status" aria-live="polite" className="pokedex-results__count">
-                {filtered ? `검색 결과 ${results.length}마리` : `전체 ${results.length}마리`}
+            <div className="pokedex-toolbar">
+              <p role="status" aria-live="polite" className="pokedex-count">
+                {filtered ? '검색 결과 ' : ''}
+                <b className="tabular">{results.length}</b>
+                {filtered ? '마리' : '마리의 포켓몬'}
               </p>
               <SortSelect value={filters.sort} onChange={(sort) => update({ sort })} />
             </div>
@@ -94,16 +80,16 @@ export function PokedexPage() {
             {results.length > 0 ? (
               <PokemonGrid key={listKey} pokemon={results} />
             ) : (
-              <div className="pokedex-results__empty">
+              <div className="pokedex-empty">
                 <p>검색 결과가 없습니다. 검색어나 필터를 확인해 주세요.</p>
-                <button type="button" className="pokedex-button" onClick={reset}>
+                <button type="button" className="button" onClick={reset}>
                   검색어·필터 초기화
                 </button>
               </div>
             )}
-          </div>
+          </section>
         </div>
       )}
-    </section>
+    </div>
   )
 }

@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { SearchIcon } from '@/shared/ui'
 
 type Props = {
   initialQuery: string
@@ -21,25 +22,29 @@ export function SearchForm({ initialQuery, disabled, onSearch }: Props) {
   }
 
   return (
-    <form className="pokedex-search" role="search" onSubmit={submit}>
+    <form className="search-form" role="search" onSubmit={submit}>
       <label htmlFor="pokedex-search-input" className="visually-hidden">
         포켓몬 검색
       </label>
-      <input
-        id="pokedex-search-input"
-        className="pokedex-search__input"
-        type="search"
-        placeholder="포켓몬 이름 또는 도감 번호를 입력하세요"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        disabled={disabled}
-      />
-      {value && (
-        <button type="button" className="pokedex-search__reset" onClick={reset} disabled={disabled}>
-          초기화
-        </button>
-      )}
-      <button type="submit" className="pokedex-search__button" disabled={disabled}>
+      <span className="search-form__field">
+        <SearchIcon size={18} className="search-form__icon" />
+        <input
+          id="pokedex-search-input"
+          className="search-form__input"
+          type="search"
+          placeholder="포켓몬 이름 또는 도감 번호"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          disabled={disabled}
+          autoComplete="off"
+        />
+        {value && (
+          <button type="button" className="search-form__reset" onClick={reset} disabled={disabled}>
+            초기화
+          </button>
+        )}
+      </span>
+      <button type="submit" className="button button--primary" disabled={disabled}>
         검색
       </button>
     </form>
