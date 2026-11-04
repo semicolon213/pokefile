@@ -1,7 +1,8 @@
 // DESIGN.md §7.1 공통 모델 (ADR-008·009 확정) — 변경 시 영향 담당자 전원 합의 필요
+import { SCOPE } from '@/shared/config/scope'
 
-/** 지원 범위: 전국도감 #1~#721 (1~6세대, ADR-008) */
-export const MAX_POKEMON_ID = 721
+/** 지원 범위의 마지막 전국도감 번호. 값은 shared/config/scope.json (ADR-015) */
+export const MAX_POKEMON_ID = SCOPE.maxPokemonId
 
 /** 전국도감 번호 = PokéAPI species id = 기본 폼 pokemon id */
 export type PokemonId = number
@@ -26,16 +27,9 @@ export function parseFormKey(value: string | null | undefined): FormKey {
   return (FORM_KEYS as readonly string[]).includes(value ?? '') ? (value as FormKey) : 'default'
 }
 
-/** PokéAPI generation 식별자 (지원 범위 1~6세대) */
-export const GENERATIONS = [
-  'generation-i',
-  'generation-ii',
-  'generation-iii',
-  'generation-iv',
-  'generation-v',
-  'generation-vi',
-] as const
-export type Generation = (typeof GENERATIONS)[number]
+/** PokéAPI generation 식별자 (예: 'generation-i'). 지원 세대 목록은 shared/config/scope.json */
+export type Generation = string
+export const GENERATIONS: readonly Generation[] = SCOPE.generations.map((g) => g.id)
 
 /** PokéAPI 타입 식별자. 6세대 기준이므로 현재 타입을 그대로 사용한다 (ADR-008) */
 export const POKEMON_TYPES = [

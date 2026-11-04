@@ -1,3 +1,4 @@
+import { SCOPE } from '@/shared/config/scope'
 import type { Generation, PokemonType } from '@/shared/models'
 
 // 화면 표기는 한국어 (DESIGN.md §3.4). API 식별자는 그대로 두고 표시할 때만 변환한다. 모든 feature가 이 표 하나를 쓴다.
@@ -22,11 +23,7 @@ export const TYPE_LABELS: Record<PokemonType, string> = {
   fairy: '페어리',
 }
 
-export const GENERATION_LABELS: Record<Generation, { name: string; region: string }> = {
-  'generation-i': { name: '1세대', region: '관동지방' },
-  'generation-ii': { name: '2세대', region: '성도지방' },
-  'generation-iii': { name: '3세대', region: '호연지방' },
-  'generation-iv': { name: '4세대', region: '신오지방' },
-  'generation-v': { name: '5세대', region: '하나지방' },
-  'generation-vi': { name: '6세대', region: '칼로스지방' },
-}
+/** 세대 표기(1세대·관동지방 …)는 지원 범위 설정(shared/config/scope.json)에서 만든다 */
+export const GENERATION_LABELS: Record<Generation, { name: string; region: string }> = Object.fromEntries(
+  SCOPE.generations.map((g) => [g.id, { name: g.name, region: g.region }]),
+)
