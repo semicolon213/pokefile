@@ -90,3 +90,15 @@ export function MoonIcon(props: IconProps) {
     </Icon>
   )
 }
+
+/** 두 값 바꾸기 (포켓몬 비교 A↔B) */
+export function SwapIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M7 7h12" />
+      <path d="m15 3 4 4-4 4" />
+      <path d="M17 17H5" />
+      <path d="m9 13-4 4 4 4" />
+    </Icon>
+  )
+}
