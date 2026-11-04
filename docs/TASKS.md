@@ -18,7 +18,7 @@
 | TASK-011 | 성윤우 | [난이도 하] 이로치 이미지 전환·울음소리 재생 (상세 이미지 영역에 공개 컴포넌트로 제공) | FR-23 | TASK-013 | READY |
 | TASK-012 | 김형균 | 외부 API 계약 검증 테스트 (`scripts/verify-api/`) | DR-01~05 | — | SELF_TESTED |
 | TASK-013 | 김형균 | 지원 범위 설정 일원화: 세대·최대 번호·메가 판별·게임 버전·도감 설명 버전·Smogon 세대를 `src/shared/config/scope.json` 한 곳으로 (세대 확장 대비, ADR-015) | DR-01~08 | — | SELF_TESTED |
-| TASK-014 | 김형균 | [난이도 중] 내 게임 선택: 게임 버전 선택·저장(URL+localStorage), 출현 장소 필터 연동 | FR-26 | TASK-013 | BACKLOG |
+| TASK-014 | 김형균 | [난이도 중] 내 게임 선택: 게임 버전 선택·저장(URL+localStorage), 출현 장소 필터 연동 | FR-26 | TASK-013 | SELF_TESTED |
 | TASK-015 | 임지섭 | [난이도 상] 기술 표: 게임 버전별 레벨업·기술머신 기술, 내 게임 연동 | FR-27 | TASK-014, TASK-023, OQ-23 | BACKLOG |
 | TASK-016 | 임지섭 | [난이도 중] 진화 조건 상세(돌·교환·친밀도·시간대·장소) | FR-28 | — | BACKLOG |
 | TASK-017 | 성윤우 | [난이도 중] 도감 완성 체크리스트·세대별 완성률 (localStorage, 즐겨찾기 구조 재사용) | FR-29 | TASK-013 | BACKLOG |

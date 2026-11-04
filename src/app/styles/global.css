@@ -243,8 +243,41 @@ img {
   color: var(--color-primary-ink);
 }
 
-.app-header__search {
+.app-header__tools {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
   margin-left: auto;
+}
+
+/* 내 게임 선택 (FR-26) */
+.my-game {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.my-game__label {
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.my-game select {
+  height: 40px;
+  max-width: 160px;
+  padding: 0 var(--space-6) 0 var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.my-game select:hover {
+  border-color: var(--color-text-muted);
 }
 
 .app-main {
@@ -254,7 +287,9 @@ img {
 }
 
 @media (max-width: 767px) {
+  /* 모바일은 헤더가 여러 줄이라 고정하지 않는다 (화면 높이 확보) */
   .app-header {
+    position: static;
     flex-wrap: wrap;
     gap: var(--space-2) var(--space-3);
     height: auto;
@@ -265,9 +300,19 @@ img {
     padding: 0 var(--space-3);
   }
 
+  .app-header__tools {
+    flex-basis: 100%;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-left: 0;
+  }
+
   .app-header__search {
     flex-basis: 100%;
-    margin-left: 0;
+  }
+
+  .my-game select {
+    max-width: none;
   }
 
   .app-main {
