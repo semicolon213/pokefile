@@ -91,6 +91,10 @@ gen6 세팅 포맷: `ou, uu, ru, nu, pu, zu, lc, ubers, monotype, doublesou, vgc
 | 한국어 이름 | 지방 도감 `names`에 ko 없음 → 화면 표기는 `scope.json`에 둔다(OQ-27) |
 | 범위 | 모든 도감의 종이 #1~#1025 안 |
 
+### 5.4 타입 상성 (2026-11-04, TASK-021)
+
+`/type/{name}`의 `damage_relations`(double/half/no_damage_to)로 18×18 상성표를 만든다. 1배가 아닌 칸 120개. 6세대 이후 바뀐 상성이 없어 현재 값을 그대로 쓴다(과거 값은 `past_damage_relations`, 사용 안 함). `verify-api`의 "타입 상성표가 damage_relations와 일치" 테스트로 저장된 표를 확인한다.
+
 ## 6. 보안
 프론트엔드 빌드 결과물은 공개되므로 비밀 키/토큰을 저장하지 않는다.
 API 출처 변경이나 프록시 서버 추가는 팀 승인 및 SRS/설계 변경을 요구한다.

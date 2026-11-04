@@ -3,6 +3,7 @@ import { battleToolsRoutes } from '@/features/battle-tools'
 import { favoritesRoutes } from '@/features/favorites'
 import { pokedexRoutes } from '@/features/pokedex'
 import { pokemonDetailRoutes } from '@/features/pokemon-detail'
+import { typeChartRoutes } from '@/features/type-chart'
 import { NotFoundPage } from '../layout/NotFoundPage'
 import { RootLayout } from '../layout/RootLayout'
 
@@ -17,6 +18,7 @@ export const routes: RouteObject[] = [
       ...pokemonDetailRoutes,
       ...favoritesRoutes,
       ...battleToolsRoutes,
+      ...typeChartRoutes,
       { path: '*', element: <NotFoundPage /> },
     ],
   },
