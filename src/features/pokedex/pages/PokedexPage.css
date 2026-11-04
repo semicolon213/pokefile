@@ -114,7 +114,7 @@
 .type-filter__chip[aria-pressed='true'] {
   border-color: var(--color-text);
   background: var(--color-text);
-  color: #fff;
+  color: var(--color-bg);
   font-weight: 600;
 }
 
@@ -127,7 +127,7 @@
 .type-filter__chip--type[aria-pressed='true'] {
   border-color: var(--type-strong);
   background: var(--type-bg);
-  color: var(--color-text);
+  color: var(--color-on-type);
   font-weight: 700;
   box-shadow: inset 0 0 0 1px var(--type-strong);
 }

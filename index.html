@@ -5,6 +5,15 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#ffffff" />
+    <!-- 화면 테마(FR-32): 렌더 전에 저장된 선택을 적용해 첫 화면이 깜빡이지 않게 한다. 키·값은 src/shared/state/theme.ts와 같다 -->
+    <script>
+      try {
+        var t = localStorage.getItem('pokefile:theme')
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
+        var dark = t === 'dark' || (t !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches)
+        if (dark) document.querySelector('meta[name="theme-color"]').content = '#181b20'
+      } catch (e) {}
+    </script>
     <!-- 본문 글꼴 Pretendard (SIL OFL 1.1), 한글 동적 서브셋 -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link
