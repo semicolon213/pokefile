@@ -1,7 +1,7 @@
 # 작업 백로그
 
 > 담당은 `OWNERSHIP.md`의 확정 배정(ADR-004)을 따른다.
-> 상태: QA_PASS / READY / IN_PROGRESS / MERGED / QA_REVIEW / QA_PASS / HUMAN_APPROVED / MERGED / BLOCKED / DONE (`WORKFLOW.md` §2)
+> 상태: BACKLOG / READY / IN_PROGRESS / SELF_TESTED / QA_REVIEW / QA_PASS / HUMAN_APPROVED / MERGED / BLOCKED / DONE (`WORKFLOW.md` §2)
 
 | TASK | 담당 | 범위 | 관련 SRS | 의존성 | 상태 |
 |---|---|---|---|---|---|
@@ -15,18 +15,22 @@
 | TASK-008 | 성윤우 | localStorage 즐겨찾기 (ADR-012) | FR-19~22 | TASK-002 | MERGED |
 | TASK-009 | 팀 합의 | 반응형·로딩·오류·캐싱 통합 | NFR-01~04,07~08 | 기능 구현 | BACKLOG |
 | TASK-010 | 팀 합의 | 통합 테스트·배포 URL 확인 | NFR-05~06 | TASK-003~009 | BACKLOG |
-| TASK-011 | 성윤우 | 이로치/울음소리·타입 상성·두 포켓몬 능력치 비교 (ADR-015) | FR-23~25 | TASK-013 | READY |
+| TASK-011 | 성윤우 | [난이도 하] 이로치 이미지 전환·울음소리 재생 (상세 이미지 영역에 공개 컴포넌트로 제공) | FR-23 | TASK-013 | READY |
 | TASK-012 | 김형균 | 외부 API 계약 검증 테스트 (`scripts/verify-api/`) | DR-01~05 | — | SELF_TESTED |
 | TASK-013 | 김형균 | 지원 범위 설정 일원화: 세대·최대 번호·메가 판별·게임 버전·도감 설명 버전·Smogon 세대를 `src/shared/config/scope.json` 한 곳으로 (세대 확장 대비, ADR-015) | DR-01~08 | — | SELF_TESTED |
-| TASK-014 | 김형균(제안) | 내 게임 선택: 게임 버전 선택·저장(URL+localStorage), 출현 장소 필터 연동 | FR-26 | TASK-013 | BACKLOG |
-| TASK-015 | 임지섭(제안) | 기술 표: 게임 버전별 레벨업·기술머신 기술, 내 게임 연동 | FR-27 | TASK-014, OQ-23 | BACKLOG |
-| TASK-016 | 임지섭(제안) | 진화 조건 상세(돌·교환·친밀도·시간대·장소) | FR-28 | — | BACKLOG |
-| TASK-017 | 성윤우(제안) | 도감 완성 체크리스트·세대별 완성률 (localStorage, 즐겨찾기 구조 재사용) | FR-29 | TASK-013 | BACKLOG |
-| TASK-018 | 임지섭(제안) | 특성 한국어 설명 | FR-30 | — | BACKLOG |
-| TASK-019 | 김형균(제안) | 지방 도감 번호 표시·지방 도감 순 정렬 (검색 인덱스 확장) | FR-31 | TASK-013 | BACKLOG |
-| TASK-020 | 김형균(제안) | 다크 모드: 어두운 테마 토큰·전환·저장, 18종 타입 배지 AA | FR-32 | OQ-24 | BACKLOG |
+| TASK-014 | 김형균 | [난이도 중] 내 게임 선택: 게임 버전 선택·저장(URL+localStorage), 출현 장소 필터 연동 | FR-26 | TASK-013 | BACKLOG |
+| TASK-015 | 임지섭 | [난이도 상] 기술 표: 게임 버전별 레벨업·기술머신 기술, 내 게임 연동 | FR-27 | TASK-014, OQ-23 | BACKLOG |
+| TASK-016 | 임지섭 | [난이도 중] 진화 조건 상세(돌·교환·친밀도·시간대·장소) | FR-28 | — | BACKLOG |
+| TASK-017 | 성윤우 | [난이도 중] 도감 완성 체크리스트·세대별 완성률 (localStorage, 즐겨찾기 구조 재사용) | FR-29 | TASK-013 | BACKLOG |
+| TASK-018 | 임지섭 | [난이도 하] 특성 한국어 설명 | FR-30 | — | BACKLOG |
+| TASK-019 | 김형균 | [난이도 중] 지방 도감 번호 표시·지방 도감 순 정렬 (검색 인덱스 확장) | FR-31 | TASK-013 | BACKLOG |
+| TASK-020 | 김형균 | [난이도 중] 다크 모드: 어두운 테마 토큰·전환·저장, 18종 타입 배지 AA | FR-32 | OQ-24 | BACKLOG |
+| TASK-021 | 김형균 | [난이도 중] 타입 상성: 전체 상성표 화면 + 상세의 약점·반감·무효 섹션(공개 컴포넌트로 제공) | FR-24 | TASK-013 | BACKLOG |
+| TASK-022 | 김형균 | [난이도 상] 두 포켓몬 능력치 비교: 비교 화면(라우트 추가)·포켓몬 선택·종족값 나란히 비교 | FR-25 | TASK-013 | BACKLOG |
 
-> TASK-014~020의 담당은 기능 소유 영역 기준 제안이다(OQ-22에서 확정).
+> 선택 기능 담당·난이도 (2026-11-04 확정, OQ-22): 비중은 김형균 > 임지섭 >>> 성윤우.
+> 난이도 점수 하=1·중=2·상=3 기준 — 김형균 11(TASK-014·019·020·021·022), 임지섭 6(TASK-015·016·018), 성윤우 3(TASK-011·017).
+> 다른 담당자 화면에 붙는 기능(타입 상성 섹션, 이로치 전환)은 소유 feature의 공개 컴포넌트로 만들고, 상세 화면 연결부는 상세 담당(임지섭)이 확인한다.
 
 ### 상태 메모 (2026-11-04)
 - TASK-001~004: develop 반영(PR #1, 직접 push). QA는 구현과 같은 Claude가 수행해 교차 QA 미충족.
