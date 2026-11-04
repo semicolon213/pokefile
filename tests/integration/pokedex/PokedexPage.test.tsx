@@ -125,7 +125,7 @@ describe('PokedexPage 검색 (TASK-003)', () => {
     expect(charizard).toHaveAttribute('data-downscaled', 'true')
     const pikachu = imageOf(/피카츄/)
     load(pikachu, 46)
-    expect(pikachu.style.width).toBe('')
+    expect(pikachu.style.width).toBe('46px')
     expect(pikachu).toHaveAttribute('data-downscaled', 'false')
   })
 
