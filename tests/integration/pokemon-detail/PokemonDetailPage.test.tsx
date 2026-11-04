@@ -242,7 +242,50 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
   it('출현 데이터 없음과 요청 실패를 구분해 안내한다 (FR-18)', async () => {
     mockFetch()
     renderAt('/pokemon/6')
-    expect(await within(section('출현 정보')).findByText('6세대 이하 게임에서 야생 출현 정보가 없습니다.')).toBeInTheDocument()
+    expect(await within(section('출현 정보')).findByText('지원하는 게임에서 야생 출현 정보가 없습니다.')).toBeInTheDocument()
+  })
+
+  it('내 게임이 출현 장소 데이터가 없는 게임이면 만날 수 없다고 하지 않고 데이터 없음으로 안내한다 (QA D-014-02)', async () => {
+    localStorage.setItem('pokefile:my-game', 'scarlet')
+    mockFetch({
+      '/pokemon/6/encounters': () =>
+        Response.json([
+          {
+            location_area: { name: 'kalos-route-1-area', url: '' },
+            version_details: [{ version: res('x'), encounter_details: [{ min_level: 10, max_level: 12, method: res('walk') }] }],
+          },
+        ]),
+    })
+    const user = userEvent.setup()
+    renderAt('/pokemon/6')
+    const encounters = section('출현 정보')
+    expect(await within(encounters).findByText('이 게임의 출현 장소 데이터가 없습니다.')).toBeInTheDocument()
+    expect(within(encounters).queryByText(/야생에서 만날 수 없습니다/)).not.toBeInTheDocument()
+    // 다른 게임의 데이터는 여전히 펼쳐 볼 수 있다
+    await user.click(within(encounters).getByRole('button', { name: '모든 게임 보기' }))
+    expect(within(encounters).getByRole('region', { name: 'X 출현 장소' })).toBeInTheDocument()
+  })
+
+  it('출현 데이터가 전혀 없는 포켓몬도 내 게임이 데이터 없는 게임이면 데이터 없음으로 안내한다', async () => {
+    localStorage.setItem('pokefile:my-game', 'legends-arceus')
+    mockFetch()
+    renderAt('/pokemon/6')
+    expect(await within(section('출현 정보')).findByText('이 게임의 출현 장소 데이터가 없습니다.')).toBeInTheDocument()
+  })
+
+  it('데이터가 있는 게임에서 출현하지 않으면 그대로 만날 수 없다고 안내한다', async () => {
+    localStorage.setItem('pokefile:my-game', 'red')
+    mockFetch({
+      '/pokemon/6/encounters': () =>
+        Response.json([
+          {
+            location_area: { name: 'kalos-route-1-area', url: '' },
+            version_details: [{ version: res('x'), encounter_details: [{ min_level: 10, max_level: 12, method: res('walk') }] }],
+          },
+        ]),
+    })
+    renderAt('/pokemon/6')
+    expect(await within(section('출현 정보')).findByText('레드에서는 야생에서 만날 수 없습니다.')).toBeInTheDocument()
   })
 
   it('특성 이름 요청이 실패해도 나머지 상세는 유지하고 API 식별자를 표시한다 (NFR-07)', async () => {
@@ -269,7 +312,7 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
 
     encounterFails = false
     await user.click(within(encounters).getByRole('button', { name: '다시 시도' }))
-    expect(await within(encounters).findByText('6세대 이하 게임에서 야생 출현 정보가 없습니다.')).toBeInTheDocument()
+    expect(await within(encounters).findByText('지원하는 게임에서 야생 출현 정보가 없습니다.')).toBeInTheDocument()
   })
 
   it('기본 데이터가 모두 실패하면 상세 오류 화면과 재시도·목록 이동을 제공한다', async () => {
