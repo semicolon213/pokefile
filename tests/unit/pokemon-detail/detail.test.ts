@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { RawPokemon, RawSpecies } from '@/features/pokemon-detail/api/pokeapi'
 import { pickFlavorText, statTotal, toFormDetail, toSpeciesDetail } from '@/features/pokemon-detail/model/detail'
 import { availableForms, pokemonResourceName, resolveFormKey } from '@/features/pokemon-detail/model/forms'
+import type { PokemonForm } from '@/shared/models'
 
 const res = (name: string, url = '') => ({ name, url })
 const lang = (name: string) => res(name)
@@ -64,9 +65,10 @@ describe('도감 설명 버전 (OQ-17 제안값)', () => {
     ).toBe('입에서 불꽃을 토한다.')
   })
 
-  it('x가 없으면 omega-ruby를 쓰고, 6세대 ko 설명이 없으면 undefined', () => {
+  it('x가 없으면 omega-ruby를, 6세대 설명이 없으면 이후 게임(scope.json 순서)을 쓰고, 지원 버전에 ko 설명이 없으면 undefined', () => {
     expect(pickFlavorText([entry('x', 'en', 'en'), entry('omega-ruby', 'ko', '오루')])).toBe('오루')
-    expect(pickFlavorText([entry('sword', 'ko', '검')])).toBeUndefined()
+    expect(pickFlavorText([entry('shield', 'ko', '방패'), entry('sword', 'ko', '검')])).toBe('검')
+    expect(pickFlavorText([entry('scarlet', 'ko', '스칼렛')])).toBeUndefined()
   })
 })
 
@@ -98,12 +100,21 @@ describe('toSpeciesDetail (FR-12)', () => {
   })
 })
 
-describe('메가 폼 결정 (ADR-009·011)', () => {
-  const charizard = availableForms(['mega-x', 'mega-y'])
+describe('폼 결정 (ADR-011·016)', () => {
+  const form = (key: string, nameKo?: string): PokemonForm => ({
+    key, nameKo, nameEn: key, category: 'mega', types: ['fire'], battleOnly: true,
+  })
+  const charizard = availableForms([form('mega-x', '메가리자몽X'), form('mega-y', '메가리자몽Y'), form('gmax')])
+  const defaultOnly = availableForms([])
 
-  it('기본 폼이 항상 먼저 온다', () => {
-    expect(charizard).toEqual(['default', 'mega-x', 'mega-y'])
-    expect(availableForms([])).toEqual(['default'])
+  it('기본 폼이 항상 먼저 오고, 메가는 짧게, 한국어 이름이 없으면 영문으로 표기한다', () => {
+    expect(charizard).toEqual([
+      { key: 'default', label: '기본' },
+      { key: 'mega-x', label: '메가X' },
+      { key: 'mega-y', label: '메가Y' },
+      { key: 'gmax', label: 'gmax' },
+    ])
+    expect(defaultOnly).toEqual([{ key: 'default', label: '기본' }])
   })
 
   it.each([
@@ -111,7 +122,8 @@ describe('메가 폼 결정 (ADR-009·011)', () => {
     [null, charizard, 'default'],
     ['abc', charizard, 'default'],
     ['mega', charizard, 'default'],
-    ['mega-x', ['default'], 'default'],
+    ['gmax', charizard, 'gmax'],
+    ['mega-x', defaultOnly, 'default'],
   ] as const)('?form=%s → %s', (param, forms, expected) => {
     expect(resolveFormKey(param, forms)).toBe(expected)
   })

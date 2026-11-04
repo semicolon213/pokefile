@@ -16,7 +16,7 @@ const p = (id: number, nameKo: string, types: PokemonSummary['types'], generatio
   nameKo,
   types,
   generation,
-  megaForms: [],
+  forms: [],
 })
 
 const LIST = [
@@ -46,7 +46,7 @@ describe('parseFilters / toSearchParams', () => {
   })
 
   it('잘못된 값은 무시한다', () => {
-    expect(parseFilters(new URLSearchParams('type=shadow&gen=7&sort=weight'))).toEqual(DEFAULT_FILTERS)
+    expect(parseFilters(new URLSearchParams('type=shadow&gen=10&sort=weight'))).toEqual(DEFAULT_FILTERS)
     expect(parseFilters(new URLSearchParams('gen=0'))).toEqual(DEFAULT_FILTERS)
     expect(parseFilters(new URLSearchParams('gen=abc'))).toEqual(DEFAULT_FILTERS)
   })
@@ -115,6 +115,9 @@ describe('countByGeneration', () => {
       'generation-iv': 0,
       'generation-v': 0,
       'generation-vi': 1,
+      'generation-vii': 0,
+      'generation-viii': 0,
+      'generation-ix': 0,
     })
   })
 })

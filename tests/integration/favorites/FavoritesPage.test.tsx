@@ -8,11 +8,11 @@ import { favoritesStore } from '@/features/favorites/model/store'
 import type { PokemonSummary } from '@/shared/models'
 
 const pokemon: PokemonSummary[] = [
-  { id: 25, nameEn: 'pikachu', nameKo: '피카츄', types: ['electric'], generation: 'generation-i', megaForms: [] },
-  { id: 6, nameEn: 'charizard', nameKo: '리자몽', types: ['fire', 'flying'], generation: 'generation-i', megaForms: ['mega-x', 'mega-y'] },
+  { id: 25, nameEn: 'pikachu', nameKo: '피카츄', types: ['electric'], generation: 'generation-i', forms: [] },
+  { id: 6, nameEn: 'charizard', nameKo: '리자몽', types: ['fire', 'flying'], generation: 'generation-i', forms: [{ key: 'mega-x', nameKo: '메가리자몽X', nameEn: 'Mega Charizard X', category: 'mega', types: ['fire', 'dragon'], battleOnly: true }, { key: 'mega-y', nameKo: '메가리자몽Y', nameEn: 'Mega Charizard Y', category: 'mega', types: ['fire', 'flying'], battleOnly: true }] },
 ]
 const clients: QueryClient[] = []
-const response = (entries = pokemon) => Response.json({ version: 1, generatedAt: '2026-11-04', count: entries.length, pokemon: entries })
+const response = (entries = pokemon) => Response.json({ version: 2, generatedAt: '2026-11-04', count: entries.length, pokemon: entries })
 const save = (ids: number[]) => localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify({ version: 1, ids }))
 const saved = () => JSON.parse(localStorage.getItem(FAVORITES_STORAGE_KEY)!)
 
@@ -99,7 +99,7 @@ describe('즐겨찾기 목록 연결 (FR-19~22 / TC-07·08·09)', () => {
   })
 
   it('잘못된 ID·중복을 제외한 안내와 유효한 저장 항목을 표시한다', async () => {
-    save([25, 25, 0, 722])
+    save([25, 25, 0, 1026])
     renderPage()
     expect(screen.getByText('잘못되거나 중복된 즐겨찾기 정보를 제외했습니다.')).toBeInTheDocument()
     expect(await screen.findByRole('list', { name: '저장한 포켓몬' })).toBeInTheDocument()

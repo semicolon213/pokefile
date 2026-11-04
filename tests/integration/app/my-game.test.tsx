@@ -22,7 +22,7 @@ const search = (router: ReturnType<typeof renderAt>) => router.state.location.se
 describe('상단 바 내 게임 선택 (FR-26)', () => {
   beforeEach(() => {
     // 목록 화면의 검색 인덱스 요청은 빈 목록으로 응답한다
-    vi.stubGlobal('fetch', vi.fn(async () => Response.json({ version: 1, generatedAt: '', count: 0, pokemon: [] })))
+    vi.stubGlobal('fetch', vi.fn(async () => Response.json({ version: 2, generatedAt: '', count: 0, pokemon: [] })))
   })
   afterEach(() => vi.unstubAllGlobals())
 
@@ -54,9 +54,9 @@ describe('상단 바 내 게임 선택 (FR-26)', () => {
   })
 
   it('지원 범위 밖의 game 값은 무시한다', async () => {
-    const router = renderAt('/favorites?game=scarlet')
+    const router = renderAt('/favorites?game=champions')
     expect(await screen.findByRole('combobox', { name: '내 게임' })).toHaveValue('')
     expect(localStorage.getItem(MY_GAME_STORAGE_KEY)).toBeNull()
-    expect(search(router)).toBe('?game=scarlet')
+    expect(search(router)).toBe('?game=champions')
   })
 })

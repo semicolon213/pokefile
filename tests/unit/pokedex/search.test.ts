@@ -8,7 +8,7 @@ const p = (id: number, nameEn: string, nameKo?: string): PokemonSummary => ({
   nameKo,
   types: ['normal'],
   generation: 'generation-i',
-  megaForms: [],
+  forms: [],
 })
 
 const LIST = [

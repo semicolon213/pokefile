@@ -8,13 +8,13 @@ import { PokedexPage } from '@/features/pokedex/pages/PokedexPage'
 import type { PokemonSummary } from '@/shared/models'
 
 const POKEMON: PokemonSummary[] = [
-  { id: 1, nameEn: 'Bulbasaur', nameKo: '이상해씨', types: ['grass', 'poison'], generation: 'generation-i', megaForms: [] },
-  { id: 6, nameEn: 'Charizard', nameKo: '리자몽', types: ['fire', 'flying'], generation: 'generation-i', megaForms: ['mega-x', 'mega-y'] },
-  { id: 25, nameEn: 'Pikachu', nameKo: '피카츄', types: ['electric'], generation: 'generation-i', megaForms: [] },
+  { id: 1, nameEn: 'Bulbasaur', nameKo: '이상해씨', types: ['grass', 'poison'], generation: 'generation-i', forms: [] },
+  { id: 6, nameEn: 'Charizard', nameKo: '리자몽', types: ['fire', 'flying'], generation: 'generation-i', forms: [{ key: 'mega-x', nameKo: '메가리자몽X', nameEn: 'Mega Charizard X', category: 'mega', types: ['fire', 'dragon'], battleOnly: true }, { key: 'mega-y', nameKo: '메가리자몽Y', nameEn: 'Mega Charizard Y', category: 'mega', types: ['fire', 'flying'], battleOnly: true }] },
+  { id: 25, nameEn: 'Pikachu', nameKo: '피카츄', types: ['electric'], generation: 'generation-i', forms: [] },
 ]
 
 function indexResponse() {
-  return new Response(JSON.stringify({ version: 1, generatedAt: '2026-10-28', count: POKEMON.length, pokemon: POKEMON }), {
+  return new Response(JSON.stringify({ version: 2, generatedAt: '2026-10-28', count: POKEMON.length, pokemon: POKEMON }), {
     status: 200,
     headers: { 'Content-Type': 'application/json' },
   })

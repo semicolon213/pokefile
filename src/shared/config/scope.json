@@ -1,15 +1,17 @@
 {
-  "$comment": "PokeFile 지원 범위의 유일한 기준 (ADR-008·015, TASK-013). 세대를 늘릴 때는 이 파일을 고치고 npm run build:index 로 검색 인덱스를 다시 만든다. 앱(TS)과 scripts(Node)가 모두 이 파일을 읽는다.",
-  "maxPokemonId": 721,
+  "$comment": "PokeFile 지원 범위의 유일한 기준 (ADR-015·016, TASK-013·023). 세대를 늘릴 때는 이 파일을 고치고 npm run build:index 로 검색 인덱스를 다시 만든다. 앱(TS)과 scripts(Node)가 모두 이 파일을 읽는다.",
+  "maxPokemonId": 1025,
   "generations": [
     { "id": "generation-i", "name": "1세대", "region": "관동지방" },
     { "id": "generation-ii", "name": "2세대", "region": "성도지방" },
     { "id": "generation-iii", "name": "3세대", "region": "호연지방" },
     { "id": "generation-iv", "name": "4세대", "region": "신오지방" },
     { "id": "generation-v", "name": "5세대", "region": "하나지방" },
-    { "id": "generation-vi", "name": "6세대", "region": "칼로스지방" }
+    { "id": "generation-vi", "name": "6세대", "region": "칼로스지방" },
+    { "id": "generation-vii", "name": "7세대", "region": "알로라지방" },
+    { "id": "generation-viii", "name": "8세대", "region": "가라르지방" },
+    { "id": "generation-ix", "name": "9세대", "region": "팔데아지방" }
   ],
-  "megaVersionGroups": ["x-y", "omega-ruby-alpha-sapphire"],
   "gameVersions": [
     { "version": "red", "label": "레드", "generation": "generation-i" },
     { "version": "blue", "label": "블루", "generation": "generation-i" },
@@ -34,8 +36,22 @@
     { "version": "x", "label": "X", "generation": "generation-vi" },
     { "version": "y", "label": "Y", "generation": "generation-vi" },
     { "version": "omega-ruby", "label": "오메가루비", "generation": "generation-vi" },
-    { "version": "alpha-sapphire", "label": "알파사파이어", "generation": "generation-vi" }
+    { "version": "alpha-sapphire", "label": "알파사파이어", "generation": "generation-vi" },
+    { "version": "sun", "label": "썬", "generation": "generation-vii" },
+    { "version": "moon", "label": "문", "generation": "generation-vii" },
+    { "version": "ultra-sun", "label": "울트라썬", "generation": "generation-vii" },
+    { "version": "ultra-moon", "label": "울트라문", "generation": "generation-vii" },
+    { "version": "lets-go-pikachu", "label": "레츠고! 피카츄", "generation": "generation-vii" },
+    { "version": "lets-go-eevee", "label": "레츠고! 이브이", "generation": "generation-vii" },
+    { "version": "sword", "label": "소드", "generation": "generation-viii", "includes": ["the-isle-of-armor-sword", "the-crown-tundra-sword"] },
+    { "version": "shield", "label": "실드", "generation": "generation-viii", "includes": ["the-isle-of-armor-shield", "the-crown-tundra-shield"] },
+    { "version": "brilliant-diamond", "label": "브릴리언트 다이아몬드", "generation": "generation-viii", "hasEncounters": false },
+    { "version": "shining-pearl", "label": "샤이닝 펄", "generation": "generation-viii", "hasEncounters": false },
+    { "version": "legends-arceus", "label": "LEGENDS 아르세우스", "generation": "generation-viii", "hasEncounters": false },
+    { "version": "scarlet", "label": "스칼렛", "generation": "generation-ix", "includes": ["the-teal-mask-scarlet", "the-indigo-disk-scarlet"], "hasEncounters": false },
+    { "version": "violet", "label": "바이올렛", "generation": "generation-ix", "includes": ["the-teal-mask-violet", "the-indigo-disk-violet"], "hasEncounters": false },
+    { "version": "legends-za", "label": "LEGENDS Z-A", "generation": "generation-ix", "includes": ["mega-dimension"], "hasEncounters": false }
   ],
-  "flavorTextVersions": ["x", "omega-ruby", "y", "alpha-sapphire"],
+  "flavorTextVersions": ["x", "omega-ruby", "y", "alpha-sapphire", "ultra-sun", "ultra-moon", "sun", "moon", "sword", "shield", "lets-go-pikachu", "lets-go-eevee"],
   "smogon": { "generation": 6 }
 }

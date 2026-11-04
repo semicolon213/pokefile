@@ -12,10 +12,10 @@ const lang = (name: string) => ({ name, url: '' })
 const res = (name: string) => ({ name, url: '' })
 
 const INDEX: PokemonSummary[] = [
-  { id: 4, nameEn: 'Charmander', nameKo: '파이리', types: ['fire'], generation: 'generation-i', megaForms: [] },
-  { id: 5, nameEn: 'Charmeleon', nameKo: '리자드', types: ['fire'], generation: 'generation-i', megaForms: [] },
-  { id: 6, nameEn: 'Charizard', nameKo: '리자몽', types: ['fire', 'flying'], generation: 'generation-i', megaForms: ['mega-x', 'mega-y'] },
-  { id: 128, nameEn: 'Tauros', nameKo: '켄타로스', types: ['normal'], generation: 'generation-i', megaForms: [] },
+  { id: 4, nameEn: 'Charmander', nameKo: '파이리', types: ['fire'], generation: 'generation-i', forms: [] },
+  { id: 5, nameEn: 'Charmeleon', nameKo: '리자드', types: ['fire'], generation: 'generation-i', forms: [] },
+  { id: 6, nameEn: 'Charizard', nameKo: '리자몽', types: ['fire', 'flying'], generation: 'generation-i', forms: [{ key: 'mega-x', nameKo: '메가리자몽X', nameEn: 'Mega Charizard X', category: 'mega', types: ['fire', 'dragon'], battleOnly: true }, { key: 'mega-y', nameKo: '메가리자몽Y', nameEn: 'Mega Charizard Y', category: 'mega', types: ['fire', 'flying'], battleOnly: true }] },
+  { id: 128, nameEn: 'Tauros', nameKo: '켄타로스', types: ['normal'], generation: 'generation-i', forms: [] },
 ]
 
 const stats = (values: number[]) =>
@@ -83,7 +83,7 @@ function mockFetch(overrides: Override = {}) {
   const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
     const url = String(input)
     if (url.endsWith('/data/pokedex-index.json')) {
-      return Response.json({ version: 1, generatedAt: '2026-10-28', count: INDEX.length, pokemon: INDEX })
+      return Response.json({ version: 2, generatedAt: '2026-10-28', count: INDEX.length, pokemon: INDEX })
     }
     const path = url.replace(API, '')
     const override = overrides[path]
@@ -221,7 +221,7 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
           location_area: { name: 'kalos-route-1-area', url: '' },
           version_details: [
             { version: res('x'), encounter_details: [{ min_level: 10, max_level: 12, method: res('walk') }] },
-            { version: res('sun'), encounter_details: [{ min_level: 10, max_level: 12, method: res('walk') }] },
+            { version: res('red-japan'), encounter_details: [{ min_level: 10, max_level: 12, method: res('walk') }] },
           ],
         },
       ]),
@@ -232,7 +232,8 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
     expect(within(x).getByText('6세대')).toBeInTheDocument()
     expect(within(x).getByText('Kalos Route 1')).toBeInTheDocument()
     expect(within(x).getByText('Lv.10~12')).toBeInTheDocument()
-    expect(within(encounters).queryByRole('region', { name: /썬/ })).not.toBeInTheDocument()
+    expect(within(encounters).queryAllByRole('region', { name: /출현 장소/ })).toHaveLength(1)
+    expect(within(encounters).queryByRole('region', { name: /japan/i })).not.toBeInTheDocument()
   })
 
   it('출현 데이터 없음과 요청 실패를 구분해 안내한다 (FR-18)', async () => {
@@ -279,7 +280,7 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
     expect(screen.getByRole('link', { name: '도감 목록으로' })).toHaveAttribute('href', '/')
   })
 
-  it.each(['0', '722', 'abc'])('지원 범위 밖 번호(%s)는 오류를 안내한다', async (id) => {
+  it.each(['0', '1026', 'abc'])('지원 범위 밖 번호(%s)는 오류를 안내한다', async (id) => {
     const fetchMock = mockFetch()
     renderAt(`/pokemon/${id}`)
     expect(await screen.findByRole('alert')).toHaveTextContent('올바르지 않은 포켓몬 번호입니다.')

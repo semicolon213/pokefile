@@ -3,8 +3,8 @@ import { favoriteEntries } from '@/features/favorites/model/list'
 import type { PokemonSummary } from '@/shared/models'
 
 const pokemon: PokemonSummary[] = [
-  { id: 25, nameEn: 'pikachu', nameKo: '피카츄', types: ['electric'], generation: 'generation-i', megaForms: [] },
-  { id: 133, nameEn: 'eevee', nameKo: '이브이', types: ['normal'], generation: 'generation-i', megaForms: [] },
+  { id: 25, nameEn: 'pikachu', nameKo: '피카츄', types: ['electric'], generation: 'generation-i', forms: [] },
+  { id: 133, nameEn: 'eevee', nameKo: '이브이', types: ['normal'], generation: 'generation-i', forms: [] },
 ]
 
 describe('저장 목록과 도감 정보 연결 (FR-22)', () => {
