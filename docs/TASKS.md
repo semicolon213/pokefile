@@ -11,12 +11,22 @@
 | TASK-004 | 김형균 | 타입·세대 필터, 번호·이름 정렬, 무한 스크롤, URL 쿼리 동기화 (ADR-011) | FR-04~09 | TASK-003, OQ-20(제안값 24 적용) | MERGED |
 | TASK-005 | 임지섭 | 상세 기본 정보·차트, 6세대 메가 폼 탭(`?form=`) | FR-10~14 | TASK-002, OQ-17(제안값 x→omega-ruby 적용) | MERGED |
 | TASK-006 | 임지섭 | 진화 트리(#722 이후 제외)·출현 장소(6세대 이하 버전만, ADR-008) | FR-15~16,18 | TASK-005, OQ-18(결정 전 임시: 장소명 영문 표기) | SELF_TESTED |
-| TASK-007 | 성윤우 | Smogon gen6 실전 세팅·이름 매핑·메가스톤 대응표 (ADR-009) | FR-17~18 | TASK-002, OQ-19 | QA_PASS |
-| TASK-008 | 성윤우 | localStorage 즐겨찾기 (ADR-012) | FR-19~22 | TASK-002 | BACKLOG |
+| TASK-007 | 성윤우 | Smogon gen6 실전 세팅·이름 매핑·메가스톤 대응표 (ADR-009) | FR-17~18 | TASK-002, OQ-19 | MERGED |
+| TASK-008 | 성윤우 | localStorage 즐겨찾기 (ADR-012) | FR-19~22 | TASK-002 | MERGED |
 | TASK-009 | 팀 합의 | 반응형·로딩·오류·캐싱 통합 | NFR-01~04,07~08 | 기능 구현 | BACKLOG |
 | TASK-010 | 팀 합의 | 통합 테스트·배포 URL 확인 | NFR-05~06 | TASK-003~009 | BACKLOG |
-| TASK-011 | 성윤우 | 이로치/울음소리·상성·비교 | FR-23~25 | 필수 기능 완료, OQ-10 | BACKLOG |
+| TASK-011 | 성윤우 | 이로치/울음소리·타입 상성·두 포켓몬 능력치 비교 (ADR-015) | FR-23~25 | TASK-013 | READY |
 | TASK-012 | 김형균 | 외부 API 계약 검증 테스트 (`scripts/verify-api/`) | DR-01~05 | — | SELF_TESTED |
+| TASK-013 | 김형균 | 지원 범위 설정 일원화: 세대·최대 번호·메가 판별·게임 버전·Smogon 세대를 `shared` 설정 한 곳으로 (세대 확장 대비, ADR-015) | DR-01~08 | — | READY |
+| TASK-014 | 김형균(제안) | 내 게임 선택: 게임 버전 선택·저장(URL+localStorage), 출현 장소 필터 연동 | FR-26 | TASK-013 | BACKLOG |
+| TASK-015 | 임지섭(제안) | 기술 표: 게임 버전별 레벨업·기술머신 기술, 내 게임 연동 | FR-27 | TASK-014, OQ-23 | BACKLOG |
+| TASK-016 | 임지섭(제안) | 진화 조건 상세(돌·교환·친밀도·시간대·장소) | FR-28 | — | BACKLOG |
+| TASK-017 | 성윤우(제안) | 도감 완성 체크리스트·세대별 완성률 (localStorage, 즐겨찾기 구조 재사용) | FR-29 | TASK-013 | BACKLOG |
+| TASK-018 | 임지섭(제안) | 특성 한국어 설명 | FR-30 | — | BACKLOG |
+| TASK-019 | 김형균(제안) | 지방 도감 번호 표시·지방 도감 순 정렬 (검색 인덱스 확장) | FR-31 | TASK-013 | BACKLOG |
+| TASK-020 | 김형균(제안) | 다크 모드: 어두운 테마 토큰·전환·저장, 18종 타입 배지 AA | FR-32 | OQ-24 | BACKLOG |
+
+> TASK-014~020의 담당은 기능 소유 영역 기준 제안이다(OQ-22에서 확정).
 
 ### 상태 메모 (2026-11-04)
 - TASK-001~004: develop 반영(PR #1, 직접 push). QA는 구현과 같은 Claude가 수행해 교차 QA 미충족.
