@@ -2,7 +2,7 @@ import { Link } from 'react-router'
 import { PokemonCard, useSearchIndex } from '@/features/pokedex'
 import { pokemonDetailPath } from '@/features/pokemon-detail'
 import type { PokemonId } from '@/shared/models'
-import { ErrorState, LoadingState } from '@/shared/ui'
+import { ErrorState, LoadingState, useDocumentTitle } from '@/shared/ui'
 import { formatDexNumber } from '@/shared/utils'
 import { FavoriteToggle } from '../components/FavoriteToggle'
 import { FavoritesNotice } from '../components/FavoritesNotice'
@@ -12,6 +12,7 @@ import './FavoritesPage.css'
 
 // UI-03 / FR-19~22: 같은 도감 카드를 공개 API로 재사용하고 저장 순서를 유지한다.
 export function FavoritesPage() {
+  useDocumentTitle('즐겨찾기')
   const favorites = useFavorites()
   return (
     <section className="favorites-page" aria-labelledby="favorites-title">
@@ -20,16 +21,16 @@ export function FavoritesPage() {
       <FavoritesNotice snapshot={favorites} onReload={favorites.reload} />
       {favorites.ids.length > 0 ? (
         <>
-          <p role="status">저장한 포켓몬 {favorites.ids.length}마리</p>
+          <p role="status" className="favorites-count tabular">저장한 포켓몬 {favorites.ids.length}마리</p>
           <SavedPokemonList ids={favorites.ids} />
-          <Link to="/">도감으로 이동</Link>
+          <Link to="/" className="button favorites-more">도감으로 이동</Link>
         </>
       ) : (
         <div className="favorites-empty">
           <p>{favorites.status === 'unavailable'
             ? '도감에서 포켓몬을 계속 탐색할 수 있습니다.'
             : '즐겨찾기한 포켓몬이 없습니다.'}</p>
-          <Link to="/">도감으로 이동</Link>
+          <Link to="/" className="button button--primary">도감으로 이동</Link>
         </div>
       )}
     </section>
@@ -47,7 +48,7 @@ function SavedPokemonList({ ids }: { ids: readonly PokemonId[] }) {
       {index.isError && (
         <div>
           <ErrorState message="포켓몬 정보를 불러오지 못했습니다. 저장한 번호로 계속 확인하거나 해제할 수 있습니다." />
-          <button type="button" onClick={() => void index.refetch()}>다시 시도</button>
+          <button type="button" className="button" onClick={() => void index.refetch()}>다시 시도</button>
         </div>
       )}
       {missing && <p role="status">일부 포켓몬 정보를 찾지 못했습니다. 저장한 번호로 확인하거나 해제할 수 있습니다.</p>}

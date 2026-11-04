@@ -1,5 +1,6 @@
 import { isPokemonId } from '@/shared/models'
 import type { PokemonId } from '@/shared/models'
+import { StarIcon } from '@/shared/ui'
 import { formatDexNumber } from '@/shared/utils'
 import { useFavorites } from '../hooks/useFavorites'
 import './FavoriteToggle.css'
@@ -26,7 +27,7 @@ export function FavoriteToggle({ pokemonId }: Props) {
           toggle(pokemonId)
         }}
       >
-        <span aria-hidden="true">{saved ? '★' : '☆'}</span>
+        <StarIcon filled={saved} size={20} />
       </button>
       {message && <span className="favorite-feedback" role="status">{status === 'unavailable' ? '저장 불가' : '저장 정보 정리됨'}</span>}
     </span>

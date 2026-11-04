@@ -60,3 +60,9 @@ CLAUDE.local.md
 
 # Office 잠금 파일
 ~$*
+
+# Impeccable 작업 산출물 (결정 스케치·검수 캡처·로컬 설정은 커밋하지 않음)
+.impeccable/mocks/
+.impeccable/review/
+.impeccable/build/
+.impeccable/config.local.json

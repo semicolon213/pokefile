@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test'
 test.describe('도감 검색', () => {
   test('721종 전체 목록을 불러온다', async ({ page }) => {
     await page.goto('#/')
-    await expect(page.getByText('전체 721마리')).toBeVisible()
+    await expect(page.getByText('721마리의 포켓몬')).toBeVisible()
   })
 
   for (const query of ['피카츄', 'Pikachu', '25']) {

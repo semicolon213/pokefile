@@ -1,9 +1,66 @@
-/* 전역 스타일만 둔다. feature 전용 스타일은 각 feature 폴더에 둔다. */
+/* 전역 스타일: 디자인 토큰, 기본 요소, 앱 셸. feature 전용 스타일은 각 feature 폴더에 둔다.
+   모든 색·간격·모서리는 여기 토큰만 참조한다 (DESIGN.md). */
 :root {
-  font-family: system-ui, -apple-system, 'Segoe UI', 'Noto Sans KR', sans-serif;
+  /* 색 — 대비는 흰 바탕 기준 WCAG AA 이상 */
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f6f8fa;
+  --color-plate: #eef1f4;
+  --color-text: #1f2328;
+  --color-text-muted: #57606a;
+  --color-border: #e3e6ea;
+  --color-border-strong: #c8d0d8;
+  --color-primary: #d1300a;
+  --color-primary-hover: #b42a0a;
+  --color-primary-soft: #fdece8;
+  --color-primary-ink: #b42a0a;
+  --color-focus: #2563eb;
+  --color-warning-soft: #fff6e0;
+  --color-warning-ink: #7a4b00;
+
+  /* 타입: --t-* 은 배지 바탕(잉크 글자 AA), --t-*-strong 은 점·선 */
+  --t-normal: #e3e1d6;   --t-normal-strong: #9a9886;
+  --t-fire: #fbcaa3;     --t-fire-strong: #e2622a;
+  --t-water: #bcd3f7;    --t-water-strong: #3f7ee0;
+  --t-grass: #c2e6ab;    --t-grass-strong: #4b9a2d;
+  --t-electric: #f9e391; --t-electric-strong: #c99a00;
+  --t-ice: #c4ecf3;      --t-ice-strong: #3aa9c4;
+  --t-fighting: #f3bfae; --t-fighting-strong: #c4502a;
+  --t-poison: #e0c0ed;   --t-poison-strong: #9145c4;
+  --t-ground: #ead4a8;   --t-ground-strong: #a77a2e;
+  --t-flying: #d3ddf8;   --t-flying-strong: #6c8fe0;
+  --t-psychic: #f8c1d5;  --t-psychic-strong: #df4a7f;
+  --t-bug: #dbe6a3;      --t-bug-strong: #879a1c;
+  --t-rock: #dfd7b0;     --t-rock-strong: #a39457;
+  --t-ghost: #d3c7e6;    --t-ghost-strong: #6c579c;
+  --t-dragon: #c9c3f6;   --t-dragon-strong: #5a4fd6;
+  --t-dark: #d3cac3;     --t-dark-strong: #5f4e44;
+  --t-steel: #d0dbe2;    --t-steel-strong: #5f8597;
+  --t-fairy: #f8cfe8;    --t-fairy-strong: #d76bb2;
+
+  /* 간격(4px 배수)·모서리·그림자 */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --radius-control: 8px;
+  --radius-card: 12px;
+  --shadow-raise: 0 6px 16px -8px rgb(31 35 40 / 22%);
+  --header-height: 64px;
+  --sidebar-width: 248px;
+
+  font-family: 'Pretendard Variable', Pretendard, 'Noto Sans KR', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 16px;
   line-height: 1.5;
-  color: #1f2328;
-  background: #ffffff;
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  text-size-adjust: 100%;
+  caret-color: var(--color-primary);
+  scrollbar-color: var(--color-border-strong) transparent;
+  accent-color: var(--color-primary);
 }
 
 * {
@@ -14,32 +71,206 @@ body {
   margin: 0;
 }
 
+::selection {
+  background: var(--color-primary-soft);
+  color: var(--color-primary-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+a {
+  color: var(--color-primary-ink);
+  text-underline-offset: 3px;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 공통 버튼 ---------- */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 40px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  border-color: var(--color-text-muted);
+}
+
+.button--primary {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.button--primary:hover {
+  border-color: var(--color-primary-hover);
+  background: var(--color-primary-hover);
+}
+
+/* ---------- 타입 배지 ---------- */
+.type-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 4px;
+  background: var(--type-bg);
+  color: var(--color-text);
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.type-badge--sm {
+  padding: 1px var(--space-2);
+  font-size: 12px;
+}
+
+.type-badge--md {
+  padding: 2px 10px;
+  font-size: 13px;
+}
+
+.type--normal { --type-bg: var(--t-normal); --type-strong: var(--t-normal-strong); }
+.type--fire { --type-bg: var(--t-fire); --type-strong: var(--t-fire-strong); }
+.type--water { --type-bg: var(--t-water); --type-strong: var(--t-water-strong); }
+.type--grass { --type-bg: var(--t-grass); --type-strong: var(--t-grass-strong); }
+.type--electric { --type-bg: var(--t-electric); --type-strong: var(--t-electric-strong); }
+.type--ice { --type-bg: var(--t-ice); --type-strong: var(--t-ice-strong); }
+.type--fighting { --type-bg: var(--t-fighting); --type-strong: var(--t-fighting-strong); }
+.type--poison { --type-bg: var(--t-poison); --type-strong: var(--t-poison-strong); }
+.type--ground { --type-bg: var(--t-ground); --type-strong: var(--t-ground-strong); }
+.type--flying { --type-bg: var(--t-flying); --type-strong: var(--t-flying-strong); }
+.type--psychic { --type-bg: var(--t-psychic); --type-strong: var(--t-psychic-strong); }
+.type--bug { --type-bg: var(--t-bug); --type-strong: var(--t-bug-strong); }
+.type--rock { --type-bg: var(--t-rock); --type-strong: var(--t-rock-strong); }
+.type--ghost { --type-bg: var(--t-ghost); --type-strong: var(--t-ghost-strong); }
+.type--dragon { --type-bg: var(--t-dragon); --type-strong: var(--t-dragon-strong); }
+.type--dark { --type-bg: var(--t-dark); --type-strong: var(--t-dark-strong); }
+.type--steel { --type-bg: var(--t-steel); --type-strong: var(--t-steel-strong); }
+.type--fairy { --type-bg: var(--t-fairy); --type-strong: var(--t-fairy-strong); }
+
+/* ---------- 앱 셸: 상단 바 ---------- */
 .app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 12px 16px;
-  border-bottom: 1px solid #d0d7de;
+  gap: var(--space-6);
+  height: var(--header-height);
+  padding: 0 var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
 }
 
-.app-header nav {
-  display: flex;
-  gap: 12px;
-}
-
-.app-header a.active {
-  font-weight: 700;
-}
-
-.app-logo {
+.app-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text);
+  font-size: 20px;
   font-weight: 800;
+  letter-spacing: -0.01em;
   text-decoration: none;
-  color: inherit;
+}
+
+.app-nav {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.app-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-control);
+  color: var(--color-text-muted);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.app-nav a:hover {
+  background: var(--color-surface-muted);
+  color: var(--color-text);
+}
+
+.app-nav a.active {
+  background: var(--color-primary-soft);
+  color: var(--color-primary-ink);
+}
+
+.app-header__search {
+  margin-left: auto;
 }
 
 .app-main {
-  max-width: 1200px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 16px;
+  padding: var(--space-5);
+}
+
+@media (max-width: 767px) {
+  .app-header {
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-3);
+    height: auto;
+    padding: var(--space-2) var(--space-4) var(--space-3);
+  }
+
+  .app-nav a {
+    padding: 0 var(--space-3);
+  }
+
+  .app-header__search {
+    flex-basis: 100%;
+    margin-left: 0;
+  }
+
+  .app-main {
+    padding: var(--space-4);
+  }
 }

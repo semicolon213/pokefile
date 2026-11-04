@@ -69,7 +69,7 @@ function EvolutionBranch({
         className="evolution-tree__card"
         aria-current={isCurrent ? 'page' : undefined}
       >
-        <PokemonImage urls={showdownImageUrls(node.id)} alt={name} className="evolution-tree__image" />
+        <PokemonImage urls={showdownImageUrls(node.id)} alt={name} className="evolution-tree__image" box={96} />
         <span className="evolution-tree__number">{formatDexNumber(node.id)}</span>
         <span className="evolution-tree__name">{name}</span>
       </Link>

@@ -43,7 +43,7 @@ describe('즐겨찾기 목록 연결 (FR-19~22 / TC-07·08·09)', () => {
     expect(within(cards[0]).getByRole('link')).toHaveAttribute('href', '/pokemon/6')
     expect(within(cards[0]).getByText('불꽃')).toBeInTheDocument()
     expect(within(cards[1]).getByRole('link')).toHaveTextContent('피카츄')
-    expect(within(cards[1]).getByRole('img')).toHaveAccessibleName('피카츄')
+    expect(within(cards[1]).getByRole('link')).toHaveAccessibleName(/피카츄/)
     fireEvent.click(screen.getByRole('button', { name: '#0006 즐겨찾기 해제' }))
     expect(saved()).toEqual({ version: 1, ids: [25] })
     expect(within(list).getAllByRole('listitem')).toHaveLength(1)

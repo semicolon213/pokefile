@@ -1,17 +1,29 @@
-/* UI-02 포켓몬 상세 (DESIGN.md §2.2, §3 토큰 제안값). 클래스는 detail- 접두사로 다른 feature와 분리한다. */
+/* UI-02 포켓몬 상세 (DESIGN.md §2.2). 색·간격은 전역 토큰만 쓴다. 클래스는 detail- 접두사로 다른 feature와 분리한다. */
 .detail-page {
-  --detail-primary: #e84b4b;
-  --detail-surface: #ffffff;
-  --detail-background: #f5f6f8;
-  --detail-text: #242933;
-  --detail-muted: #667085;
-  --detail-border: #e5e7eb;
-  --detail-focus: #2563eb;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  color: var(--detail-text);
+/* 넓은 화면: 기본 정보와 종족값을 나란히, 나머지는 전체 폭 */
+@media (min-width: 1100px) {
+  .detail-page {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  }
+
+  .detail-page > * {
+    grid-column: 1 / -1;
+  }
+
+  .detail-page > .detail-basic {
+    grid-column: 1;
+  }
+
+  .detail-page > .detail-stats-section {
+    grid-column: 2;
+  }
 }
 
 .detail-visually-hidden {
@@ -24,105 +36,120 @@
   white-space: nowrap;
 }
 
-.detail-page a:focus-visible,
-.detail-page button:focus-visible {
-  outline: 3px solid var(--detail-focus);
-  outline-offset: 2px;
-}
-
 .detail-back {
-  align-self: flex-start;
-  color: var(--detail-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: 6px;
+  min-height: 44px;
+  margin-left: calc(var(--space-2) * -1);
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-control);
+  color: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 600;
   text-decoration: none;
-  font-size: 0.95rem;
 }
 
 .detail-back:hover {
-  color: var(--detail-primary);
+  background: var(--color-surface-muted);
+  color: var(--color-text);
 }
 
-/* ---------- Header ---------- */
+/* ---------- 머리글 ---------- */
 .detail-header {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .detail-header__title {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 4px 12px;
+  gap: var(--space-1) var(--space-3);
 }
 
 .detail-header__title h1 {
   margin: 0;
-  font-size: 1.9rem;
-  line-height: 1.2;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .detail-header__number {
-  color: var(--detail-muted);
+  color: var(--color-text-muted);
+  font-size: 18px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
 .detail-header__en {
-  color: var(--detail-muted);
+  color: var(--color-text-muted);
+  font-size: 16px;
 }
 
-/* ---------- Form tabs ---------- */
+/* ---------- 폼 탭 (분할 버튼) ---------- */
 .detail-form-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  display: inline-flex;
+  justify-self: start;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--color-surface-muted);
 }
 
 .detail-form-tab {
-  min-height: 44px;
+  min-height: 40px;
   min-width: 72px;
-  padding: 8px 16px;
-  border: 1px solid var(--detail-border);
-  border-radius: 10px;
-  background: var(--detail-surface);
-  color: var(--detail-text);
-  font: inherit;
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--color-text-muted);
   font-weight: 600;
   cursor: pointer;
 }
 
+.detail-form-tab:hover {
+  color: var(--color-text);
+}
+
 .detail-form-tab[aria-pressed='true'] {
-  border-color: var(--detail-primary);
-  background: var(--detail-primary);
-  color: #fff;
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: 0 1px 3px rgb(31 35 40 / 16%);
 }
 
 .detail-form-name {
   margin: 0;
+  color: var(--color-text);
+  font-size: 18px;
   font-weight: 700;
-  color: var(--detail-primary);
 }
 
-/* ---------- Sections ---------- */
+/* ---------- 섹션 ---------- */
 .detail-section {
-  padding: 16px;
-  border: 1px solid var(--detail-border);
-  border-radius: 14px;
-  background: var(--detail-surface);
+  min-width: 0;
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
 }
 
 .detail-section h2 {
-  margin: 0 0 12px;
-  font-size: 1.2rem;
+  margin: 0 0 var(--space-4);
+  font-size: 18px;
+  font-weight: 700;
 }
 
 .detail-section-error {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px 12px;
+  gap: var(--space-2) var(--space-3);
 }
 
 .detail-section-error p {
@@ -130,68 +157,66 @@
 }
 
 .detail-section-error button {
-  min-height: 44px;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 10px;
-  background: var(--detail-primary);
-  color: #fff;
-  font: inherit;
+  min-height: 40px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 600;
   cursor: pointer;
 }
 
-/* ---------- Basic info ---------- */
+/* ---------- 기본 정보 ---------- */
 .detail-basic {
   display: grid;
-  grid-template-columns: minmax(160px, 240px) 1fr;
-  gap: 16px 24px;
-  align-items: center;
+  grid-template-columns: 216px minmax(0, 1fr);
+  gap: var(--space-4) var(--space-5);
+  align-items: start;
 }
 
 .detail-basic__image {
   display: grid;
   place-items: center;
-  min-height: 180px;
-  border-radius: 12px;
-  background: var(--detail-background);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--color-plate);
 }
 
 .detail-basic__image img {
-  max-width: 100%;
-  max-height: 160px;
-  image-rendering: auto;
+  image-rendering: pixelated;
 }
 
 .detail-image__placeholder {
   display: block;
-  width: 96px;
-  height: 96px;
+  width: 64px;
+  height: 64px;
+  border: 4px solid var(--color-border-strong);
   border-radius: 50%;
-  background: linear-gradient(var(--detail-primary) 0 46%, #333 46% 54%, #fff 54%);
-  opacity: 0.35;
 }
 
 .detail-basic__facts {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px 16px;
+  gap: var(--space-4);
   margin: 0;
 }
 
 .detail-basic__facts dt {
-  color: var(--detail-muted);
-  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-size: 13px;
 }
 
 .detail-basic__facts dd {
   margin: 2px 0 0;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .detail-basic__types {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: var(--space-1);
 }
 
 .detail-basic__abilities {
@@ -201,59 +226,34 @@
 }
 
 .detail-basic__hidden {
-  color: var(--detail-muted);
+  color: var(--color-text-muted);
+  font-size: 13px;
   font-weight: 400;
-  font-size: 0.85rem;
 }
 
 .detail-basic__flavor {
   grid-column: 1 / -1;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
 }
 
 .detail-basic__flavor h3 {
-  margin: 0 0 4px;
-  font-size: 1rem;
+  margin: 0 0 var(--space-1);
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .detail-basic__flavor p {
+  max-width: 65ch;
   margin: 0;
 }
 
-/* 타입 색상은 pokedex와 같은 값 (DESIGN §3.1: 중앙 토큰 파일 확정 전 임시) */
-.detail-type-chip {
-  padding: 4px 12px;
-  border-radius: 999px;
-  background: var(--chip, #9fa19f);
-  color: #fff;
-  font-size: 0.88rem;
-  font-weight: 700;
-  text-shadow: 0 1px 1px rgb(0 0 0 / 25%);
-}
-
-.detail-type-chip--normal { --chip: #9fa19f; }
-.detail-type-chip--fire { --chip: #e62829; }
-.detail-type-chip--water { --chip: #2980ef; }
-.detail-type-chip--grass { --chip: #3fa129; }
-.detail-type-chip--electric { --chip: #d8a800; }
-.detail-type-chip--ice { --chip: #3dc7ef; }
-.detail-type-chip--fighting { --chip: #ff8000; }
-.detail-type-chip--poison { --chip: #9141cb; }
-.detail-type-chip--ground { --chip: #915121; }
-.detail-type-chip--flying { --chip: #81b9ef; }
-.detail-type-chip--psychic { --chip: #ef4179; }
-.detail-type-chip--bug { --chip: #91a119; }
-.detail-type-chip--rock { --chip: #afa981; }
-.detail-type-chip--ghost { --chip: #704170; }
-.detail-type-chip--dragon { --chip: #5060e1; }
-.detail-type-chip--dark { --chip: #624d4e; }
-.detail-type-chip--steel { --chip: #60a1b8; }
-.detail-type-chip--fairy { --chip: #ef70ef; }
-
-/* ---------- Stats ---------- */
+/* ---------- 종족값 ---------- */
 .detail-stats {
   display: grid;
-  grid-template-columns: 1fr minmax(160px, 220px);
-  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) 132px;
+  gap: var(--space-4);
   align-items: center;
 }
 
@@ -264,39 +264,40 @@
 .detail-stats__table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 14px;
   font-variant-numeric: tabular-nums;
 }
 
 .detail-stats__table th,
 .detail-stats__table td {
-  padding: 4px 0;
-  border-bottom: 1px solid var(--detail-border);
+  padding: 5px 0;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .detail-stats__table th {
-  text-align: left;
+  color: var(--color-text-muted);
   font-weight: 500;
-  color: var(--detail-muted);
+  text-align: left;
 }
 
 .detail-stats__table td {
-  text-align: right;
   font-weight: 700;
+  text-align: right;
 }
 
 .detail-stats__total th,
 .detail-stats__total td {
   border-bottom: none;
-  color: var(--detail-text);
+  color: var(--color-text);
   font-weight: 800;
 }
 
-/* ---------- Evolution ---------- */
+/* ---------- 진화 ---------- */
 .evolution-tree,
 .evolution-tree__children {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: var(--space-3);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -306,90 +307,105 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .evolution-tree__children {
   flex-direction: column;
-  padding-left: 12px;
-  border-left: 2px solid var(--detail-border);
+  padding-left: var(--space-3);
+  border-left: 1px solid var(--color-border-strong);
+}
+
+/* 갈라지지 않는 진화(다음 단계가 하나)는 들여쓰지 않고 한 줄로 잇는다. 분기만 세로로 들여쓴다. */
+.evolution-tree__children:has(> li:only-child) {
+  flex-direction: row;
+  padding-left: 0;
+  border-left: 0;
 }
 
 .evolution-tree__condition {
   order: -1;
-  color: var(--detail-muted);
-  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  font-size: 12px;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 .evolution-tree__card {
   display: grid;
+  grid-template-rows: 96px auto auto;
   justify-items: center;
   gap: 2px;
   width: 112px;
-  padding: 8px;
-  border: 1px solid var(--detail-border);
-  border-radius: 12px;
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
   color: inherit;
-  text-decoration: none;
   text-align: center;
+  text-decoration: none;
 }
 
 .evolution-tree__card:hover {
-  border-color: var(--detail-primary);
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-raise);
 }
 
 .evolution-tree__card[aria-current='page'] {
-  border-color: var(--detail-primary);
-  box-shadow: inset 0 0 0 1px var(--detail-primary);
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+/* 이미지 칸을 96px로 고정해 카드 높이와 스프라이트 기준선을 맞춘다 (스프라이트는 1배 유지) */
+.evolution-tree__image,
+.evolution-tree__card .detail-image__placeholder {
+  align-self: end;
 }
 
 .evolution-tree__image {
-  height: 56px;
-  max-width: 96px;
-  object-fit: contain;
+  image-rendering: pixelated;
 }
 
 .evolution-tree__card .detail-image__placeholder {
-  width: 56px;
-  height: 56px;
+  width: 48px;
+  height: 48px;
 }
 
 .evolution-tree__number {
-  color: var(--detail-muted);
-  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
 }
 
 .evolution-tree__name {
+  font-size: 14px;
   font-weight: 700;
-  font-size: 0.9rem;
   word-break: keep-all;
 }
 
-/* ---------- Encounters ---------- */
+/* ---------- 출현 정보 ---------- */
 .encounters {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .encounters__version {
-  padding: 12px;
-  border-radius: 10px;
-  background: var(--detail-background);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-control);
+  background: var(--color-surface-muted);
 }
 
 .encounters__version h3 {
   display: flex;
   align-items: baseline;
-  gap: 8px;
-  margin: 0 0 6px;
-  font-size: 1rem;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-2);
+  font-size: 15px;
 }
 
 .encounters__generation {
-  color: var(--detail-muted);
-  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  font-size: 12px;
   font-weight: 500;
 }
 
@@ -402,24 +418,33 @@
 .encounters__version li {
   display: flex;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-2);
   padding: 2px 0;
-  font-size: 0.9rem;
+  font-size: 14px;
 }
 
 .encounters__level {
   flex-shrink: 0;
-  color: var(--detail-muted);
+  color: var(--color-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
 @media (max-width: 767px) {
   .detail-basic,
   .detail-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .detail-basic__image {
+    width: 216px;
+    justify-self: center;
+  }
+
+  .detail-section {
+    padding: var(--space-4);
   }
 
   .detail-header__title h1 {
-    font-size: 1.6rem;
+    font-size: 26px;
   }
 }
