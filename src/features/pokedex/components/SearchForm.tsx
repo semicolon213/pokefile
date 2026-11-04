@@ -2,23 +2,30 @@ import { useState, type FormEvent } from 'react'
 import { SearchIcon } from '@/shared/ui'
 
 type Props = {
-  initialQuery: string
+  query: string
   disabled?: boolean
   onSearch: (query: string) => void
 }
 
-// ADR-011: 검색 버튼(또는 Enter)으로 제출할 때만 조회한다.
-export function SearchForm({ initialQuery, disabled, onSearch }: Props) {
-  const [value, setValue] = useState(initialQuery)
+// ADR-011 (2026-11-04 개정): 입력할 때마다 바로 조회한다. 검색 버튼·Enter도 그대로 동작한다.
+export function SearchForm({ query, disabled, onSearch }: Props) {
+  const [value, setValue] = useState(query)
+  const [syncedQuery, setSyncedQuery] = useState(query)
+
+  // 뒤로 가기 등으로 URL의 검색어가 바뀌면 입력창도 맞춘다. 입력 중인 앞뒤 공백은 지우지 않는다.
+  if (query !== syncedQuery) {
+    setSyncedQuery(query)
+    if (value.trim() !== query) setValue(query)
+  }
+
+  const change = (next: string) => {
+    setValue(next)
+    onSearch(next.trim())
+  }
 
   const submit = (e: FormEvent) => {
     e.preventDefault()
     onSearch(value.trim())
-  }
-
-  const reset = () => {
-    setValue('')
-    onSearch('')
   }
 
   return (
@@ -34,12 +41,12 @@ export function SearchForm({ initialQuery, disabled, onSearch }: Props) {
           type="search"
           placeholder="포켓몬 이름 또는 도감 번호"
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e) => change(e.target.value)}
           disabled={disabled}
           autoComplete="off"
         />
         {value && (
-          <button type="button" className="search-form__reset" onClick={reset} disabled={disabled}>
+          <button type="button" className="search-form__reset" onClick={() => change('')} disabled={disabled}>
             초기화
           </button>
         )}

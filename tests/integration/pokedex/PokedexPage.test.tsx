@@ -82,13 +82,20 @@ describe('PokedexPage 검색 (TASK-003)', () => {
     expect(cardNames()[0]).toContain(expected)
   })
 
-  it('입력만 하고 제출하지 않으면 조회하지 않는다 (ADR-011)', async () => {
+  it('한 글자 입력할 때마다 결과를 바로 갱신하고 입력창 포커스를 유지한다 (ADR-011 개정)', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => indexResponse()))
     const user = userEvent.setup()
     renderPage()
     await findCount('3마리의 포켓몬')
-    await user.type(screen.getByRole('searchbox', { name: '포켓몬 검색' }), '피카츄')
-    expect(screen.getAllByRole('article')).toHaveLength(3)
+    const input = screen.getByRole('searchbox', { name: '포켓몬 검색' })
+    await user.type(input, '리')
+    expect(getCount('검색 결과 1마리')).toBeInTheDocument()
+    expect(cardNames()[0]).toContain('리자몽')
+    await user.type(input, '자몽')
+    expect(input).toHaveFocus()
+    expect(input).toHaveValue('리자몽')
+    await user.clear(input)
+    expect(getCount('3마리의 포켓몬')).toBeInTheDocument()
   })
 
   it('결과가 없으면 안내하고 초기화로 전체 목록을 되돌린다', async () => {
