@@ -7,6 +7,7 @@ import {
   parseFilters,
   toSearchParams,
 } from '@/features/pokedex/model/filters'
+import type { PokedexFilters } from '@/features/pokedex/model/filters'
 import type { PokemonSummary } from '@/shared/models'
 
 const p = (id: number, nameKo: string, types: PokemonSummary['types'], generation: PokemonSummary['generation']): PokemonSummary => ({
@@ -31,10 +32,17 @@ describe('parseFilters / toSearchParams', () => {
   it('URL 쿼리를 필터로 읽는다', () => {
     expect(parseFilters(new URLSearchParams('q=피카&type=electric&gen=1&sort=name'))).toEqual({
       q: '피카',
-      type: 'electric',
+      types: ['electric'],
       gen: 'generation-i',
       sort: 'name',
     })
+  })
+
+  it('타입은 반복 키·쉼표 모두 읽고, 표준 순서로 최대 2개만 남긴다', () => {
+    expect(parseFilters(new URLSearchParams('type=flying&type=fire')).types).toEqual(['fire', 'flying'])
+    expect(parseFilters(new URLSearchParams('type=fire,flying')).types).toEqual(['fire', 'flying'])
+    expect(parseFilters(new URLSearchParams('type=fire&type=fire&type=shadow')).types).toEqual(['fire'])
+    expect(parseFilters(new URLSearchParams('type=normal&type=fire&type=water')).types).toEqual(['normal', 'fire'])
   })
 
   it('잘못된 값은 무시한다', () => {
@@ -45,8 +53,9 @@ describe('parseFilters / toSearchParams', () => {
 
   it('기본값은 URL에 쓰지 않고, 왕복 변환이 같다', () => {
     expect(toSearchParams(DEFAULT_FILTERS).toString()).toBe('')
-    const filters = { q: '리자몽', type: 'fire', gen: 'generation-vi', sort: 'name' } as const
+    const filters: PokedexFilters = { q: '리자몽', types: ['fire', 'flying'], gen: 'generation-vi', sort: 'name' }
     expect(parseFilters(toSearchParams(filters))).toEqual(filters)
+    expect(toSearchParams({ ...filters, types: ['flying', 'fire'] }).getAll('type')).toEqual(['fire', 'flying'])
     expect(toSearchParams(filters).get('gen')).toBe('6')
   })
 
@@ -62,8 +71,13 @@ describe('applyFilters', () => {
   })
 
   it('FR-04 타입 필터 (복합 타입 포함)', () => {
-    expect(ids(applyFilters(LIST, { ...DEFAULT_FILTERS, type: 'fire' }))).toEqual([4, 6, 155])
-    expect(ids(applyFilters(LIST, { ...DEFAULT_FILTERS, type: 'flying' }))).toEqual([6])
+    expect(ids(applyFilters(LIST, { ...DEFAULT_FILTERS, types: ['fire'] }))).toEqual([4, 6, 155])
+    expect(ids(applyFilters(LIST, { ...DEFAULT_FILTERS, types: ['flying'] }))).toEqual([6])
+  })
+
+  it('타입 조합: 고른 타입을 모두 가진 포켓몬만', () => {
+    expect(ids(applyFilters(LIST, { ...DEFAULT_FILTERS, types: ['fire', 'flying'] }))).toEqual([6])
+    expect(ids(applyFilters(LIST, { ...DEFAULT_FILTERS, types: ['fire', 'fairy'] }))).toEqual([])
   })
 
   it('FR-05 세대 필터', () => {
@@ -71,8 +85,8 @@ describe('applyFilters', () => {
   })
 
   it('검색어 AND 타입 AND 세대', () => {
-    expect(ids(applyFilters(LIST, { q: '리', type: 'fire', gen: 'generation-i', sort: 'id' }))).toEqual([4, 6])
-    expect(ids(applyFilters(LIST, { q: '피카츄', type: 'fire', gen: null, sort: 'id' }))).toEqual([])
+    expect(ids(applyFilters(LIST, { q: '리', types: ['fire'], gen: 'generation-i', sort: 'id' }))).toEqual([4, 6])
+    expect(ids(applyFilters(LIST, { q: '피카츄', types: ['fire'], gen: null, sort: 'id' }))).toEqual([])
   })
 
   it('FR-06 이름순은 한국어 가나다순', () => {

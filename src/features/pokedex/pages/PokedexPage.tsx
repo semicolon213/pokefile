@@ -66,7 +66,7 @@ export function PokedexPage() {
             <h2 id="pokedex-results-title" className="visually-hidden">
               포켓몬 목록
             </h2>
-            <TypeFilter selected={filters.type} onSelect={(type) => update({ type })} />
+            <TypeFilter selected={filters.types} onChange={(types) => update({ types })} />
 
             <div className="pokedex-toolbar">
               <p role="status" aria-live="polite" className="pokedex-count">

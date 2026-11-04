@@ -110,12 +110,48 @@
   border-color: var(--color-text-muted);
 }
 
-/* 선택은 잉크로 채워 색 외에도 구분된다 (DESIGN.md §5.2) */
+/* '전체 타입' 선택은 잉크로 채운다 */
 .type-filter__chip[aria-pressed='true'] {
   border-color: var(--color-text);
   background: var(--color-text);
   color: #fff;
   font-weight: 600;
+}
+
+/* 타입 칩: 마우스를 올리면 그 타입 색이 비치고, 선택하면 카드 배지와 같은 타입 색으로 채운다.
+   선택은 색 외에도 2px 진한 테두리와 굵은 글씨로 구분된다 (DESIGN.md §5.2). 글자는 잉크라 18종 모두 AA. */
+.type-filter__chip--type:hover {
+  border-color: var(--type-strong);
+}
+
+.type-filter__chip--type[aria-pressed='true'] {
+  border-color: var(--type-strong);
+  background: var(--type-bg);
+  color: var(--color-text);
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px var(--type-strong);
+}
+
+/* 타입 2개를 고르면 나머지는 고를 수 없다 */
+.type-filter__chip:disabled {
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.type-filter-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.type-filter__hint {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  word-break: keep-all;
+  text-wrap: pretty;
 }
 
 /* ---------- 결과 수 · 정렬 ---------- */
