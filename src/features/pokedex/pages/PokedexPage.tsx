@@ -1,6 +1,7 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
+import { useLocation } from 'react-router'
 import { GENERATIONS } from '@/shared/models'
-import { useMyGame } from '@/shared/state'
+import { rememberListSearch, useMyGame } from '@/shared/state'
 import { ErrorState, GENERATION_LABELS, useDocumentTitle } from '@/shared/ui'
 import { GenerationNav } from '../components/GenerationNav'
 import { PokemonGrid } from '../components/PokemonGrid'
@@ -35,6 +36,9 @@ export function PokedexPage() {
   const filtered = !isDefaultFilters(filters)
   // 필터가 바뀌면 목록을 처음(첫 묶음)부터 다시 보여준다
   const listKey = toSearchParams(filters).toString()
+  // 상세의 '도감 목록으로'가 이 주소(필터 포함)로 돌아오도록 기억한다
+  const { search } = useLocation()
+  useEffect(() => rememberListSearch(search), [search])
 
   return (
     <div className="pokedex">
@@ -97,7 +101,7 @@ export function PokedexPage() {
             )}
 
             {results.length > 0 ? (
-              <PokemonGrid key={listKey} pokemon={results} regional={regional} />
+              <PokemonGrid key={listKey} pokemon={results} regional={regional} listKey={listKey} />
             ) : (
               <div className="pokedex-empty">
                 <p>검색 결과가 없습니다. 검색어나 필터를 확인해 주세요.</p>

@@ -4,6 +4,7 @@ import { favoritesRoutes } from '@/features/favorites'
 import { pokedexRoutes } from '@/features/pokedex'
 import { pokemonDetailRoutes } from '@/features/pokemon-detail'
 import { typeChartRoutes } from '@/features/type-chart'
+import { AppScrollRestoration } from '../layout/AppScrollRestoration'
 import { NotFoundPage } from '../layout/NotFoundPage'
 import { RootLayout } from '../layout/RootLayout'
 
@@ -12,7 +13,12 @@ import { RootLayout } from '../layout/RootLayout'
 export const routes: RouteObject[] = [
   {
     path: '/',
-    element: <RootLayout />,
+    element: (
+      <>
+        <RootLayout />
+        <AppScrollRestoration />
+      </>
+    ),
     children: [
       ...pokedexRoutes,
       ...pokemonDetailRoutes,

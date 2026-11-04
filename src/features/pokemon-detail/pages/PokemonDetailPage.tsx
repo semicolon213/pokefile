@@ -5,6 +5,7 @@ import { FavoriteToggle } from '@/features/favorites'
 import { TypeMatchups } from '@/features/type-chart'
 import { parseFormKey, parsePokemonId } from '@/shared/models'
 import type { FormKey, PokemonId, PokemonSummary } from '@/shared/models'
+import { lastListPath } from '@/shared/state'
 import { ArrowLeftIcon, ErrorState, useDocumentTitle } from '@/shared/ui'
 import { displayName, formFullName, formatDexNumber } from '@/shared/utils'
 import { BasicInfoSection } from '../components/BasicInfoSection'
@@ -26,7 +27,7 @@ export function PokemonDetailPage() {
     return (
       <div className="detail-page">
         <ErrorState message="올바르지 않은 포켓몬 번호입니다." />
-        <Link to="/">도감 목록으로</Link>
+        <Link to={lastListPath()}>도감 목록으로</Link>
       </div>
     )
   }
@@ -91,14 +92,15 @@ function PokemonDetail({ pokemonId }: { pokemonId: PokemonId }) {
             void formQuery.refetch()
           }}
         />
-        <Link to="/">도감 목록으로</Link>
+        <Link to={lastListPath()}>도감 목록으로</Link>
       </div>
     )
   }
 
   return (
     <article className="detail-page" aria-labelledby="detail-title">
-      <Link to="/" className="detail-back">
+      {/* 마지막으로 본 목록(필터 포함)으로 돌아가고, 스크롤 위치는 앱 셸의 ScrollRestoration이 되찾는다 */}
+      <Link to={lastListPath()} className="detail-back">
         <ArrowLeftIcon size={18} />
         도감 목록으로
       </Link>

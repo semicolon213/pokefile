@@ -3,11 +3,12 @@ import { useEffect, useState } from 'react'
 /**
  * 목록 끝(sentinel)이 화면에 들어오면 pageSize만큼 더 보여준다 (FR-08, 버튼 없음).
  * 필터가 바뀌면 호출하는 쪽에서 key로 컴포넌트를 다시 만들어 처음부터 보여준다.
+ * initialCount: 상세에서 돌아왔을 때 펼쳐 두었던 카드 수(스크롤 위치를 되찾을 수 있도록).
  * IntersectionObserver가 없는 환경에서는 전체를 보여준다.
  */
-export function useInfiniteScroll(total: number, pageSize: number) {
+export function useInfiniteScroll(total: number, pageSize: number, initialCount = pageSize) {
   const supported = typeof IntersectionObserver !== 'undefined'
-  const [visibleCount, setVisibleCount] = useState(supported ? pageSize : total)
+  const [visibleCount, setVisibleCount] = useState(supported ? Math.max(initialCount, pageSize) : total)
   const [sentinel, setSentinel] = useState<HTMLElement | null>(null)
 
   // 한 묶음을 추가할 때마다 다시 관찰한다. 추가 후에도 sentinel이 화면 안에 있으면
