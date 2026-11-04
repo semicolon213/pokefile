@@ -1,0 +1,305 @@
+/* UI-01 도감 목록: 좌측 세대 사이드바 + 본문(타입 칩 · 결과 수/정렬 · 카드 격자) */
+.pokedex-layout {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-6);
+}
+
+.pokedex-results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+/* ---------- 세대 사이드바 ---------- */
+.generation-nav {
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-5));
+}
+
+.generation-nav__title {
+  margin: 0 0 var(--space-2);
+  padding: 0 var(--space-3);
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.generation-nav__list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.generation-nav__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--color-text);
+  font-size: 15px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.generation-nav__item:hover {
+  background: var(--color-surface-muted);
+}
+
+.generation-nav__item[aria-pressed='true'] {
+  background: var(--color-primary-soft);
+  color: var(--color-primary-ink);
+  font-weight: 700;
+}
+
+.generation-nav__name {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.generation-nav__region {
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.generation-nav__item[aria-pressed='true'] .generation-nav__region,
+.generation-nav__item[aria-pressed='true'] .generation-nav__count {
+  color: var(--color-primary-ink);
+}
+
+.generation-nav__count {
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 타입 필터 ---------- */
+.type-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.type-filter__chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.type-filter__chip:hover {
+  border-color: var(--color-text-muted);
+}
+
+/* 선택은 잉크로 채워 색 외에도 구분된다 (DESIGN.md §5.2) */
+.type-filter__chip[aria-pressed='true'] {
+  border-color: var(--color-text);
+  background: var(--color-text);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ---------- 결과 수 · 정렬 ---------- */
+.pokedex-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.pokedex-count,
+.pokedex-status {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.pokedex-count b {
+  margin-right: 1px;
+  color: var(--color-text);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.sort-select select {
+  height: 40px;
+  padding: 0 var(--space-6) 0 var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* ---------- 카드 격자 ---------- */
+.pokedex-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pokedex-grid__sentinel {
+  padding: var(--space-5);
+  color: var(--color-text-muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+/* ---------- 상태: 로딩 · 결과 없음 · 오류 ---------- */
+.pokedex-loading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.pokedex-card-skeleton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+}
+
+.pokedex-card-skeleton__plate,
+.pokedex-card-skeleton__line {
+  background: linear-gradient(90deg, var(--color-surface-muted) 25%, var(--color-plate) 50%, var(--color-surface-muted) 75%);
+  background-size: 200% 100%;
+  animation: pokedex-shimmer 1.4s ease-in-out infinite;
+}
+
+.pokedex-card-skeleton__plate {
+  width: 104px;
+  height: 104px;
+  margin-top: 28px;
+  border-radius: 50%;
+}
+
+.pokedex-card-skeleton__line {
+  width: 70%;
+  height: 14px;
+  border-radius: 4px;
+}
+
+.pokedex-card-skeleton__line--short {
+  width: 45%;
+}
+
+@keyframes pokedex-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.pokedex-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-4);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-card);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.pokedex-empty p {
+  margin: 0;
+  word-break: keep-all;
+  text-wrap: pretty;
+}
+
+.pokedex-error {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+/* ---------- 반응형 ---------- */
+/* 태블릿 이하: 세대 사이드바를 목록 위 가로 스크롤 메뉴로 (DESIGN.md §4) */
+@media (max-width: 1023px) {
+  .pokedex-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+
+  .generation-nav {
+    position: static;
+  }
+
+  .generation-nav__title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .generation-nav__list {
+    flex-direction: row;
+    gap: var(--space-1);
+    overflow-x: auto;
+    padding-bottom: var(--space-1);
+  }
+
+  .generation-nav__item {
+    width: auto;
+    white-space: nowrap;
+  }
+
+  .generation-nav__region {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .pokedex-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+
+  .type-filter {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: var(--space-1);
+  }
+
+  .type-filter__chip {
+    flex-shrink: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pokedex-card-skeleton__plate,
+  .pokedex-card-skeleton__line {
+    animation: none;
+  }
+}

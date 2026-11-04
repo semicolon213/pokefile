@@ -1,0 +1,119 @@
+/* 실전 추천 세팅 (상세 화면 섹션). 섹션 틀은 상세의 .detail-section을 따른다. */
+.smogon-section {
+  min-width: 0;
+}
+
+.smogon-section > h2 {
+  margin-bottom: var(--space-1);
+}
+
+.smogon-source,
+.smogon-summary {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.smogon-source {
+  margin: 0 0 var(--space-4);
+}
+
+.smogon-summary {
+  margin: var(--space-3) 0;
+}
+
+.smogon-format {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.smogon-format select,
+.smogon-section button {
+  min-height: 40px;
+  max-width: 100%;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 14px;
+}
+
+.smogon-section button {
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.smogon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: var(--space-3);
+}
+
+.smogon-card {
+  min-width: 0;
+  padding: var(--space-4);
+  border-radius: var(--radius-control);
+  background: var(--color-surface-muted);
+  overflow-wrap: anywhere;
+}
+
+.smogon-card h3 {
+  margin: 0 0 var(--space-3);
+  font-size: 15px;
+}
+
+.smogon-card h4 {
+  margin: var(--space-4) 0 var(--space-2);
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.smogon-fields {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: 14px;
+}
+
+.smogon-fields > div {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: var(--space-2);
+}
+
+.smogon-fields dt {
+  color: var(--color-text-muted);
+}
+
+.smogon-fields dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.smogon-spreads {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.smogon-spreads li + li {
+  margin-top: var(--space-1);
+}
+
+.smogon-or {
+  color: var(--color-text-muted);
+}
+
+.smogon-moves {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 14px;
+}
+
+.smogon-moves li + li {
+  margin-top: var(--space-1);
+}

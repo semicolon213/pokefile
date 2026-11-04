@@ -1,0 +1,100 @@
+/* UI-03 즐겨찾기: 도감 카드를 그대로 재사용한다 */
+.favorites-page {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.favorites-page > h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.favorites-page__intro,
+.favorites-count {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.favorites-grid > li {
+  min-width: 0;
+}
+
+.favorites-more {
+  justify-self: start;
+}
+
+.favorites-empty,
+.favorites-notice,
+.favorites-fallback {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border-radius: var(--radius-card);
+}
+
+.favorites-empty {
+  justify-items: center;
+  border: 1px dashed var(--color-border-strong);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.favorites-notice {
+  background: var(--color-warning-soft);
+  color: var(--color-warning-ink);
+}
+
+.favorites-empty p,
+.favorites-notice p,
+.favorites-fallback p {
+  margin: 0;
+  word-break: keep-all;
+  text-wrap: pretty;
+}
+
+.favorites-fallback {
+  align-content: start;
+  height: 100%;
+  border: 1px solid var(--color-border);
+  overflow-wrap: anywhere;
+}
+
+.favorites-fallback p {
+  color: var(--color-text-muted);
+}
+
+.favorites-page button:not(.favorite-toggle, .button) {
+  min-height: 40px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media (max-width: 767px) {
+  .favorites-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+
+  .favorites-empty,
+  .favorites-notice,
+  .favorites-fallback {
+    padding: var(--space-4);
+  }
+}

@@ -1,21 +1,28 @@
-# 작업 백로그 (초안)
+# 작업 백로그
 
-> 담당은 `OWNERSHIP.md`의 **임시 배정**에 따른 제안이다. 실제 개발 전 팀 합의가 필요하다.
-> 상태: BACKLOG / READY / IN_PROGRESS / SELF_TESTED / QA_REVIEW / QA_PASS / BLOCKED / DONE
+> 담당은 `OWNERSHIP.md`의 확정 배정(ADR-004)을 따른다.
+> 상태: QA_PASS / READY / IN_PROGRESS / MERGED / QA_REVIEW / QA_PASS / HUMAN_APPROVED / MERGED / BLOCKED / DONE (`WORKFLOW.md` §2)
 
-| TASK | 담당(제안) | 범위 | 관련 SRS | 의존성 | 상태 |
+| TASK | 담당 | 범위 | 관련 SRS | 의존성 | 상태 |
 |---|---|---|---|---|---|
-| TASK-001 | 김형균 | Vite/React/라우터/Query 초기 설정 | NFR-05 | 배포·구조 합의 | BACKLOG |
-| TASK-002 | 김형균 | 공통 모델/API 계약 | DR-01~04 | API 스키마 검증 | BACKLOG |
-| TASK-003 | 김형균 | 검색 인덱스·한국어 검색 | FR-01~03 | TASK-002 | BACKLOG |
-| TASK-004 | 김형균 | 타입·세대 필터/정렬/무한 스크롤 | FR-04~09 | TASK-003 | BACKLOG |
-| TASK-005 | 임지섭 | 상세 기본 정보·차트 | FR-10~14 | TASK-002 | BACKLOG |
-| TASK-006 | 임지섭 | 진화 트리·출현 장소 | FR-15~16,18 | TASK-005 | BACKLOG |
-| TASK-007 | 성윤우 | Smogon 실전 세팅/폼 매핑 | FR-17~18 | TASK-002, API 검증 | BACKLOG |
-| TASK-008 | 성윤우 | localStorage 즐겨찾기 | FR-19~22 | TASK-002 | BACKLOG |
+| TASK-001 | 김형균 | Vite `react-ts`·HashRouter·Query 초기 설정, oxlint·Vitest·Playwright·npm scripts, GitHub Actions CI/CD·Pages 배포, CODEOWNERS | NFR-05 | ADR-005~007 | MERGED |
+| TASK-002 | 김형균 | 공통 모델(`PokemonId`·`FormKey`·`Generation`·`PokemonType`·`PokemonSummary`)과 공통 유틸(`toShowdownId`·`formatDexNumber`·`displayName`) (ADR-009) | DR-01~04 | API 스키마 검증(API_SPEC §5) | MERGED |
+| TASK-003 | 김형균 | 정적 검색 인덱스 생성 스크립트(`public/data/pokedex-index.json`)·한국어 검색 (ADR-010) | FR-01~03 | TASK-002 | MERGED |
+| TASK-004 | 김형균 | 타입·세대 필터, 번호·이름 정렬, 무한 스크롤, URL 쿼리 동기화 (ADR-011) | FR-04~09 | TASK-003, OQ-20(제안값 24 적용) | MERGED |
+| TASK-005 | 임지섭 | 상세 기본 정보·차트, 6세대 메가 폼 탭(`?form=`) | FR-10~14 | TASK-002, OQ-17(제안값 x→omega-ruby 적용) | MERGED |
+| TASK-006 | 임지섭 | 진화 트리(#722 이후 제외)·출현 장소(6세대 이하 버전만, ADR-008) | FR-15~16,18 | TASK-005, OQ-18(결정 전 임시: 장소명 영문 표기) | SELF_TESTED |
+| TASK-007 | 성윤우 | Smogon gen6 실전 세팅·이름 매핑·메가스톤 대응표 (ADR-009) | FR-17~18 | TASK-002, OQ-19 | QA_PASS |
+| TASK-008 | 성윤우 | localStorage 즐겨찾기 (ADR-012) | FR-19~22 | TASK-002 | BACKLOG |
 | TASK-009 | 팀 합의 | 반응형·로딩·오류·캐싱 통합 | NFR-01~04,07~08 | 기능 구현 | BACKLOG |
-| TASK-010 | 팀 합의 | 통합 테스트·정적 배포 | NFR-05~06 | TASK-003~009 | BACKLOG |
-| TASK-011 | 성윤우(제안) | 이로치/울음소리·상성·비교 | FR-23~25 | 필수 기능 완료 | BACKLOG |
+| TASK-010 | 팀 합의 | 통합 테스트·배포 URL 확인 | NFR-05~06 | TASK-003~009 | BACKLOG |
+| TASK-011 | 성윤우 | 이로치/울음소리·상성·비교 | FR-23~25 | 필수 기능 완료, OQ-10 | BACKLOG |
+| TASK-012 | 김형균 | 외부 API 계약 검증 테스트 (`scripts/verify-api/`) | DR-01~05 | — | SELF_TESTED |
+
+### 상태 메모 (2026-11-04)
+- TASK-001~004: develop 반영(PR #1, 직접 push). QA는 구현과 같은 Claude가 수행해 교차 QA 미충족.
+- TASK-005·006: develop 반영(PR #2). 1차 QA FAIL(E2E 회귀) → 테스트 수정 후 병합, 재검증 기록 없음.
+- TASK-007·008: Codex 구현, Claude 독립 QA 1차 FAIL(M-1) → PR #6에서 수정·재검증 PASS. PR #6 병합 시 MERGED.
+- 메인(`main`) 배포는 아직 없음. 필수 기능 완료 후 `develop → main` PR로 반영.
 
 ## 작업 카드 형식 (복사해 사용)
 ```yaml
@@ -39,10 +46,10 @@ verification:
   - npm run typecheck
   - npm test
   - npm run build
-qa_reviewer: 미정
-human_approver: 미정
+qa_reviewer: 교차 배정(ADR-014)
+human_approver: 기능 오너 (공통 영역은 김형균)
 ```
-`verification`은 **프로젝트에 해당 npm script가 실제로 구성된 후** 실행 가능하다.
+`verification`은 **TASK-001에서 npm script(ADR-007)가 실제로 구성된 후** 실행 가능하다.
 
 ## 교차 의존성 규칙
 - `shared` 수정은 별도 TASK/PR로 분리하는 것을 원칙으로 한다.

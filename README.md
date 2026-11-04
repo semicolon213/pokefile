@@ -89,9 +89,14 @@ TASK 할당 → feature 브랜치 구현 → 자동 검사 → 독립 QA → 담
 Node 22 이상 (`.nvmrc`).
 ```bash
 npm install
-npm run dev        # 개발 서버
+npm run dev        # 개발 서버 → http://localhost:5173/pokefile/
 npm run verify     # lint(oxlint + 모듈 경계 검사) → typecheck → test → build
+npm run test:watch # 단위·통합 테스트 감시 모드
+
+npx playwright install chromium   # E2E 최초 1회
+npm run test:e2e                  # E2E (빌드 후 /pokefile/ 경로에서 실행)
 ```
+라우팅은 HashRouter라서 주소는 `/pokefile/#/pokemon/25` 형태입니다.
 
 ## 프로젝트 구조
 ```text
@@ -143,11 +148,12 @@ tests/{unit,integration,e2e}/<feature>/
 - `docs/OPEN_QUESTIONS.md`: 팀 확인이 필요한 사항
 - `docs/qa/QA_TEMPLATE.md`: 독립 QA 보고서 양식
 - `AGENTS.md`, `CLAUDE.md`: AI 도구별 진입점
-- `.github/CODEOWNERS`: GitHub 리뷰어 예시 (계정 치환 필요)
+- `.github/CODEOWNERS`: 경로별 리뷰 요청 (ADR-014)
 - `.github/pull_request_template.md`: PR 양식
-- `.github/workflows/ci.yml`: CI (lint/typecheck/test/build)
+- `.github/workflows/ci.yml`: CI (lint/typecheck/test/build) — 모든 PR, `main`·`develop` push
+- `.github/workflows/deploy.yml`: `main` 반영 시 GitHub Pages 배포 (ADR-005)
 - `scripts/verify.sh`: 공통 검증 스크립트
+- `scripts/verify-api/`: 외부 API 계약 검증 (`npm run verify:api`)
 
-### 미확정 사항
-`CODEOWNERS`의 GitHub 사용자명, 배포 플랫폼, 작업 담당은 확정되지 않았다.
-테스트 도구는 `scripts/verify.sh` 실행을 위해 Vitest + Testing Library를 **임시 채택**했으며 OQ-11에서 확정한다. E2E 도구는 미도입.
+### 결정 사항
+담당, 배포(GitHub Pages + HashRouter), 테스트 도구(Vitest · Testing Library · Playwright), 지원 범위 등은 `docs/DECISIONS.md`에 기록되어 있다. 남은 결정은 `docs/OPEN_QUESTIONS.md`를 본다.

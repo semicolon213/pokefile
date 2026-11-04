@@ -4,6 +4,8 @@ import { defineConfig } from 'vitest/config'
 
 // https://vite.dev/config/
 export default defineConfig({
+  // GitHub Pages 저장소 경로 (ADR-005). 저장소 이름이 바뀌면 함께 수정한다.
+  base: '/pokefile/',
   plugins: [react()],
   resolve: {
     alias: {
