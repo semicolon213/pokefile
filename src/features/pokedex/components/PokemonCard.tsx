@@ -3,7 +3,7 @@ import { Link } from 'react-router'
 import { FavoriteToggle } from '@/features/favorites'
 import { pokemonDetailPath } from '@/features/pokemon-detail'
 import type { PokemonSummary } from '@/shared/models'
-import { TypeBadge } from '@/shared/ui'
+import { TypeBadge, fitSprite } from '@/shared/ui'
 import { displayName, formatDexNumber } from '@/shared/utils'
 import { pokemonImageUrls } from '../model/image'
 import './PokemonCard.css'
@@ -45,10 +45,7 @@ export function PokemonCard({ pokemon, regionalNumber }: Props) {
               alt=""
               loading="lazy"
               decoding="async"
-              onLoad={(e) => {
-                const img = e.currentTarget
-                img.dataset.downscaled = String(Math.max(img.naturalWidth, img.naturalHeight) > SPRITE_BOX)
-              }}
+              onLoad={(e) => fitSprite(e.currentTarget, SPRITE_BOX, { upscale: false })}
               onError={() => setImageIndex((i) => i + 1)}
             />
           ) : (
