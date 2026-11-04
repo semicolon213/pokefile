@@ -44,6 +44,22 @@
   line-height: 20px;
 }
 
+/* 지방을 골랐을 때: 지방 번호를 앞에, 전국 번호는 옅게 (FR-31). 즐겨찾기 별 자리를 비우고, 길면 전국 번호를 다음 줄로 */
+.pokemon-card__number:has(.pokemon-card__regional) {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-2);
+  padding-right: 32px;
+}
+
+.pokemon-card__regional {
+  color: var(--color-text);
+}
+
+.pokemon-card__national {
+  font-weight: 500;
+}
+
 /* 스프라이트 원판: 픽셀 아트를 회색 원 위에 정수배로 또렷하게 */
 .pokemon-card__plate {
   display: grid;

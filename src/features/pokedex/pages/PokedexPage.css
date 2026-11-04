@@ -169,6 +169,13 @@
   font-size: 14px;
 }
 
+/* 지방을 골랐을 때 어느 판의 도감인지 (FR-31) */
+.pokedex-edition {
+  margin: calc(var(--space-2) * -1) 0 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
 .pokedex-count b {
   margin-right: 1px;
   color: var(--color-text);
