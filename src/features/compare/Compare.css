@@ -1,0 +1,383 @@
+/* 포켓몬 비교 (FR-25, TASK-022).
+   두 포켓몬 구분 색은 dataviz 검증기로 확인했다(색각 이상 ΔE 28.6, 일반 34.5, 표면 대비 3:1 이상, 다크는 별도 단계).
+   색은 막대·범례 칩에만 쓰고 숫자·이름 글자는 본문 잉크로 둔다. */
+:root {
+  --compare-a: #2f6fd6;
+  --compare-b: #e07a1f;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --compare-a: #5b93f0;
+    --compare-b: #d16f1c;
+  }
+}
+
+:root[data-theme='dark'] {
+  --compare-a: #5b93f0;
+  --compare-b: #d16f1c;
+}
+
+.compare-page {
+  display: grid;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+.compare-page > h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.compare-status {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+/* ---------- 고르기 ---------- */
+.compare-pickers {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-4);
+}
+
+.compare-picker {
+  min-width: 0;
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+
+.compare-picker--a {
+  --swatch: var(--compare-a);
+}
+
+.compare-picker--b {
+  --swatch: var(--compare-b);
+}
+
+.compare-picker__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-4);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.compare-swatch {
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--swatch);
+}
+
+.compare-swap {
+  display: grid;
+  place-items: center;
+  align-self: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.compare-swap:hover:not(:disabled) {
+  border-color: var(--color-text-muted);
+}
+
+.compare-swap:disabled {
+  color: var(--color-text-muted);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.compare-search {
+  position: relative;
+}
+
+.compare-search__input {
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.compare-search__input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.compare-search__list {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  left: 0;
+  z-index: 5;
+  margin: 0;
+  padding: var(--space-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-raise);
+  list-style: none;
+}
+
+.compare-search__option {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.compare-search__option .tabular {
+  color: var(--color-text-muted);
+}
+
+.compare-search__option[aria-selected='true'] {
+  background: var(--color-surface-muted);
+}
+
+.compare-search__empty {
+  margin: var(--space-2) 0 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.compare-selected {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+}
+
+.compare-selected__plate {
+  display: grid;
+  place-items: center;
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  background: var(--color-plate);
+}
+
+.compare-selected__plate img {
+  image-rendering: pixelated;
+}
+
+.compare-selected__body {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.compare-selected__number {
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.compare-selected__name {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.compare-selected__types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.compare-selected__form select {
+  max-width: 100%;
+  height: 36px;
+  margin-top: var(--space-1);
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.compare-selected__change {
+  grid-column: 1 / -1;
+  justify-self: start;
+  min-height: 36px;
+  padding: 0 var(--space-3);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.compare-selected__change:hover {
+  border-color: var(--color-text-muted);
+  color: var(--color-text);
+}
+
+/* ---------- 비교표 ---------- */
+.compare-result {
+  min-width: 0;
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+
+.compare-result h2 {
+  margin: 0 0 var(--space-4);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.compare-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.compare-legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.compare-legend__item--a,
+.compare-table__head--a {
+  --swatch: var(--compare-a);
+}
+
+.compare-legend__item--b,
+.compare-table__head--b {
+  --swatch: var(--compare-b);
+}
+
+.compare-table thead th.compare-table__num .compare-swatch {
+  display: inline-block;
+  margin-right: 4px;
+  vertical-align: -1px;
+}
+
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.compare-table th,
+.compare-table td {
+  padding: var(--space-2) var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.compare-table thead th {
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.compare-table tbody th {
+  width: 88px;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.compare-table th.compare-table__num,
+.compare-table td.compare-table__num {
+  width: 64px;
+  text-align: right;
+  color: var(--color-text-muted);
+}
+
+.compare-table td.compare-table__num[data-win] {
+  color: var(--color-text);
+  font-weight: 800;
+}
+
+.compare-table__bars {
+  width: 50%;
+}
+
+.compare-bars {
+  display: grid;
+  gap: 2px;
+}
+
+.compare-bar {
+  display: block;
+  height: 10px;
+  border-radius: 0 4px 4px 0;
+}
+
+.compare-bar--a {
+  background: var(--compare-a);
+}
+
+.compare-bar--b {
+  background: var(--compare-b);
+}
+
+.compare-table__diff {
+  color: var(--color-text-muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.compare-table__total th,
+.compare-table__total td {
+  border-bottom: 0;
+  padding-top: var(--space-3);
+}
+
+.compare-table__total td.compare-table__num {
+  font-size: 16px;
+}
+
+@media (max-width: 767px) {
+  .compare-pickers {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .compare-swap {
+    justify-self: center;
+    transform: rotate(90deg);
+  }
+
+  .compare-picker,
+  .compare-result {
+    padding: var(--space-4);
+  }
+
+  .compare-table tbody th {
+    width: 64px;
+  }
+
+  .compare-table th.compare-table__num,
+  .compare-table td.compare-table__num {
+    width: 40px;
+  }
+
+  /* 좁은 화면: 차이 열을 막대 아래 줄로 내리지 않고 숨긴다(값 두 개와 굵은 글자로 비교 가능) */
+  .compare-table__diff {
+    display: none;
+  }
+}

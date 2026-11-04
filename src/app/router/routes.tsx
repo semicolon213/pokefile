@@ -1,5 +1,6 @@
 import type { RouteObject } from 'react-router'
 import { battleToolsRoutes } from '@/features/battle-tools'
+import { compareRoutes } from '@/features/compare'
 import { favoritesRoutes } from '@/features/favorites'
 import { pokedexRoutes } from '@/features/pokedex'
 import { pokemonDetailRoutes } from '@/features/pokemon-detail'
@@ -25,6 +26,7 @@ export const routes: RouteObject[] = [
       ...favoritesRoutes,
       ...battleToolsRoutes,
       ...typeChartRoutes,
+      ...compareRoutes,
       { path: '*', element: <NotFoundPage /> },
     ],
   },

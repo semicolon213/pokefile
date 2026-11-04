@@ -7,7 +7,7 @@ import { parseFormKey, parsePokemonId } from '@/shared/models'
 import type { FormKey, PokemonId, PokemonSummary } from '@/shared/models'
 import { lastListPath } from '@/shared/state'
 import { ArrowLeftIcon, ErrorState, useDocumentTitle } from '@/shared/ui'
-import { displayName, formFullName, formatDexNumber } from '@/shared/utils'
+import { comparePath, displayName, formFullName, formatDexNumber } from '@/shared/utils'
 import { BasicInfoSection } from '../components/BasicInfoSection'
 import { EncountersSection } from '../components/EncountersSection'
 import { EvolutionSection } from '../components/EvolutionSection'
@@ -114,7 +114,13 @@ function PokemonDetail({ pokemonId }: { pokemonId: PokemonId }) {
             </span>
           )}
         </div>
-        <FavoriteToggle pokemonId={pokemonId} />
+        <div className="detail-header__actions">
+          {/* TASK-022: 지금 보는 폼을 포켓몬 A로 두고 비교 화면을 연다 */}
+          <Link to={comparePath({ id: pokemonId, form: formKey ?? 'default' })} className="detail-compare">
+            비교하기
+          </Link>
+          <FavoriteToggle pokemonId={pokemonId} />
+        </div>
       </header>
 
       {forms && formKey && <FormTabs forms={forms} selected={formKey} onSelect={selectForm} />}

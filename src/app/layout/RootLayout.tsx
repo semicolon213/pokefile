@@ -20,6 +20,7 @@ export function RootLayout() {
             포켓몬 도감
           </NavLink>
           <NavLink to="/types">타입 상성</NavLink>
+          <NavLink to="/compare">포켓몬 비교</NavLink>
           <NavLink to="/favorites">즐겨찾기</NavLink>
         </nav>
         <div className="app-header__tools">

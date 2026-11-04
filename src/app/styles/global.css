@@ -183,6 +183,10 @@ img {
   border-color: var(--color-text-muted);
 }
 
+.button {
+  white-space: nowrap;
+}
+
 .button--primary {
   border-color: var(--color-primary);
   background: var(--color-primary);
@@ -269,6 +273,7 @@ img {
   display: inline-flex;
   align-items: center;
   min-height: 40px;
+  white-space: nowrap;
   padding: 0 var(--space-4);
   border-radius: var(--radius-control);
   color: var(--color-text-muted);
@@ -360,6 +365,25 @@ img {
   max-width: 1440px;
   margin: 0 auto;
   padding: var(--space-5);
+}
+
+/* 768~1279px: 메뉴 4개와 도구(내 게임·검색·테마)가 한 줄에 들어가지 않으므로 도구를 둘째 줄 오른쪽으로 내린다.
+   상단 바 높이 토큰도 함께 바꿔 사이드바 sticky 위치가 맞게 한다. */
+@media (min-width: 768px) and (max-width: 1279px) {
+  :root {
+    --header-height: 112px;
+  }
+
+  .app-header {
+    flex-wrap: wrap;
+    align-content: center;
+    row-gap: var(--space-2);
+  }
+
+  .app-header__tools {
+    flex-basis: 100%;
+    justify-content: flex-end;
+  }
 }
 
 @media (max-width: 767px) {

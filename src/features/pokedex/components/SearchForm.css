@@ -8,7 +8,8 @@
   position: relative;
   display: flex;
   align-items: center;
-  width: 320px;
+  /* 상단 바 폭이 모자라면 줄어든다 (메뉴 4개 + 내 게임 + 테마와 한 줄) */
+  width: clamp(180px, 18vw, 320px);
 }
 
 .search-form__icon {
@@ -20,6 +21,7 @@
 
 .search-form__input {
   width: 100%;
+  text-overflow: ellipsis;
   height: 40px;
   padding: 0 72px 0 38px;
   border: 1px solid var(--color-border-strong);
