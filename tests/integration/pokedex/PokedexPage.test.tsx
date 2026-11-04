@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { RootLayout } from '@/app/layout/RootLayout'
@@ -107,6 +107,26 @@ describe('PokedexPage 검색 (TASK-003)', () => {
     expect(screen.getByText('검색 결과가 없습니다. 검색어나 필터를 확인해 주세요.')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: '초기화' }))
     expect(getCount('3마리의 포켓몬')).toBeInTheDocument()
+  })
+
+  it('목록 스프라이트는 키우지 않고, 상자보다 큰 GIF도 PNG로 바꾸지 않고 줄여서 움직임을 유지한다', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => indexResponse()))
+    renderPage()
+    await findCount('3마리의 포켓몬')
+    const imageOf = (name: RegExp) => screen.getByRole('link', { name }).querySelector('img')!
+    const load = (img: HTMLImageElement, size: number) => {
+      Object.defineProperty(img, 'naturalWidth', { value: size, configurable: true })
+      Object.defineProperty(img, 'naturalHeight', { value: size, configurable: true })
+      fireEvent.load(img)
+    }
+    const charizard = imageOf(/리자몽/)
+    load(charizard, 140)
+    expect(charizard.getAttribute('src')).toMatch(/showdown\/6\.gif$/)
+    expect(charizard).toHaveAttribute('data-downscaled', 'true')
+    const pikachu = imageOf(/피카츄/)
+    load(pikachu, 46)
+    expect(pikachu.style.width).toBe('')
+    expect(pikachu).toHaveAttribute('data-downscaled', 'false')
   })
 
   it('인덱스 요청 실패 시 오류와 다시 시도를 제공한다', async () => {

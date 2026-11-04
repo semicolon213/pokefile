@@ -3,14 +3,17 @@ import { Link } from 'react-router'
 import { FavoriteToggle } from '@/features/favorites'
 import { pokemonDetailPath } from '@/features/pokemon-detail'
 import type { PokemonSummary } from '@/shared/models'
-import { TypeBadge, fitPixelArt } from '@/shared/ui'
+import { TypeBadge } from '@/shared/ui'
 import { displayName, formatDexNumber } from '@/shared/utils'
 import { pokemonImageUrls } from '../model/image'
 import './PokemonCard.css'
 
 type Props = { pokemon: PokemonSummary }
 
-/** 스프라이트 원판(104px) 안의 상자. 픽셀 아트는 이 안에서 정수배로만 키우고, 더 크면 96px PNG(1배)로 바꾼다. */
+/**
+ * 스프라이트 원판(104px) 안의 상자. 목록에서는 키우지 않고 원본 크기(1배)로 보여 포켓몬끼리 크기 비율을 지킨다.
+ * 상자보다 큰 GIF(실측 1011개 중 292개)는 PNG로 바꾸지 않고 상자에 맞게 줄여 움직임을 유지한다(줄일 때만 부드럽게 보간).
+ */
 const SPRITE_BOX = 96
 
 // DESIGN.md §5.1: 카드 본문은 상세로 이동, 즐겨찾기 버튼은 이동하지 않는다.
@@ -33,7 +36,8 @@ export function PokemonCard({ pokemon }: Props) {
               loading="lazy"
               decoding="async"
               onLoad={(e) => {
-                if (!fitPixelArt(e.currentTarget, SPRITE_BOX)) setImageIndex((i) => i + 1)
+                const img = e.currentTarget
+                img.dataset.downscaled = String(Math.max(img.naturalWidth, img.naturalHeight) > SPRITE_BOX)
               }}
               onError={() => setImageIndex((i) => i + 1)}
             />
