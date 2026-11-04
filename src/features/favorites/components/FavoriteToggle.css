@@ -1,0 +1,21 @@
+.favorite-control { display: inline-flex; flex-direction: column; align-items: center; gap: 4px; }
+.favorite-toggle {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 4px;
+  border: 1px solid #d0d5dd;
+  border-radius: 50%;
+  color: #59636e;
+  background: #fff;
+  font: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.favorite-toggle[aria-pressed="true"] { color: #c83131; border-color: #e84b4b; background: #fff4f4; }
+.favorite-toggle:hover:not(:disabled) { border-color: #e84b4b; }
+.favorite-toggle:focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
+.favorite-toggle:disabled { opacity: 0.6; cursor: not-allowed; }
+.favorite-feedback { max-width: 100px; color: #8a3d16; font-size: 0.7rem; text-align: center; }
