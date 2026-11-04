@@ -1,6 +1,6 @@
 # 외부 API 및 데이터 계약 (검증 초안)
 
-> 2026-10-28 `scripts/verify-api`로 #1~#721과 6세대 메가 48종의 응답 필드를 실측했다(§5). 요청량 제한과 배포 origin CORS는 아직 검증되지 않았다.
+> 2026-10-28 `scripts/verify-api`로 #1~#721과 6세대 메가 48종의 응답 필드를 실측했다(§5). 2026-11-04 범위를 #1~#1025·모든 폼으로 넓히며(ADR-016) 추가 실측했다(§5.2). 요청량 제한과 배포 origin CORS는 아직 검증되지 않았다.
 
 ## 1. 출처
 | 출처 | 보고서에서 확인한 목적 | 확인 상태 |
@@ -23,7 +23,7 @@
 - API 실패/지연/응답 구조 변경 시 UI 처리
 
 ## 3. 정규화 원칙
-- 내부 기준 ID는 전국도감 번호(1~721)이고, 6세대 메가는 `FormKey`로 구분한다(ADR-009). 다른 대체 폼은 OQ-15.
+- 내부 기준 ID는 전국도감 번호(1~1025)이고, 폼은 PokéAPI pokemon 이름에서 종 이름을 뺀 폼 키로 구분한다(ADR-009·016). 범위 값은 `src/shared/config/scope.json`이 기준이다.
 - API 응답 객체를 UI 컴포넌트에 직접 전파하지 않고 adapter에서 정규화한다.
 - 번역·폼 매핑은 검증된 매핑 테이블로 관리한다.
 - 매핑 실패는 `empty` 또는 명시적 오류로 반환하며 다른 포켓몬의 세팅으로 대체하지 않는다.
@@ -35,7 +35,7 @@ Query Key 예: `['pokemon', id]`, `['species', id]`, `['encounters', id]`, `['po
 
 ## 5. 검증 기록 표
 
-검증 코드: `scripts/verify-api/verify-api.test.mjs` (`node --test`, 실제 네트워크 호출). 범위: #1~#721 + 6세대 메가 48종 (ADR-008). 최종 실행: 11/11 PASS.
+검증 코드: `scripts/verify-api/verify-api.test.mjs` (`node --test`, 실제 네트워크 호출). 아래 표의 범위: #1~#721 + 6세대 메가 48종 (ADR-008 당시, 이력). 9세대·모든 폼 실측은 §5.2. 최종 실행: 11/11 PASS.
 
 | 항목 | 실제 호출 URL | 샘플 포켓몬/폼 | 결과 | 확인자/날짜 |
 |---|---|---|---|---|
@@ -60,6 +60,25 @@ Query Key 예: `['pokemon', id]`, `['species', id]`, `['encounters', id]`, `['po
 gen6 세팅 포맷: `ou, uu, ru, nu, pu, zu, lc, ubers, monotype, doublesou, vgc2014, vgc2016, battlespotsingles, battlespotdoubles, battlespottriples, anythinggoes, 1v1, cap, middlecup, stabmons, almostanyability, balancedhackmons, purehackmons` → 표시 포맷은 OQ-19.
 
 **미검증:** 배포 origin(GitHub Pages)에서의 CORS 확인(배포 후 TASK-010), 요청량 제한.
+
+### 5.2 9세대·모든 폼 실측 (2026-11-04, ADR-016 근거)
+
+탐색 스크립트로 PokéAPI·data.pkmn.cc를 전수 조회했다. `scripts/verify-api`의 계약 테스트 확장은 TASK-023에서 한다(아직 미반영).
+
+| 항목 | 결과 |
+|---|---|
+| 세대별 종 수 | i 151, ii 100, iii 135, iv 107, v 156, vi 72, vii 88, viii 96, ix 120 = **1025** |
+| 한국어 종 이름 | **1025/1025 존재** |
+| 한국어 도감 설명 | #899~#1025 **127종 없음**. ko 설명이 있는 버전: x·y·oras(721종), sun·moon(302), ultra-sun·ultra-moon(403), lets-go(153), sword·shield(609) → OQ-17 |
+| 기본 폼이 아닌 폼 | **326개**: 메가 97(x-y 30, oras 18, mega-dimension 49), 거다이맥스 34, 알로라 20(토템 1 포함), 가라르 20, 히스이 16, 팔데아 4, 원시회귀 2, 기타 133 |
+| 폼 한국어 이름(form_names) | 메가 48/97, 거다이맥스 0/34, 알로라 19, 가라르 20/20, 히스이 0/16, 팔데아 0/4, 기타 137개 중 91 (46개 없음: 피카츄 옷갈아입기, 토템, 디아루가·펄기아 오리진, 바스라오 흰줄무늬, 돌핀맨 마이티폼, 싸리용 폼, 코라이돈·미라이돈 변신 모습 등) → ADR-016 이름 규칙, OQ-26 |
+| 폼 이미지 | showdown GIF: 메가 57/97, 거다이맥스 34/34, 기타 123/137. 기타 중 이미지가 전혀 없는 폼 8개(코라이돈 4·미라이돈 4) → 기본 모습 이미지 |
+| 기본 폼 이미지(#722~#1025) | showdown GIF 없음 14종(무쇠 시리즈 10·미라이돈·오거폰·테라파고스·복숭악동), 기본 PNG는 전부 있음 |
+| 전투 중에만 나오는 폼 | 23개 |
+| 타입 변경 | 6세대 이후 바뀐 타입 없음(현재 타입 그대로 사용) |
+| 게임 버전 한국어 이름 | sun 썬, moon 문, ultra-sun/moon, lets-go 레츠고! 피카츄/이브이, sword 소드, shield 실드(+갑옷의 외딴섬·왕관의 설원), brilliant-diamond·shining-pearl, legends-arceus, scarlet 스칼렛, violet 바이올렛, legends-za, mega-dimension 메가 차원 러시. teal-mask·indigo-disk·champions는 ko 이름 없음 |
+| 출현 장소(encounters) | sun·moon·usum·lets-go·sword·shield(+DLC)는 있음. **BDSP·LEGENDS 아르세우스·스칼렛/바이올렛·LEGENDS Z-A는 데이터 없음** |
+| Smogon 세팅 | 키 수 gen7 830, gen8 624, gen9 656. 종 커버: gen9 508, gen8 504, gen7 705, gen6 639, **어느 세대든 911종**, 없음 114종. 리전폼은 `Raichu-Alola` 같은 키로 존재 |
 
 ## 6. 보안
 프론트엔드 빌드 결과물은 공개되므로 비밀 키/토큰을 저장하지 않는다.
