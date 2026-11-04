@@ -1,0 +1,41 @@
+.smogon-section {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.smogon-section > h2 { margin: 0 0 4px; }
+.smogon-source, .smogon-summary { color: #667085; font-size: 0.875rem; }
+.smogon-source { margin: 0 0 20px; }
+.smogon-format { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; font-weight: 600; }
+.smogon-format select, .smogon-section button {
+  min-height: 44px;
+  max-width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  color: #242933;
+  background: #fff;
+  font: inherit;
+}
+.smogon-section button { cursor: pointer; }
+.smogon-section :is(select, button):focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
+.smogon-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; }
+.smogon-card { min-width: 0; padding: 20px; border: 1px solid #e5e7eb; border-radius: 12px; background: #f9fafb; overflow-wrap: anywhere; }
+.smogon-card h3 { margin: 0 0 16px; font-size: 1rem; }
+.smogon-card h4 { margin: 16px 0 8px; font-size: 0.875rem; }
+.smogon-fields { display: grid; gap: 12px; margin: 0; }
+.smogon-fields > div { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 8px; }
+.smogon-fields dt { color: #667085; font-size: 0.875rem; }
+.smogon-fields dd { margin: 0; font-size: 0.875rem; }
+.smogon-spreads { margin: 0; padding: 0; list-style: none; }
+.smogon-spreads li + li { margin-top: 6px; }
+.smogon-or { color: #667085; }
+.smogon-moves { margin: 0; padding-left: 22px; font-size: 0.875rem; }
+.smogon-moves li + li { margin-top: 6px; }
+@media (max-width: 600px) {
+  .smogon-section { padding: 16px; }
+  .smogon-card { padding: 16px; }
+}

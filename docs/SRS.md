@@ -183,7 +183,7 @@ PokeFile은 별도 애플리케이션 서버 없이 웹 브라우저에서 동�
        ├─ 종족값 차트 ───── Recharts
        └─ 즐겨찾기 ─────── localStorage
 
-정적 사이트 배포: GitHub Pages / Vercel / Netlify 중 선택
+정적 사이트 배포: GitHub Pages + GitHub Actions (ADR-005)
 자체 백엔드 서버 및 자체 DB: 없음
 ```
 

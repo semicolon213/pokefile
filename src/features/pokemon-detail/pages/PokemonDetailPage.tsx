@@ -148,8 +148,16 @@ function PokemonDetail({ pokemonId }: { pokemonId: PokemonId }) {
       />
 
       <EncountersSection pokemonId={pokemonId} />
-      {/* TODO(계약): 실전 세팅도 폼 기준으로 바뀌어야 한다(DESIGN §2.2). formKey 전달은 TASK-007 담당과 props 합의 후 연결 */}
-      <SmogonSetsSection pokemonId={pokemonId} />
+      {/* TASK-007 / CR-007-INTEGRATION: 상세에서 확정한 종 이름·유효 폼과 조회 상태를 전달한다. */}
+      <SmogonSetsSection
+        pokemonId={pokemonId}
+        identity={speciesQuery.isError
+          ? { status: 'error', message: '포켓몬 정보를 불러오지 못했습니다.' }
+          : species && formKey
+            ? { status: 'success', data: { speciesName: species.name, formKey } }
+            : { status: 'loading' }}
+        onRetryIdentity={() => void speciesQuery.refetch()}
+      />
     </article>
   )
 }
