@@ -13,7 +13,8 @@ AI 자체 보고와 실제 실행 결과를 구분한다. `SRS.md`의 FR/NFR/DR 
 | API contract | 실제 응답과 adapter 기대 필드 비교 | `node:test` (`scripts/verify-api/`) | `npm run verify:api` |
 | Manual | 모바일/데스크톱, 키보드 조작, 차트 수치, 배포 URL(`/#/...`) 새로고침 | — | — |
 
-- CI(PR): lint · typecheck · test · build. E2E와 API contract는 외부 네트워크에 의존하므로 CI 필수 단계에 넣을지는 TASK-001에서 정한다.
+- CI(모든 PR, `main`·`develop` push): `verify` 작업(lint · typecheck · test · build)과 `e2e` 작업(Playwright Chromium)을 함께 실행하며 둘 다 통과해야 한다. 다른 영역 화면 변경이 기존 E2E를 깨는 회귀(PR #2·#4)를 막기 위해 2026-11-04 추가했다.
+- API contract(`npm run verify:api`)는 외부 API 상태에 좌우되므로 CI에 넣지 않고 필요할 때 수동 실행한다.
 - 단위·통합 테스트는 외부 API를 직접 호출하지 않고 응답 샘플(fixture)을 사용한다.
 
 ## 3. 테스트 매트릭스

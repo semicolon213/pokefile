@@ -16,3 +16,28 @@ jobs:
         run: npm ci
       - name: Verify (lint · typecheck · test · build)
         run: bash scripts/verify.sh
+
+  # 다른 영역의 화면 변경이 기존 흐름을 깨는지 PR 단계에서 잡는다 (PR #2·#4 회귀 재발 방지).
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+      - name: E2E (build → vite preview → Playwright)
+        run: npm run test:e2e
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report
+            test-results
+          retention-days: 7
