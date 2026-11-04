@@ -91,6 +91,36 @@ describe('PokedexPage 필터·정렬·URL 동기화 (TASK-004)', () => {
     expect(getCount('5마리의 포켓몬')).toBeInTheDocument()
   })
 
+  it('타입을 2개 고르면 그 조합을 모두 가진 포켓몬만 보이고, 나머지 칩은 비활성화된다', async () => {
+    stubIndex(BASE)
+    const user = userEvent.setup()
+    renderAt()
+    await findCount('5마리의 포켓몬')
+    await user.click(screen.getByRole('button', { name: '비행' }))
+    await user.click(screen.getByRole('button', { name: '불꽃' }))
+    expect(search()).toBe('?type=fire&type=flying')
+    expect(names()).toEqual(['리자몽'])
+    expect(screen.getByRole('button', { name: '불꽃' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('button', { name: '비행' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('button', { name: '물' })).toBeDisabled()
+    expect(screen.getByText(/최대 2개/)).toBeInTheDocument()
+
+    // 하나를 해제하면 다시 고를 수 있다
+    await user.click(screen.getByRole('button', { name: '비행' }))
+    expect(search()).toBe('?type=fire')
+    expect(screen.getByRole('button', { name: '물' })).toBeEnabled()
+  })
+
+  it('전체 타입을 누르면 고른 타입을 모두 해제한다', async () => {
+    stubIndex(BASE)
+    const user = userEvent.setup()
+    renderAt('/?type=fire&type=flying')
+    await findCount('검색 결과 1마리')
+    await user.click(screen.getByRole('button', { name: '전체 타입' }))
+    expect(search()).toBe('')
+    expect(getCount('5마리의 포켓몬')).toBeInTheDocument()
+  })
+
   it('검색어는 제출할 때 URL에 반영되고 다른 필터와 AND로 조합된다', async () => {
     stubIndex(BASE)
     const user = userEvent.setup()
