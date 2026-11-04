@@ -2,9 +2,9 @@ import { expect, test } from '@playwright/test'
 
 // TASK-003: 실제 정적 인덱스(public/data/pokedex-index.json)로 검색 → 상세 이동
 test.describe('도감 검색', () => {
-  test('721종 전체 목록을 불러온다', async ({ page }) => {
+  test('1025종 전체 목록을 불러온다', async ({ page }) => {
     await page.goto('#/')
-    await expect(page.getByText('721마리의 포켓몬')).toBeVisible()
+    await expect(page.getByText('1025마리의 포켓몬')).toBeVisible()
   })
 
   for (const query of ['피카츄', 'Pikachu', '25']) {

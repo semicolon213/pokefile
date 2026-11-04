@@ -23,16 +23,29 @@ test.describe('포켓몬 상세', () => {
     await expect(page.getByText('비행')).toBeVisible()
   })
 
-  test('출현 장소를 6세대 이하 게임별로 표시한다', async ({ page }) => {
+  test('출현 장소를 지원 게임별로 표시한다', async ({ page }) => {
     await page.goto('#/pokemon/25')
     await expect(page.getByRole('region', { name: '레드 출현 장소', exact: true })).toBeVisible()
-    await expect(page.getByRole('region', { name: /썬|소드/ })).toHaveCount(0)
+    // 출현 데이터가 없는 게임은 게임별 목록에 나오지 않는다 (안내는 TASK-024)
+    await expect(page.getByRole('region', { name: /LEGENDS Z-A/ })).toHaveCount(0)
   })
 
-  test('#722 이후 진화형은 진화 트리에 표시하지 않는다 (절각참의 킹갬브릿 #983 제외)', async ({ page }) => {
+  test('9세대 진화형까지 진화 트리에 표시한다 (절각참 → 대도각참 #983, ADR-016)', async ({ page }) => {
     await page.goto('#/pokemon/625')
     const evolution = page.locator('section', { has: page.getByRole('heading', { name: '진화' }) })
     await expect(evolution.getByRole('link', { name: /자망칼/ })).toBeVisible()
-    await expect(evolution.getByRole('link', { name: /#0983/ })).toHaveCount(0)
+    await expect(evolution.getByRole('link', { name: /대도각참/ })).toHaveAttribute('href', '#/pokemon/983')
+  })
+
+  test('리전폼·거다이맥스를 폼 탭으로 고를 수 있다 (ADR-016)', async ({ page }) => {
+    await page.goto('#/pokemon/26?form=alola')
+    const tabs = page.getByRole('group', { name: '폼 선택' })
+    await expect(tabs.getByRole('button', { name: '알로라의 모습' })).toHaveAttribute('aria-pressed', 'true')
+    await expect(page.getByText('라이츄 (알로라의 모습)')).toBeVisible()
+    await expect(page.getByText('에스퍼').first()).toBeVisible()
+    await tabs.getByRole('button', { name: '메가X' }).click()
+    await expect(page).toHaveURL(/form=mega-x/)
+    await page.goto('#/pokemon/6?form=gmax')
+    await expect(page.getByText('거다이맥스 리자몽')).toBeVisible()
   })
 })

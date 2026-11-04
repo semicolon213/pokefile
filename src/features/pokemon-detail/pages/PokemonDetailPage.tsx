@@ -5,15 +5,15 @@ import { FavoriteToggle } from '@/features/favorites'
 import { parseFormKey, parsePokemonId } from '@/shared/models'
 import type { FormKey, PokemonId, PokemonSummary } from '@/shared/models'
 import { ArrowLeftIcon, ErrorState, useDocumentTitle } from '@/shared/ui'
-import { displayName, formatDexNumber } from '@/shared/utils'
+import { displayName, formFullName, formatDexNumber } from '@/shared/utils'
 import { BasicInfoSection } from '../components/BasicInfoSection'
 import { EncountersSection } from '../components/EncountersSection'
 import { EvolutionSection } from '../components/EvolutionSection'
 import { FormTabs } from '../components/FormTabs'
 import { SectionState } from '../components/SectionState'
 import { StatChart } from '../components/StatChart'
-import { useMegaFormName, usePokedexIndex, usePokemonForm, useSpecies } from '../hooks/useDetailQueries'
-import { availableForms, resolveFormKey } from '../model/forms'
+import { usePokedexIndex, usePokemonForm, useSpecies } from '../hooks/useDetailQueries'
+import { availableForms, resolveFormKey, type FormOption } from '../model/forms'
 import './PokemonDetailPage.css'
 
 // UI-02 포켓몬 상세 — TASK-005(기본 정보·종족값·메가 폼 탭), TASK-006(진화·출현 장소)
@@ -44,23 +44,23 @@ function PokemonDetail({ pokemonId }: { pokemonId: PokemonId }) {
   )
   const summary = indexById.get(pokemonId)
 
-  // 폼 목록은 정적 인덱스의 megaForms로 정한다. 인덱스 실패 시 기본 폼만 제공한다.
-  const forms: FormKey[] | null = indexQuery.isSuccess
-    ? availableForms(summary?.megaForms ?? [])
+  // 폼 목록·폼 이름은 정적 인덱스의 forms로 정한다(ADR-016). 인덱스 실패 시 기본 폼만 제공한다.
+  const forms: FormOption[] | null = indexQuery.isSuccess
+    ? availableForms(summary?.forms ?? [])
     : indexQuery.isError
-      ? ['default']
+      ? availableForms([])
       : null
   const formParam = searchParams.get('form')
   const formKey: FormKey | null =
     parseFormKey(formParam) === 'default' ? 'default' : forms ? resolveFormKey(formParam, forms) : null
 
   const formQuery = usePokemonForm(pokemonId, formKey, speciesQuery.data?.name)
-  const isMega = formKey !== null && formKey !== 'default'
-  const megaNameQuery = useMegaFormName(formQuery.data?.formResourceName, isMega)
+  const isAltForm = formKey !== null && formKey !== 'default'
+  const formInfo = isAltForm ? summary?.forms.find((form) => form.key === formKey) : undefined
 
   const species = speciesQuery.data
   const baseName = species ? displayName(species) : summary ? displayName(summary) : `포켓몬 #${pokemonId}`
-  const formName = isMega ? (megaNameQuery.data ?? baseName) : baseName
+  const formName = formInfo ? formFullName(baseName, formInfo) : baseName
   useDocumentTitle(baseName)
 
   const selectForm = (form: FormKey) => {
@@ -115,7 +115,7 @@ function PokemonDetail({ pokemonId }: { pokemonId: PokemonId }) {
       </header>
 
       {forms && formKey && <FormTabs forms={forms} selected={formKey} onSelect={selectForm} />}
-      {isMega && <p className="detail-form-name">{formName}</p>}
+      {isAltForm && <p className="detail-form-name">{formName}</p>}
 
       {formQuery.isError ? (
         <SectionState

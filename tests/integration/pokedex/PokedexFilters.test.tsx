@@ -8,17 +8,17 @@ import { PokedexPage } from '@/features/pokedex/pages/PokedexPage'
 import type { PokemonSummary } from '@/shared/models'
 
 const BASE: PokemonSummary[] = [
-  { id: 4, nameEn: 'Charmander', nameKo: '파이리', types: ['fire'], generation: 'generation-i', megaForms: [] },
-  { id: 6, nameEn: 'Charizard', nameKo: '리자몽', types: ['fire', 'flying'], generation: 'generation-i', megaForms: ['mega-x', 'mega-y'] },
-  { id: 25, nameEn: 'Pikachu', nameKo: '피카츄', types: ['electric'], generation: 'generation-i', megaForms: [] },
-  { id: 155, nameEn: 'Cyndaquil', nameKo: '브케인', types: ['fire'], generation: 'generation-ii', megaForms: [] },
-  { id: 700, nameEn: 'Sylveon', nameKo: '님피아', types: ['fairy'], generation: 'generation-vi', megaForms: [] },
+  { id: 4, nameEn: 'Charmander', nameKo: '파이리', types: ['fire'], generation: 'generation-i', forms: [] },
+  { id: 6, nameEn: 'Charizard', nameKo: '리자몽', types: ['fire', 'flying'], generation: 'generation-i', forms: [{ key: 'mega-x', nameKo: '메가리자몽X', nameEn: 'Mega Charizard X', category: 'mega', types: ['fire', 'dragon'], battleOnly: true }, { key: 'mega-y', nameKo: '메가리자몽Y', nameEn: 'Mega Charizard Y', category: 'mega', types: ['fire', 'flying'], battleOnly: true }] },
+  { id: 25, nameEn: 'Pikachu', nameKo: '피카츄', types: ['electric'], generation: 'generation-i', forms: [] },
+  { id: 155, nameEn: 'Cyndaquil', nameKo: '브케인', types: ['fire'], generation: 'generation-ii', forms: [] },
+  { id: 700, nameEn: 'Sylveon', nameKo: '님피아', types: ['fairy'], generation: 'generation-vi', forms: [] },
 ]
 
 function stubIndex(pokemon: PokemonSummary[]) {
   vi.stubGlobal(
     'fetch',
-    vi.fn(async () => new Response(JSON.stringify({ version: 1, generatedAt: '2026-10-28', count: pokemon.length, pokemon }))),
+    vi.fn(async () => new Response(JSON.stringify({ version: 2, generatedAt: '2026-10-28', count: pokemon.length, pokemon }))),
   )
 }
 
@@ -183,7 +183,7 @@ describe('무한 스크롤 (FR-08)', () => {
     nameKo: `몬${i + 1}`,
     types: ['normal'],
     generation: 'generation-i',
-    megaForms: [],
+    forms: [],
   }))
 
   it('처음 24마리를 보여주고 목록 끝에 닿을 때마다 24마리씩 추가한다', async () => {

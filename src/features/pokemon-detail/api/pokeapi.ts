@@ -88,13 +88,13 @@ export function fetchEncounters(id: number) {
 
 /**
  * 정적 검색 인덱스(public/data/pokedex-index.json, ADR-010).
- * 메가 폼 목록(`megaForms`)과 진화 트리의 한국어 이름에 사용한다.
+ * 폼 목록(`forms`)·폼 이름과 진화 트리의 한국어 이름에 사용한다.
  */
 export const POKEDEX_INDEX_URL = `${import.meta.env.BASE_URL}data/pokedex-index.json`
 
 export async function fetchPokedexIndex(): Promise<PokemonSummary[]> {
   const file = await fetchJson<{ version: number; pokemon: PokemonSummary[] }>(POKEDEX_INDEX_URL)
-  if (file.version !== 1 || !Array.isArray(file.pokemon)) {
+  if (file.version !== 2 || !Array.isArray(file.pokemon)) {
     throw new Error('검색 인덱스 형식이 올바르지 않습니다.')
   }
   return file.pokemon

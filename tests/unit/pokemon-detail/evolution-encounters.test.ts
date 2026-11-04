@@ -23,7 +23,7 @@ describe('toEvolutionTree (FR-15, ADR-008)', () => {
     expect(tree.children[0].minLevel).toBeUndefined()
   })
 
-  it('#722 이후 진화형은 가지째 제외한다 (예: 킹갬브릿 #983)', () => {
+  it('지원 범위(#1025) 밖 진화형은 가지째 제외한다', () => {
     const raw: RawEvolutionNode = {
       species: species('pawniard', 624),
       evolution_details: [],
@@ -31,7 +31,7 @@ describe('toEvolutionTree (FR-15, ADR-008)', () => {
         {
           species: species('bisharp', 625),
           evolution_details: [levelUp(52)],
-          evolves_to: [{ species: species('kingambit', 983), evolution_details: [], evolves_to: [] }],
+          evolves_to: [{ species: species('future-mon', 1026), evolution_details: [], evolves_to: [] }],
         },
       ],
     }
@@ -45,7 +45,7 @@ describe('toEvolutionTree (FR-15, ADR-008)', () => {
   })
 })
 
-describe('toVersionEncounters (FR-16, ADR-008)', () => {
+describe('toVersionEncounters (FR-16, ADR-016)', () => {
   const encounter = (area: string, versions: [string, number, number][]): RawEncounter => ({
     location_area: { name: area, url: '' },
     version_details: versions.map(([version, min, max]) => ({
@@ -57,7 +57,7 @@ describe('toVersionEncounters (FR-16, ADR-008)', () => {
     })),
   })
 
-  it('6세대 이하 버전만 남기고 ADR-008 버전 순서로 묶는다', () => {
+  it('지원 게임 버전만 남기고 scope.json 버전 순서로 묶는다', () => {
     const result = toVersionEncounters([
       encounter('viridian-forest-area', [
         ['sword', 10, 12],
@@ -68,7 +68,7 @@ describe('toVersionEncounters (FR-16, ADR-008)', () => {
       ]),
       encounter('power-plant-area', [['red', 21, 24]]),
     ])
-    expect(result.map((v) => v.version)).toEqual(['red', 'yellow'])
+    expect(result.map((v) => v.version)).toEqual(['red', 'yellow', 'lets-go-pikachu', 'sword'])
     expect(result[0]).toMatchObject({ label: '레드', generation: 'generation-i' })
     expect(result[0].locations).toEqual([
       { area: 'viridian-forest-area', label: 'Viridian Forest', minLevel: 3, maxLevel: 5 },
@@ -77,7 +77,7 @@ describe('toVersionEncounters (FR-16, ADR-008)', () => {
   })
 
   it('지원 버전에 기록이 없으면 빈 배열 (DR-05 안내 대상)', () => {
-    expect(toVersionEncounters([encounter('route-1', [['sun', 2, 4]])])).toEqual([])
+    expect(toVersionEncounters([encounter('route-1', [['red-japan', 2, 4]])])).toEqual([])
     expect(toVersionEncounters([])).toEqual([])
   })
 

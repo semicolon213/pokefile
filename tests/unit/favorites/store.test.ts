@@ -78,7 +78,7 @@ describe('즐겨찾기 상태와 저장 실패 (TC-07·09)', () => {
     expect(disconnect).toHaveBeenCalledOnce()
   })
 
-  it.each([0, 722, 25.5, NaN])('범위 밖 ID %s는 저장하지 않는다', (id) => {
+  it.each([0, 1026, 25.5, NaN])('범위 밖 ID %s는 저장하지 않는다', (id) => {
     const storage = memoryStorage()
     const store = createFavoritesStore(() => storage)
     expect(store.toggle(id)).toBe(false)

@@ -7,7 +7,10 @@ describe('내 게임 (FR-26)', () => {
 
   it('지원 범위의 게임 버전만 인정한다', () => {
     expect(findGameVersion('black-2')).toMatchObject({ version: 'black-2', label: '블랙 2', generation: 'generation-v' })
-    expect(findGameVersion('sun')).toBeNull()
+    expect(findGameVersion('scarlet')).toMatchObject({ label: '스칼렛', generation: 'generation-ix' })
+    // 확장팩 버전은 본편에 합치고, 대전 전용 게임은 넣지 않는다 (ADR-016)
+    expect(findGameVersion('the-teal-mask-scarlet')).toBeNull()
+    expect(findGameVersion('champions')).toBeNull()
     expect(findGameVersion(null)).toBeNull()
   })
 
@@ -23,7 +26,7 @@ describe('내 게임 (FR-26)', () => {
   })
 
   it('저장된 잘못된 값은 무시한다', () => {
-    localStorage.setItem(MY_GAME_STORAGE_KEY, 'scarlet')
+    localStorage.setItem(MY_GAME_STORAGE_KEY, 'champions')
     resetMyGameForTest()
     const { result } = renderHook(() => useMyGame())
     expect(result.current).toBeNull()
