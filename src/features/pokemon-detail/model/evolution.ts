@@ -13,8 +13,8 @@ export type EvolutionNode = {
 }
 
 /**
- * evolution-chain 응답 → 지원 범위(#1~#721) 진화 트리 (ADR-008).
- * #722 이후 종(예: 킹갬브릿 #983)은 그 아래 가지까지 함께 제외한다. 루트가 범위 밖이면 null.
+ * evolution-chain 응답 → 지원 범위(#1~MAX_POKEMON_ID) 진화 트리 (ADR-016).
+ * 지원 범위 밖 종은 그 아래 가지까지 함께 제외한다. 루트가 범위 밖이면 null.
  */
 export function toEvolutionTree(raw: RawEvolutionNode): EvolutionNode | null {
   const id = idFromResourceUrl(raw.species.url)

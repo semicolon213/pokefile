@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router'
 import { RootLayout } from '@/app/layout/RootLayout'
@@ -8,13 +8,13 @@ import { PokedexPage } from '@/features/pokedex/pages/PokedexPage'
 import type { PokemonSummary } from '@/shared/models'
 
 const POKEMON: PokemonSummary[] = [
-  { id: 1, nameEn: 'Bulbasaur', nameKo: '이상해씨', types: ['grass', 'poison'], generation: 'generation-i', megaForms: [] },
-  { id: 6, nameEn: 'Charizard', nameKo: '리자몽', types: ['fire', 'flying'], generation: 'generation-i', megaForms: ['mega-x', 'mega-y'] },
-  { id: 25, nameEn: 'Pikachu', nameKo: '피카츄', types: ['electric'], generation: 'generation-i', megaForms: [] },
+  { id: 1, nameEn: 'Bulbasaur', nameKo: '이상해씨', types: ['grass', 'poison'], generation: 'generation-i', forms: [] },
+  { id: 6, nameEn: 'Charizard', nameKo: '리자몽', types: ['fire', 'flying'], generation: 'generation-i', forms: [{ key: 'mega-x', nameKo: '메가리자몽X', nameEn: 'Mega Charizard X', category: 'mega', types: ['fire', 'dragon'], battleOnly: true }, { key: 'mega-y', nameKo: '메가리자몽Y', nameEn: 'Mega Charizard Y', category: 'mega', types: ['fire', 'flying'], battleOnly: true }] },
+  { id: 25, nameEn: 'Pikachu', nameKo: '피카츄', types: ['electric'], generation: 'generation-i', forms: [] },
 ]
 
 function indexResponse() {
-  return new Response(JSON.stringify({ version: 1, generatedAt: '2026-10-28', count: POKEMON.length, pokemon: POKEMON }), {
+  return new Response(JSON.stringify({ version: 2, generatedAt: '2026-10-28', count: POKEMON.length, pokemon: POKEMON }), {
     status: 200,
     headers: { 'Content-Type': 'application/json' },
   })
@@ -82,13 +82,20 @@ describe('PokedexPage 검색 (TASK-003)', () => {
     expect(cardNames()[0]).toContain(expected)
   })
 
-  it('입력만 하고 제출하지 않으면 조회하지 않는다 (ADR-011)', async () => {
+  it('한 글자 입력할 때마다 결과를 바로 갱신하고 입력창 포커스를 유지한다 (ADR-011 개정)', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => indexResponse()))
     const user = userEvent.setup()
     renderPage()
     await findCount('3마리의 포켓몬')
-    await user.type(screen.getByRole('searchbox', { name: '포켓몬 검색' }), '피카츄')
-    expect(screen.getAllByRole('article')).toHaveLength(3)
+    const input = screen.getByRole('searchbox', { name: '포켓몬 검색' })
+    await user.type(input, '리')
+    expect(getCount('검색 결과 1마리')).toBeInTheDocument()
+    expect(cardNames()[0]).toContain('리자몽')
+    await user.type(input, '자몽')
+    expect(input).toHaveFocus()
+    expect(input).toHaveValue('리자몽')
+    await user.clear(input)
+    expect(getCount('3마리의 포켓몬')).toBeInTheDocument()
   })
 
   it('결과가 없으면 안내하고 초기화로 전체 목록을 되돌린다', async () => {
@@ -100,6 +107,26 @@ describe('PokedexPage 검색 (TASK-003)', () => {
     expect(screen.getByText('검색 결과가 없습니다. 검색어나 필터를 확인해 주세요.')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: '초기화' }))
     expect(getCount('3마리의 포켓몬')).toBeInTheDocument()
+  })
+
+  it('목록 스프라이트는 키우지 않고, 상자보다 큰 GIF도 PNG로 바꾸지 않고 줄여서 움직임을 유지한다', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => indexResponse()))
+    renderPage()
+    await findCount('3마리의 포켓몬')
+    const imageOf = (name: RegExp) => screen.getByRole('link', { name }).querySelector('img')!
+    const load = (img: HTMLImageElement, size: number) => {
+      Object.defineProperty(img, 'naturalWidth', { value: size, configurable: true })
+      Object.defineProperty(img, 'naturalHeight', { value: size, configurable: true })
+      fireEvent.load(img)
+    }
+    const charizard = imageOf(/리자몽/)
+    load(charizard, 140)
+    expect(charizard.getAttribute('src')).toMatch(/showdown\/6\.gif$/)
+    expect(charizard).toHaveAttribute('data-downscaled', 'true')
+    const pikachu = imageOf(/피카츄/)
+    load(pikachu, 46)
+    expect(pikachu.style.width).toBe('')
+    expect(pikachu).toHaveAttribute('data-downscaled', 'false')
   })
 
   it('인덱스 요청 실패 시 오류와 다시 시도를 제공한다', async () => {

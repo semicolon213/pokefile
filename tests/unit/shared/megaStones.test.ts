@@ -4,16 +4,18 @@ import type { PokemonSummary } from '@/shared/models'
 import { GEN6_MEGA_STONES, isGen6MegaStone, megaStoneFor, toShowdownId } from '@/shared/utils'
 
 describe('6세대 메가스톤 대응 (ADR-009 / CR-007-INTEGRATION)', () => {
-  it('도감 인덱스의 48개 메가 폼 중 스톤이 있는 47개만 대응한다', () => {
+  it('6세대 메가스톤 47개는 모두 도감 인덱스의 메가 폼과 대응한다 (인덱스는 메가 97개, ADR-016)', () => {
     const index = JSON.parse(indexJson) as { pokemon: PokemonSummary[] }
-    const forms = index.pokemon.flatMap((pokemon) => pokemon.megaForms.map((form) => ({ name: pokemon.nameEn, form })))
-    expect(forms).toHaveLength(48)
+    const forms = index.pokemon.flatMap((pokemon) =>
+      pokemon.forms.filter((f) => f.category === 'mega').map((f) => ({ name: pokemon.nameEn, form: f.key })),
+    )
+    expect(forms).toHaveLength(97)
     const mapped = forms.filter(({ name, form }) => megaStoneFor(name, form) !== undefined)
-    expect(mapped).toHaveLength(47)
     expect(mapped.map(({ name, form }) => toShowdownId(`${name}-${form}`)).sort())
       .toEqual(Object.keys(GEN6_MEGA_STONES).sort())
-    expect(forms.filter(({ name, form }) => !megaStoneFor(name, form)).map(({ name }) => name.toLowerCase()))
-      .toEqual(['rayquaza'])
+    // 메가레쿠쟈는 인덱스에 있지만 스톤이 없다. 6세대 이후 메가의 스톤은 TASK-025에서 다룬다.
+    expect(forms).toContainEqual({ name: 'Rayquaza', form: 'mega' })
+    expect(megaStoneFor('rayquaza', 'mega')).toBeUndefined()
   })
 
   it('리자몽·뮤츠의 X/Y 스톤을 구분한다', () => {

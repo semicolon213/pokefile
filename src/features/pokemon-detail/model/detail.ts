@@ -1,3 +1,4 @@
+import { SCOPE } from '@/shared/config/scope'
 import { POKEMON_TYPES } from '@/shared/models'
 import type { PokemonType } from '@/shared/models'
 import type { RawAbility, RawPokemon, RawPokemonForm, RawSpecies } from '../api/pokeapi'
@@ -70,10 +71,10 @@ export function toFormDetail(raw: RawPokemon): PokemonFormDetail {
 }
 
 /**
- * 한국어 도감 설명 버전 우선순위 (OQ-17 제안값: x, 없으면 omega-ruby).
- * 실측상 721종 모두 x·y·omega-ruby·alpha-sapphire에 ko 설명이 있으므로 같은 6세대 버전을 이어서 찾는다.
+ * 한국어 도감 설명 버전 우선순위 (OQ-17 제안값: x, 없으면 omega-ruby, 그다음 scope.json 순서).
+ * #899~#1025는 PokéAPI에 ko 설명이 없어 undefined(정보 없음)가 된다 (ADR-016).
  */
-export const FLAVOR_TEXT_VERSIONS = ['x', 'omega-ruby', 'y', 'alpha-sapphire'] as const
+export const FLAVOR_TEXT_VERSIONS = SCOPE.flavorTextVersions
 
 export function pickFlavorText(entries: RawSpecies['flavor_text_entries']): string | undefined {
   const ko = entries.filter((entry) => entry.language.name === 'ko')

@@ -1,20 +1,18 @@
-// PokéAPI / data.pkmn.cc 계약 검증 테스트 (OQ-08, API_SPEC §5)
+// PokéAPI / data.pkmn.cc 계약 검증 테스트 (OQ-08, API_SPEC §5·§5.2)
 // 실행: node --test scripts/verify-api/verify-api.test.mjs
 // 외부 네트워크를 실제로 호출한다. 의존성 없음(Node 18+ 내장 fetch, node:test).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 
 const POKEAPI = 'https://pokeapi.co/api/v2';
 const PKMN = 'https://data.pkmn.cc';
-const MAX_ID = 721; // 6세대까지 (ADR-008)
-const MEGA_VERSION_GROUPS = ['x-y', 'omega-ruby-alpha-sapphire']; // 6세대에 도입된 메가진화만
-const SUPPORTED_VERSIONS = [
-  'red', 'blue', 'yellow', 'gold', 'silver', 'crystal',
-  'ruby', 'sapphire', 'emerald', 'firered', 'leafgreen',
-  'diamond', 'pearl', 'platinum', 'heartgold', 'soulsilver',
-  'black', 'white', 'black-2', 'white-2',
-  'x', 'y', 'omega-ruby', 'alpha-sapphire',
-];
+// 지원 범위는 앱과 같은 설정 파일을 읽는다 (TASK-013, ADR-015)
+const scope = JSON.parse(readFileSync(new URL('../../src/shared/config/scope.json', import.meta.url), 'utf8'));
+const MAX_ID = scope.maxPokemonId;
+// 실전 세팅(gen6) 메가스톤 대응은 6세대에 도입된 메가만 대상이다 (ADR-009, 최신 메가는 TASK-025)
+const GEN6_MEGA_GROUPS = ['x-y', 'omega-ruby-alpha-sapphire'];
+const SUPPORTED_VERSIONS = scope.gameVersions.map((g) => g.version);
 
 const getJson = async (url, init) => {
   const res = await fetch(url, init);
@@ -46,16 +44,38 @@ const gen6Megas = () => (megaCache ??= (async () => {
   const list = await getJson(`${POKEAPI}/pokemon?limit=2000`);
   const candidates = list.results.filter((r) => /-mega(-|$)/.test(r.name));
   const forms = await pool(candidates, 12, (r) => getJson(`${POKEAPI}/pokemon-form/${r.name}`));
-  const megas = forms.filter((f) => f.is_mega && MEGA_VERSION_GROUPS.includes(f.version_group.name));
+  const megas = forms.filter((f) => f.is_mega && GEN6_MEGA_GROUPS.includes(f.version_group.name));
   return { candidates, megas: await pool(megas, 12, (f) => getJson(`${POKEAPI}/pokemon/${f.pokemon.name}`)), forms };
 })());
 
-test('PokéAPI: 1~721 species의 세대가 generation-i~vi 범위', async () => {
+test('PokéAPI: 1~MAX species의 세대가 scope.json 세대와 일치 (ADR-016)', async () => {
   const species = await allSpecies();
   const gens = new Set(species.map((s) => s.generation.name));
   console.log('  generations:', [...gens].join(', '));
-  assert.deepEqual([...gens].sort(), ['generation-i', 'generation-ii', 'generation-iii', 'generation-iv', 'generation-v', 'generation-vi']);
-  assert.equal(species[MAX_ID - 1].name, 'volcanion');
+  assert.deepEqual([...gens].sort(), scope.generations.map((g) => g.id).sort());
+  assert.equal(species[MAX_ID - 1].name, 'pecharunt');
+});
+
+// ADR-016: 기본 폼이 아닌 모든 폼. 폼 키 = pokemon 이름에서 '{종 이름}-'을 뺀 부분이 성립해야 한다
+test('PokéAPI: 모든 폼 목록과 폼 키 규칙 (ADR-016)', async () => {
+  const species = await allSpecies();
+  const variants = species.flatMap((s) => s.varieties.filter((v) => !v.is_default).map((v) => ({ species: s.name, name: v.pokemon.name })));
+  console.log(`  기본 폼이 아닌 폼 ${variants.length}개`);
+  assert.ok(variants.length >= 326, '실측 326개보다 줄면 범위 확인 필요');
+  const broken = variants.filter((v) => !v.name.startsWith(`${v.species}-`));
+  assert.deepEqual(broken, [], '종 이름으로 시작하지 않는 폼');
+  const index = JSON.parse(readFileSync(new URL('../../public/data/pokedex-index.json', import.meta.url), 'utf8'));
+  const indexed = index.pokemon.reduce((n, p) => n + p.forms.length, 0);
+  assert.equal(indexed, variants.length, '검색 인덱스와 PokéAPI 폼 수가 다르면 npm run build:index');
+});
+
+test('PokéAPI: scope.json 게임 버전·확장팩 버전이 존재하고 세대가 맞다 (ADR-016)', async () => {
+  for (const g of scope.gameVersions) {
+    const v = await getJson(`${POKEAPI}/version/${g.version}`);
+    const vg = await getJson(v.version_group.url);
+    assert.equal(vg.generation.name, g.generation, g.version);
+    for (const extra of g.includes ?? []) await getJson(`${POKEAPI}/version/${extra}`);
+  }
 });
 
 test('PokéAPI: 한국어 이름 존재 여부', async () => {
@@ -88,11 +108,14 @@ test('PokéAPI: 애니메이션 GIF 스프라이트 범위 (ADR-013)', async () 
     console.log(`  [${label}] BW GIF 누락 ${bw.length}/${list.length}, showdown GIF 누락 ${sd.length}/${list.length}, showdown 이로치 누락 ${sdShiny.length}`);
     return { bw, sd };
   };
-  const base = report('#1~#721', pokemon);
-  report('#650~#721', pokemon.slice(649));
+  const base = report(`#1~#${MAX_ID}`, pokemon);
+  report('#650~#721', pokemon.slice(649, 721));
   const mega = report('6세대 메가', megas);
   console.log('  BW GIF 없는 메가:', mega.bw.map((p) => p.name).join(', '));
-  assert.equal(base.sd.length, 0, 'showdown GIF는 전 범위 존재해야 함');
+  // ADR-016: #722 이후 일부(실측 14종)는 showdown GIF가 없다 → 기본 PNG로 대체하므로 PNG는 반드시 있어야 한다
+  console.log('  showdown GIF 없는 종:', base.sd.map((p) => `${p.name}#${p.id}`).join(', '));
+  assert.ok(base.sd.every((p) => p.id > 721), '6세대 이하는 showdown GIF가 모두 있어야 함');
+  assert.deepEqual(base.sd.filter((p) => !p.sprites.front_default).map((p) => p.name), [], 'GIF가 없으면 PNG는 있어야 함');
   for (const url of [pokemon[24].sprites.other.showdown.front_default, megas[0].sprites.other.showdown.front_default]) {
     const res = await fetch(url, { method: 'HEAD' });
     console.log('  ', url, res.status, res.headers.get('content-type'));
@@ -125,8 +148,8 @@ test('PokéAPI: 6세대 메가진화 목록과 한국어 폼 이름', async () =
   console.log('  참고: 원시회귀 kyogre-primal is_mega =', prim.is_mega, '| version_group =', prim.version_group.name);
 });
 
-test('PokéAPI: 출현 장소 버전 범위 (6세대 게임까지)', async () => {
-  for (const id of [25, 495, 650, 714]) {
+test('PokéAPI: 출현 장소 버전 범위 (지원 게임)', async () => {
+  for (const id of [25, 495, 650, 714, 819, 906]) {
     const enc = await getJson(`${POKEAPI}/pokemon/${id}/encounters`);
     const versions = new Set(enc.flatMap((e) => e.version_details.map((v) => v.version.name)));
     const inside = [...versions].filter((v) => SUPPORTED_VERSIONS.includes(v));
@@ -154,7 +177,7 @@ test('PokéAPI: 진화 체인 분기와 6세대 이후 진화 포함 여부 (FR-
 });
 
 test('data.pkmn.cc: CORS 및 리다이렉트', async () => {
-  const res = await fetch(`${PKMN}/sets/gen6.json`, { headers: { Origin: 'https://example.github.io' } });
+  const res = await fetch(`${PKMN}/sets/gen${scope.smogon.generation}.json`, { headers: { Origin: 'https://example.github.io' } });
   assert.equal(res.status, 200);
   console.log('  최종 URL:', res.url);
   console.log('  access-control-allow-origin:', res.headers.get('access-control-allow-origin'));
@@ -162,7 +185,7 @@ test('data.pkmn.cc: CORS 및 리다이렉트', async () => {
 });
 
 test('data.pkmn.cc: gen6 세팅 스키마와 PokéAPI 이름 매핑 (FR-17, DR-04)', async () => {
-  const sets = await getJson(`${PKMN}/sets/gen6.json`);
+  const sets = await getJson(`${PKMN}/sets/gen${scope.smogon.generation}.json`);
   const keys = Object.keys(sets);
   const formats = new Set(keys.flatMap((k) => Object.keys(sets[k])));
   console.log(`  세팅 보유 키: ${keys.length}, 포맷:`, [...formats].join(', '));
@@ -195,7 +218,7 @@ test('data.pkmn.cc: gen6 세팅 스키마와 PokéAPI 이름 매핑 (FR-17, DR-0
 const NON_STANDARD_FORMATS = new Set(['balancedhackmons', 'purehackmons', 'almostanyability', 'stabmons', 'cap']);
 
 test('data.pkmn.cc: 실전 세팅 추출 — 기본 폼과 메가(메가스톤) (FR-17)', async () => {
-  const sets = await getJson(`${PKMN}/sets/gen6.json`);
+  const sets = await getJson(`${PKMN}/sets/gen${scope.smogon.generation}.json`);
   const entry = (name) => sets[Object.keys(sets).find((k) => toId(k) === toId(name))];
   const items = (s) => [].concat(s.item ?? []);
 

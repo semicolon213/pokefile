@@ -3,8 +3,8 @@ import { decodeFavorites, encodeFavorites } from '@/features/favorites/model/sto
 
 describe('즐겨찾기 저장 스키마 (ADR-012 / TC-07)', () => {
   it('지원 ID만 중복 없이 추가 순서대로 읽는다', () => {
-    const result = decodeFavorites(JSON.stringify({ version: 1, ids: [133, 25, 133, 1, 721, 0, 722, 25.5, '6', null] }))
-    expect(result.ids).toEqual([133, 25, 1, 721])
+    const result = decodeFavorites(JSON.stringify({ version: 1, ids: [133, 25, 133, 1, 1025, 0, 1026, 25.5, '6', null] }))
+    expect(result.ids).toEqual([133, 25, 1, 1025])
     expect(result.status).toBe('recovered')
     expect(result.message).toBeTruthy()
   })

@@ -6,9 +6,11 @@
 ## 1. 담당표 (확정)
 | 담당 | GitHub | 기능 | 기본 수정 가능 경로 |
 |---|---|---|---|
-| 김형균 | `semicolon213` | 검색·목록·필터·정렬·무한 스크롤 | `src/features/pokedex/**`, `tests/**/pokedex/**` |
-| 임지섭 | `MianShang` | 상세·종족값·진화·출현 장소·메가 폼 전환 | `src/features/pokemon-detail/**`, `tests/**/pokemon-detail/**` |
-| 성윤우 | `yoonwoo2002` | 실전 세팅·즐겨찾기·선택 기능 | `src/features/battle-tools/**`, `src/features/favorites/**`, 해당 테스트 |
+| 김형균 | `semicolon213` | 검색·목록·필터·정렬·무한 스크롤·내 게임·지방 도감·타입 상성·능력치 비교·다크 모드 | `src/features/pokedex/**`, `tests/**/pokedex/**` |
+| 임지섭 | `MianShang` | 상세·종족값·진화(조건 포함)·출현 장소·메가 폼 전환·기술 표·특성 설명 | `src/features/pokemon-detail/**`, `tests/**/pokemon-detail/**` |
+| 성윤우 | `yoonwoo2002` | 실전 세팅·즐겨찾기·이로치/울음소리·도감 체크리스트 | `src/features/battle-tools/**`, `src/features/favorites/**`, 해당 테스트 (체크리스트는 favorites 또는 새 `src/features/collection/**`) |
+
+선택 기능 중 새 feature 폴더가 생기면 담당자가 소유한다(ADR-015): 김형균 — 타입 상성·능력치 비교(예: `src/features/type-chart/**`, `src/features/compare/**`), 다크 모드는 공통 영역(`src/app/**`, `src/shared/**`). 다른 담당자 화면에 붙는 섹션은 소유 feature의 공개 API로 제공하고 연결부는 화면 담당자가 확인한다.
 
 저장소: `semicolon213/pokefile`. 세 계정이 존재하는 것은 확인했고(2026-10-28), 공동작업자 등록 여부는 저장소 권한이 있는 계정으로 확인해야 한다.
 

@@ -1,6 +1,5 @@
 export type { Loadable } from './loadable'
 export {
-  FORM_KEYS,
   GENERATIONS,
   MAX_POKEMON_ID,
   POKEMON_TYPES,
@@ -8,4 +7,12 @@ export {
   parseFormKey,
   parsePokemonId,
 } from './pokemon'
-export type { FormKey, Generation, PokemonId, PokemonSummary, PokemonType } from './pokemon'
+export type {
+  FormCategory,
+  FormKey,
+  Generation,
+  PokemonForm,
+  PokemonId,
+  PokemonSummary,
+  PokemonType,
+} from './pokemon'

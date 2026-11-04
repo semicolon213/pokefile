@@ -1,18 +1,22 @@
 #!/usr/bin/env node
 // 정적 검색 인덱스 생성 (ADR-010)
-// PokéAPI에서 #1~#721과 6세대 메가 정보를 모아 public/data/pokedex-index.json을 만든다.
+// 지원 범위(src/shared/config/scope.json)의 포켓몬과 모든 폼(ADR-016)을 PokéAPI에서 모아 public/data/pokedex-index.json을 만든다.
 // 실행: npm run build:index  (네트워크 필요, 결과 파일은 저장소에 커밋한다)
-import { mkdirSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { formCategoryOf, formKeyOf, formNameKoOf } from './lib/form-names.mjs'
 
 const POKEAPI = 'https://pokeapi.co/api/v2'
-const MAX_ID = 721 // ADR-008
-const MEGA_VERSION_GROUPS = ['x-y', 'omega-ruby-alpha-sapphire'] // 6세대에 도입된 메가만
 const CONCURRENCY = 12
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+// 지원 범위는 앱과 같은 설정 파일을 읽는다 (TASK-013, ADR-015)
+const scope = JSON.parse(readFileSync(join(root, 'src', 'shared', 'config', 'scope.json'), 'utf8'))
+const MAX_ID = scope.maxPokemonId
 const outFile = join(root, 'public', 'data', 'pokedex-index.json')
+// API에 한국어 폼 이름이 없거나 맞지 않는 폼의 번역표 (ADR-016, OQ-26)
+const translations = JSON.parse(readFileSync(join(root, 'scripts', 'data', 'form-names-ko.json'), 'utf8')).names
 
 async function getJson(url, attempt = 1) {
   const res = await fetch(url)
@@ -38,9 +42,8 @@ async function pool(items, fn) {
 }
 
 const nameIn = (names, lang) => names.find((n) => n.language.name === lang)?.name
-
-// 'charizard-mega-x' → 'mega-x', 'venusaur-mega' → 'mega'
-const formKeyOf = (pokemonName) => pokemonName.match(/-(mega(?:-[xy])?)$/)?.[1]
+const titleCase = (key) => key.split('-').map((w) => w[0].toUpperCase() + w.slice(1)).join(' ')
+const typesOf = (pokemon) => [...pokemon.types].sort((a, b) => a.slot - b.slot).map((t) => t.type.name)
 
 async function main() {
   const ids = Array.from({ length: MAX_ID }, (_, i) => i + 1)
@@ -50,20 +53,40 @@ async function main() {
   console.log(`pokemon ${MAX_ID}건 조회`)
   const pokemon = await pool(ids, (id) => getJson(`${POKEAPI}/pokemon/${id}`))
 
-  console.log('6세대 메가 폼 조회')
-  const list = await getJson(`${POKEAPI}/pokemon?limit=2000`)
-  const megaNames = list.results.map((r) => r.name).filter((n) => /-mega(-[xy])?$/.test(n))
-  const forms = await pool(megaNames, (n) => getJson(`${POKEAPI}/pokemon-form/${n}`))
-  const megaFormsBySpecies = new Map()
-  for (const form of forms) {
-    if (!form.is_mega || !MEGA_VERSION_GROUPS.includes(form.version_group.name)) continue
-    const mega = await getJson(form.pokemon.url)
-    const speciesId = Number(mega.species.url.match(/\/(\d+)\/?$/)[1])
-    if (speciesId > MAX_ID) continue
-    const list = megaFormsBySpecies.get(speciesId) ?? []
-    list.push(formKeyOf(mega.name))
-    megaFormsBySpecies.set(speciesId, list.sort())
-  }
+  // 기본 폼이 아닌 모든 폼 (ADR-016). 순서는 species.varieties 순서를 따른다.
+  const variants = species.flatMap((s) =>
+    s.varieties.filter((v) => !v.is_default).map((v) => ({ speciesId: s.id, name: v.pokemon.name })),
+  )
+  console.log(`폼 ${variants.length}건 조회`)
+  const formData = await pool(variants, async ({ name }) => {
+    const p = await getJson(`${POKEAPI}/pokemon/${name}`)
+    const f = await getJson(p.forms[0].url)
+    return { p, f }
+  })
+  const formsBySpecies = new Map()
+  variants.forEach(({ speciesId, name }, i) => {
+    const { p, f } = formData[i]
+    const s = species[speciesId - 1]
+    const key = formKeyOf(name, s.name)
+    const category = formCategoryOf(key, f.is_mega)
+    const nameKo = formNameKoOf({
+      pokemonName: name,
+      key,
+      category,
+      apiNameKo: nameIn(f.form_names, 'ko'),
+      speciesKo: nameIn(s.names, 'ko') ?? s.name,
+      translations,
+    })
+    const form = {
+      key,
+      ...(nameKo ? { nameKo } : {}),
+      nameEn: nameIn(f.form_names, 'en') ?? nameIn(f.names, 'en') ?? titleCase(key),
+      category,
+      types: typesOf(p),
+      battleOnly: f.is_battle_only,
+    }
+    formsBySpecies.set(speciesId, [...(formsBySpecies.get(speciesId) ?? []), form])
+  })
 
   const entries = ids.map((id, i) => {
     const s = species[i]
@@ -75,18 +98,28 @@ async function main() {
       id,
       nameEn,
       ...(nameKo ? { nameKo } : {}),
-      types: [...p.types].sort((a, b) => a.slot - b.slot).map((t) => t.type.name),
+      types: typesOf(p),
       generation: s.generation.name,
-      megaForms: megaFormsBySpecies.get(id) ?? [],
+      forms: formsBySpecies.get(id) ?? [],
     }
   })
 
-  const megaCount = entries.reduce((n, e) => n + e.megaForms.length, 0)
+  for (const e of entries) {
+    const keys = e.forms.map((f) => f.key)
+    if (new Set(keys).size !== keys.length) throw new Error(`폼 키 중복: #${e.id}`)
+  }
+  const allForms = entries.flatMap((e) => e.forms)
+  const formSummary = Object.entries(Object.groupBy(allForms, (f) => f.category))
+    .map(([category, list]) => `${category} ${list.length}`)
+    .join(', ')
+  const formsWithoutKo = entries.flatMap((e) => e.forms.filter((f) => !f.nameKo).map((f) => `${e.nameEn}-${f.key}`))
   const missingKo = entries.filter((e) => !e.nameKo).length
-  if (megaCount !== 48) throw new Error(`6세대 메가 수가 48이 아님: ${megaCount}`)
+  const gens = new Set(entries.map((e) => e.generation))
+  const unknownGen = [...gens].filter((g) => !scope.generations.some((s) => s.id === g))
+  if (unknownGen.length) throw new Error(`scope.json generations에 없는 세대: ${unknownGen.join(', ')}`)
 
   const index = {
-    version: 1,
+    version: 2,
     generatedAt: new Date().toISOString().slice(0, 10),
     source: 'PokéAPI (https://pokeapi.co)',
     count: entries.length,
@@ -94,7 +127,8 @@ async function main() {
   }
   mkdirSync(dirname(outFile), { recursive: true })
   writeFileSync(outFile, JSON.stringify(index) + '\n')
-  console.log(`완료: ${entries.length}종, 메가 ${megaCount}개, 한국어 이름 누락 ${missingKo}건 → ${outFile}`)
+  console.log(`완료: ${entries.length}종, 폼 ${allForms.length}개(${formSummary}), 한국어 이름 누락 ${missingKo}건 → ${outFile}`)
+  console.log(`한국어 폼 이름 없음(영문 표시) ${formsWithoutKo.length}개:`, formsWithoutKo.join(', ') || '없음')
 }
 
 main().catch((err) => {
