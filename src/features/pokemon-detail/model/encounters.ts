@@ -56,3 +56,8 @@ export function toVersionEncounters(raw: readonly RawEncounter[]): VersionEncoun
     return locations.length > 0 ? [{ version, label, generation, locations }] : []
   })
 }
+
+/** 내 게임(FR-26)이 정해져 있으면 그 게임의 출현 장소만 남긴다. version이 없으면 그대로 */
+export function filterEncountersByGame(entries: readonly VersionEncounters[], version: string | null): VersionEncounters[] {
+  return version ? entries.filter((entry) => entry.version === version) : [...entries]
+}
