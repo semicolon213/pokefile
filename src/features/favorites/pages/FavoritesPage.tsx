@@ -1,4 +1,4 @@
-import { Link } from 'react-router'
+import { Link, useSearchParams } from 'react-router'
 import { PokemonCard, useSearchIndex } from '@/features/pokedex'
 import { pokemonDetailPath } from '@/features/pokemon-detail'
 import type { PokemonId } from '@/shared/models'
@@ -8,10 +8,29 @@ import { FavoriteToggle } from '../components/FavoriteToggle'
 import { FavoritesNotice } from '../components/FavoritesNotice'
 import { useFavorites } from '../hooks/useFavorites'
 import { favoriteEntries } from '../model/list'
+import { CollectionChecklist } from '../collection/CollectionChecklist'
 import './FavoritesPage.css'
 
 // UI-03 / FR-19~22: 같은 도감 카드를 공개 API로 재사용하고 저장 순서를 유지한다.
 export function FavoritesPage() {
+  const [params] = useSearchParams()
+  const collection = params.get('view') === 'collection'
+  const destination = (showCollection: boolean) => {
+    const next = new URLSearchParams(params)
+    if (showCollection) next.set('view', 'collection')
+    else next.delete('view')
+    return { pathname: '/favorites', search: next.size ? `?${next}` : '' }
+  }
+  return <>
+    <nav className="favorites-views" aria-label="저장한 포켓몬 보기">
+      <Link to={destination(false)} aria-current={!collection ? 'page' : undefined}>즐겨찾기 목록</Link>
+      <Link to={destination(true)} aria-current={collection ? 'page' : undefined}>도감 체크리스트</Link>
+    </nav>
+    {collection ? <CollectionChecklist /> : <FavoritesListPage />}
+  </>
+}
+
+function FavoritesListPage() {
   useDocumentTitle('즐겨찾기')
   const favorites = useFavorites()
   return (
