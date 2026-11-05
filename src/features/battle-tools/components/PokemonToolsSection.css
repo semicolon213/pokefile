@@ -1,4 +1,4 @@
-.pokemon-tools { min-width: 0; }
+.pokemon-tools { min-width: 0; container: pokemon-media / inline-size; }
 .pokemon-tools__header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); flex-wrap: wrap; }
 .pokemon-tools__header h2 { margin: 0; }
 .pokemon-tools__note { color: var(--color-text-muted); font-size: 14px; margin: var(--space-2) 0 var(--space-4); }
@@ -32,4 +32,4 @@
 .pokemon-tools__comparison th:first-child { width: 28%; text-align: left; }
 .pokemon-tools__comparison thead { background: var(--color-surface-muted); }
 .pokemon-tools__comparison tr:last-child { font-weight: 700; }
-@media (max-width: 600px) { .pokemon-tools__media { grid-template-columns: minmax(0, 1fr); gap: var(--space-4); } }
+@container pokemon-media (max-width: 600px) { .pokemon-tools__media { grid-template-columns: minmax(0, 1fr); gap: var(--space-4); } }

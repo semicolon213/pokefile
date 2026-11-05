@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import type { Locator, Page } from '@playwright/test'
 import snapshot from '../../integration/battle-tools/task011-fixture.json' with { type: 'json' }
 
 const resource = (name: string) => ({ name, url: '' })
@@ -10,6 +11,31 @@ const index = { version: 2, count: 3, pokemon: [
   { id: 25, nameEn: 'Pikachu', nameKo: '피카츄', types: ['electric'], generation: 'generation-i', forms: [] },
   { id: 681, nameEn: 'Aegislash', nameKo: '킬가르도', types: ['steel', 'ghost'], generation: 'generation-vi', forms: [] },
 ] }
+
+async function mockLargeSprite(page: Page, width: number, height: number) {
+  // 외부 GIF 가용성 검증과 구분하고, 보고된 GIF/PNG 원본 크기를 재현한다.
+  await page.route('https://raw.githubusercontent.com/PokeAPI/sprites/**', (route) => {
+    const animated = route.request().url().includes('/showdown/')
+    return route.fulfill({
+      contentType: 'image/svg+xml',
+      body: `<svg xmlns="http://www.w3.org/2000/svg" width="${animated ? width : 96}" height="${animated ? height : 96}"><rect width="100%" height="100%" fill="#c8d0d8"/></svg>`,
+    })
+  })
+}
+
+async function expectMediaContained(tools: Locator) {
+  await expect.poll(() => tools.evaluate((region) => {
+    const bounds = region.getBoundingClientRect()
+    const visible = [region, ...region.querySelectorAll('*')].filter((element) => element.getClientRects().length > 0)
+    return {
+      inViewport: bounds.left >= 0 && bounds.right <= innerWidth,
+      contentFits: visible.every((element) => {
+        const rect = element.getBoundingClientRect()
+        return element.scrollWidth <= element.clientWidth + 1 && rect.left >= bounds.left && rect.right <= bounds.right
+      }),
+    }
+  })).toEqual({ inViewport: true, contentFits: true })
+}
 
 test.beforeEach(async ({ context }) => {
   await context.route('**/data/pokedex-index.json', (route) => route.fulfill({ json: index }))
@@ -134,11 +160,8 @@ test('D-1: 음원 실패·재시도에도 키보드 포커스를 유지하고 �
 })
 
 for (const [width, height] of [[161, 107], [201, 166]]) {
-  test(`D-2: ${width}×${height} 이미지를 PC·320px 화면에서 원본 크기로 표시한다 (TC-08·11)`, async ({ page }, testInfo) => {
-    // 보고된 메가X·Y 원본 크기를 재현하는 이미지 fixture다. 외부 GIF 가용성 검증과 구분한다.
-    await page.route('https://raw.githubusercontent.com/PokeAPI/sprites/**/showdown/**', (route) => route.fulfill({
-      contentType: 'image/svg+xml', body: `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}"><rect width="100%" height="100%" fill="#c8d0d8"/></svg>`,
-    }))
+  test(`D-2: ${width}×${height} 이미지를 미디어 영역 안에서 표시하고 영역 축소에 대응한다 (TC-08·11)`, async ({ page }, testInfo) => {
+    await mockLargeSprite(page, width, height)
     for (const viewportWidth of [1280, 320]) {
       await page.setViewportSize({ width: viewportWidth, height: 844 })
       await page.goto('#/pokemon/6?form=mega-x')
@@ -151,15 +174,60 @@ for (const [width, height] of [[161, 107], [201, 166]]) {
         await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.naturalWidth)).toBe(width)
         await expect.poll(async () => (await image.boundingBox())?.width).toBe(width)
         await expect.poll(async () => (await image.boundingBox())?.height).toBe(height)
+        await expectMediaContained(tools)
       }
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
       if (viewportWidth === 320) {
         await tools.screenshot({ path: testInfo.outputPath(`media-${width}-mobile.png`) })
         // 로드 후 가용 너비가 줄면 ResizeObserver가 같은 모드의 PNG로 대체한다.
         await tools.locator('.pokemon-tools__sprite').evaluate((element: HTMLElement) => { element.style.maxWidth = '150px' })
-        await expect(tools.getByRole('img', { name: '리자몽 · 메가X 이로치', exact: true })).toHaveAttribute('src', /\/shiny\/10034.png$/)
+        const fallback = tools.getByRole('img', { name: '리자몽 · 메가X 이로치', exact: true })
+        await expect(fallback).toHaveAttribute('src', /\/shiny\/10034.png$/)
+        await expect.poll(async () => (await fallback.boundingBox())?.width).toBe(96)
+        await expectMediaContained(tools)
+      }
+      await tools.getByRole('button', { name: '미디어 접기', exact: true }).click()
+    }
+  })
+
+  test(`페이지 통합: ${width}×${height} 미디어를 열어도 PC·320px 문서가 넘치지 않는다 (TC-08)`, async ({ page }) => {
+    // 기존 문서 전체 검사를 보존한다. 공통 메뉴 결함은 이 검사에서 계속 드러난다.
+    await mockLargeSprite(page, width, height)
+    for (const viewportWidth of [1280, 320]) {
+      await page.setViewportSize({ width: viewportWidth, height: 844 })
+      await page.goto('#/pokemon/6?form=mega-x')
+      await page.getByRole('button', { name: '미디어 열기', exact: true }).click()
+      const tools = page.getByRole('region', { name: '이로치와 울음소리', exact: true })
+      for (const mode of ['일반', '이로치']) {
+        await tools.getByRole('button', { name: mode, exact: true }).click()
+        await expect(tools.getByRole('img', { name: `리자몽 · 메가X ${mode}`, exact: true })).toBeVisible()
+        expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
       }
       await tools.getByRole('button', { name: '미디어 접기', exact: true }).click()
     }
   })
 }
+
+test('PC에서도 미디어 삽입 영역의 너비에 따라 세로·가로 배치가 전환된다 (TC-08·11)', async ({ page }, testInfo) => {
+  await mockLargeSprite(page, 201, 166)
+  await page.setViewportSize({ width: 1280, height: 844 })
+  await page.goto('#/pokemon/6?form=mega-x')
+  const tools = page.getByRole('region', { name: '이로치와 울음소리', exact: true })
+  await tools.evaluate((element: HTMLElement) => { element.style.width = '288px' })
+  await tools.getByRole('button', { name: '미디어 열기', exact: true }).click()
+  const sprite = tools.locator('.pokemon-tools__sprite')
+  const audio = tools.getByLabel('리자몽 · 메가X 울음소리')
+  await expect.poll(async () => {
+    const imageBox = await sprite.boundingBox()
+    const audioBox = await audio.boundingBox()
+    return !!imageBox && !!audioBox && audioBox.y >= imageBox.y + imageBox.height
+  }).toBe(true)
+  await expectMediaContained(tools)
+  await tools.screenshot({ path: testInfo.outputPath('media-narrow-desktop.png') })
+  await tools.evaluate((element: HTMLElement) => { element.style.width = '700px' })
+  await expect.poll(async () => {
+    const imageBox = await sprite.boundingBox()
+    const audioBox = await audio.boundingBox()
+    return !!imageBox && !!audioBox && audioBox.x >= imageBox.x + imageBox.width
+  }).toBe(true)
+  await expectMediaContained(tools)
+})
