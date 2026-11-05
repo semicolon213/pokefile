@@ -1,6 +1,5 @@
-import { useQueries, useQuery } from '@tanstack/react-query'
-import type { PokemonType } from '@/shared/models'
-import { fetchPokemonTools, fetchTypeDefense } from '../api/tools'
+import { useQuery } from '@tanstack/react-query'
+import { fetchPokemonTools } from '../api/tools'
 import type { PokemonSelection } from '../model/tools'
 
 export function usePokemonTools(selection: PokemonSelection | null) {
@@ -13,11 +12,4 @@ export function usePokemonTools(selection: PokemonSelection | null) {
     },
     enabled: selection !== null,
   })
-}
-
-export function useTypeDefenses(types: readonly PokemonType[]) {
-  return useQueries({ queries: types.map((type) => ({
-    queryKey: ['battle-tools', 'type', 'gen6', type],
-    queryFn: ({ signal }: { signal: AbortSignal }) => fetchTypeDefense(type, signal),
-  })) })
 }

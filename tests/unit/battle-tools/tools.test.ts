@@ -1,66 +1,36 @@
 import { describe, expect, it } from 'vitest'
-import { normalizePokemonTools, pokemonResource, statTotal } from '@/features/battle-tools/model/tools'
+import { normalizePokemonTools, pokemonResource } from '@/features/battle-tools/model/tools'
 import type { PokemonSelection } from '@/features/battle-tools/model/tools'
 import snapshot from '../../integration/battle-tools/task011-fixture.json'
 import { MAX_POKEMON_ID } from '@/shared/models'
 
 const charizard: PokemonSelection = { id: 6, speciesName: 'charizard', formKey: 'default' }
 const raw = snapshot.pokemon.find((entry) => entry.name === 'charizard')!
-const generation = (name: string) => ({ name })
-const stat = (name: string, base_stat: number) => ({ stat: { name }, base_stat })
 
-describe('선택 기능 데이터 (FR-23·25 / TC-11)', () => {
+describe('이로치·울음소리 데이터 (FR-23 / TC-11)', () => {
   it('실제 응답의 일반·이로치 GIF/PNG와 울음소리를 같은 폼에서 정규화한다', () => {
     const result = normalizePokemonTools(raw, charizard)
     expect(result.normalImages).toHaveLength(2)
     expect(result.shinyImages[0]).toContain('/showdown/shiny/6.gif')
     expect(result.shinyImages[1]).toContain('/shiny/6.png')
     expect(result.cries).toHaveLength(2)
-    expect(result.types).toEqual(['fire', 'flying'])
-    expect(statTotal(result.stats!)).toBe(534)
   })
 
-  it('메가X는 전용 미디어·타입·종족값을 사용하고 없는 legacy 소리를 채우지 않는다', () => {
+  it('메가X는 전용 미디어를 사용하고 없는 legacy 소리를 채우지 않는다', () => {
     const mega = snapshot.pokemon.find((entry) => entry.name === 'charizard-mega-x')!
     const result = normalizePokemonTools(mega, { ...charizard, formKey: 'mega-x' })
-    expect(result.types).toEqual(['fire', 'dragon'])
     expect(result.shinyImages[0]).toContain('10034.gif')
     expect(result.cries).toHaveLength(1)
-    expect(statTotal(result.stats!)).toBe(634)
   })
 
-  it('실제 킬가르도 이력의 일부 항목을 현재 값에 덮어써 6세대 수치로 비교한다', () => {
-    const shield = snapshot.pokemon.find((entry) => entry.name === 'aegislash-shield')!
-    const result = normalizePokemonTools(shield, { id: 681, speciesName: 'aegislash', formKey: 'default' })
-    expect(result.stats).toMatchObject({ defense: 150, 'special-defense': 150, hp: 60, speed: 60 })
-    expect(statTotal(result.stats!)).toBe(520)
-  })
-
-  it('서로 다른 시기의 부분 이력을 항목별로 합치고 가장 가까운 세대를 우선한다', () => {
-    const result = normalizePokemonTools({ ...raw, past_stats: [
-      { generation: generation('generation-vii'), stats: [stat('attack', 80)] },
-      { generation: generation('generation-viii'), stats: [stat('attack', 90), stat('defense', 70)] },
-      { generation: generation('generation-v'), stats: [stat('speed', 20)] },
-    ] }, charizard)
-    expect(result.stats).toMatchObject({ attack: 80, defense: 70, speed: 100 })
-  })
-
-  it('6세대에 적용되는 과거 타입을 선택하고 5세대 이전 이력은 적용하지 않는다', () => {
-    const result = normalizePokemonTools({ ...raw, past_types: [
-      { generation: generation('generation-v'), types: [{ type: { name: 'normal' } }] },
-      { generation: generation('generation-vii'), types: [{ type: { name: 'dragon' } }] },
-    ] }, charizard)
-    expect(result.types).toEqual(['dragon'])
-  })
-
-  it('미디어·종족값 일부 누락이 다른 영역을 중단시키지 않는다', () => {
+  it('누락된 이미지·울음소리는 빈 후보로 안내할 수 있다', () => {
     const result = normalizePokemonTools({ ...raw, stats: [], sprites: {}, cries: {} }, charizard)
-    expect(result).toMatchObject({ types: ['fire', 'flying'], stats: null, shinyImages: [], normalImages: [], cries: [] })
+    expect(result).toEqual({ speciesName: 'charizard', shinyImages: [], normalImages: [], cries: [] })
   })
 
-  it('잘못된 수치·과거 이력은 0이나 현재 값으로 추정하지 않는다', () => {
-    expect(normalizePokemonTools({ ...raw, past_stats: [{ generation: generation('generation-vii'), stats: [stat('defense', -1)] }] }, charizard).stats).toBeNull()
-    expect(normalizePokemonTools({ ...raw, past_types: [{ generation: generation('generation-vii') }] }, charizard).types).toBeNull()
+  it('미디어와 무관한 타입·종족값 필드가 잘못돼도 미디어는 유지한다', () => {
+    expect(normalizePokemonTools({ ...raw, types: null, stats: null, past_types: 'invalid', past_stats: 'invalid' }, charizard))
+      .toEqual(normalizePokemonTools(raw, charizard))
   })
 
   it('실제 다른 종·폼의 응답을 거부한다', () => {
