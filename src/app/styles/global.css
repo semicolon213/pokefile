@@ -396,6 +396,11 @@ img {
     padding: var(--space-2) var(--space-4) var(--space-3);
   }
 
+  /* 메뉴 4개가 320px 한 줄에 들어가지 않으므로 줄바꿈한다 (TC-08) */
+  .app-nav {
+    flex-wrap: wrap;
+  }
+
   .app-nav a {
     padding: 0 var(--space-3);
   }
