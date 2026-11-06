@@ -1,20 +1,11 @@
-.pokemon-tools { min-width: 0; container: pokemon-media / inline-size; }
+.pokemon-tools { min-width: 0; }
 .pokemon-tools__header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); flex-wrap: wrap; }
 .pokemon-tools__header h2 { margin: 0; }
 .pokemon-tools__note { color: var(--color-text-muted); font-size: 14px; margin: var(--space-2) 0 var(--space-4); }
 .pokemon-tools button { min-height: 44px; max-width: 100%; padding: var(--space-2) var(--space-3); border: 1px solid var(--color-border-strong); border-radius: var(--radius-control); color: var(--color-text); background: var(--color-surface); }
 .pokemon-tools button { cursor: pointer; }
 .pokemon-tools button:hover { border-color: var(--color-primary); }
-.pokemon-tools button[aria-pressed='true'] { border-color: var(--color-primary); color: var(--color-primary-ink); background: var(--color-primary-soft); font-weight: 700; }
 .pokemon-tools__content { display: grid; gap: var(--space-4); margin-top: var(--space-5); }
 .pokemon-tools__identity { margin: 0; font-weight: 700; }
 .pokemon-tools__panel { min-width: 0; border: 1px solid var(--color-border); border-radius: var(--radius-card); padding: var(--space-4); }
-.pokemon-tools__panel h3 { margin: 0 0 var(--space-3); font-size: 18px; }
-.pokemon-tools__media { display: grid; grid-template-columns: minmax(0, 224px) minmax(0, 1fr); align-items: center; gap: var(--space-5); }
-.pokemon-tools__media > div { min-width: 0; }
-.pokemon-tools__media audio { width: 100%; max-width: 320px; }
-.pokemon-tools__modes { display: flex; gap: var(--space-2); }
-.pokemon-tools__sprite { display: grid; place-items: center; width: 100%; min-height: 224px; max-width: 224px; margin-top: var(--space-3); border-radius: var(--radius-card); background: var(--color-plate); }
-.pokemon-tools__sprite img { image-rendering: pixelated; }
-.pokemon-tools__sprite p { padding: var(--space-3); text-align: center; color: var(--color-text-muted); }
-@container pokemon-media (max-width: 600px) { .pokemon-tools__media { grid-template-columns: minmax(0, 1fr); gap: var(--space-4); } }
+.pokemon-tools__panel audio { width: 100%; max-width: 320px; }

@@ -1,7 +1,7 @@
 import { TypeBadge } from '@/shared/ui'
+import { PokemonImageToggle } from '@/features/battle-tools'
 import { useAbilityNames } from '../hooks/useDetailQueries'
 import type { PokemonFormDetail, SpeciesDetail } from '../model/detail'
-import { PokemonImage } from './PokemonImage'
 
 type Props = {
   form: PokemonFormDetail
@@ -21,9 +21,7 @@ export function BasicInfoSection({ form, species, name }: Props) {
       <h2 id="detail-basic-title" className="detail-visually-hidden">
         기본 정보
       </h2>
-      <div className="detail-basic__image">
-        <PokemonImage urls={form.imageUrls} alt={name} box={192} />
-      </div>
+      <PokemonImageToggle key={form.resourceName} name={name} normalUrls={form.imageUrls} shinyUrls={form.shinyImageUrls} cryUrls={form.cryUrls} />
       <dl className="detail-basic__facts">
         <div>
           <dt>분류</dt>

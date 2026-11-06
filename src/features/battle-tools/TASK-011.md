@@ -1,5 +1,53 @@
 # TASK-011 작업 기록
 
+## 대표 이미지 UI 후속 PR 제출 — 2026-11-06
+
+- 사용자 승인: `pr 만들어서 git에 푸시 해줘`. `feat/TASK-011-inline-shiny`의 검증한 변경을 커밋·푸시하고 develop 대상 후속 초안 PR로 제출한다. PR #31은 이미 병합됐으므로 새 PR을 만든다. 독립 QA·상세 담당 확인·최종 사람 승인 대기 상태를 명시하며 병합·배포·정식 TASK 상태 갱신은 포함하지 않는다.
+- 최신 origin/develop은 검증 기반 `162a632`와 같고, 제출 브랜치의 기존 PR은 없다. 기존 대표 이미지 토글·인라인 울음소리의 자체 검증 결과(324개 테스트·전체 E2E 67개 통과)를 사용한다. 이번 제출 준비에서는 제품·테스트 코드를 추가 변경하지 않는다.
+- 제출 범위는 아래 CR-011-PORTRAIT-INTEGRATION·CR-011-INLINE-CRY의 16개 파일이며, 상세의 응답 타입·후보 전달·대표 이미지 연결·모델 테스트 4개 파일은 임지섭 확인 대상으로 PR에 명시한다. 공통 메뉴·app/shared·패키지·CI 설정·다른 작업 폴더의 파일은 포함하지 않는다.
+
+## 울음소리 컨트롤을 대표 이미지 아래로 이동 — 2026-11-06
+
+- 사용자 요청: 캐릭터 바로 아래에 소리 재생 부분만 배치하고 기존 별도 울음소리 창 제거. TASK-011 / FR-23 / 성윤우 / TC-04·08·09·11.
+- CR-011-INLINE-CRY: 공개 대표 이미지 컴포넌트 아래에 기존 음원 재생·후보 대체·포커스 복구 로직을 연결한다. 정상 상태에서는 제목·패널·접기 버튼·안내 문구 없이 native audio controls만 표시한다. 오류·누락 시 안내 및 재시도는 유지한다.
+- 상세 연결은 앞서 명시한 4개 파일 범위에서 기존 `/pokemon` 응답의 cries 후보를 함께 전달한다. 추가 API 조회 없이 preload=none·사용자 조작 재생을 유지한다. 실전 세팅의 미디어 부가 렌더를 제거해 상세 하단의 울음소리 영역이 나타나지 않도록 한다. 공통·정책·설정은 변경하지 않는다.
+- 폼·종 변경 및 화면 이동 시 기존 재생 중지, 이미지 토글 시 음원 유지, 같은 위치의 오류·재시도 포커스, 모바일 경계와 실제 화면을 검증한다. 기존 공개 미디어 컴포넌트는 호환용으로 보존하되 상세 화면에서는 렌더하지 않는다.
+
+### 이미지 아래 울음소리 검증 결과
+
+- `npm.cmd run lint`, `npm.cmd run typecheck`, `npm.cmd run build`: 모두 종료 0. 기존 청크 경고 유지.
+- 관련 4개 파일 단위·통합 검사: 53개 통과. `npm.cmd test`: 종료 0, 45개 파일·324개 통과.
+- `npm.cmd run test:e2e -- --workers=1 --reporter=line --output=test-results/task011-inline-cry-full`: 종료 0, 전체 67개 통과(1.2분). 음원은 사용자 조작 전 요청하지 않고, 이미지 토글 시 같은 audio를 유지하며 폼 변경·목록 이동 시 재생을 중지했다. 누락·오류·재시도·포커스 복구와 PC/모바일 경계 검사도 통과했다.
+- 실제 PokéAPI·GitHub 음원으로 대표 이미지 아래 controls 1개, 별도 울음소리 section 0개를 확인했다. 사용자 키보드 조작 후 실제 `latest/6.ogg`의 paused=false·currentTime 증가를 확인했다(스피커 청취 검증과 구분).
+- `test-results/task011-inline-cry-visual/{desktop,mobile-portrait}.png`의 다크 모드 PC·모바일 배치를 확인했다. 정상 상태에는 재생 컨트롤만 있고, 누락·실패 시에만 안내/재시도를 표시한다.
+- 누적 변경은 battle-tools 소스·작업 기록·해당 테스트 12개와 명시된 상세 연결/데이터/단위 테스트 4개, 총 16개다. `git diff --check` 통과. 로컬 반영 상태이며 새 커밋·푸시·PR 생성·독립 QA·상세 담당 확인은 수행하지 않았다.
+
+## 대표 이미지 옆 이로치 토글 연결 — 2026-11-06
+
+- 사용자 요청: 아래 별도 이미지 영역 대신 기존 상세 대표 이미지 옆 토글로 일반/이로치를 전환. TASK-011 / 성윤우 / FR-23, NFR-01·08 / TC-04·08·09·11.
+- PR #31은 이미 병합됐다. 최신 develop `162a632`에서 `feat/TASK-011-inline-shiny` 브랜치를 분리한다. 이 기반에는 공통 메뉴 가로 넘침 수정 PR #33과 TASK-017 병합이 포함돼 있다.
+- CR-011-PORTRAIT-INTEGRATION: UI·상태·이미지 대체는 battle-tools 공개 컴포넌트로 제공한다. 이번 사용자 요청의 상세 이미지 연결에 필요한 `src/features/pokemon-detail/api/pokeapi.ts`(이미 존재하는 응답의 shiny 필드 타입), `model/detail.ts`(같은 폼 shiny 후보 전달), `components/BasicInfoSection.tsx`(공개 컴포넌트 연결), `tests/unit/pokemon-detail/detail.test.ts`(필드 전달 검증)를 최소 변경 대상으로 명시한다. 상세 연결부는 임지섭 확인 대상이다. 그 외 공통·상세 파일·정책·설정은 변경하지 않는다.
+- 인수 조건: 대표 이미지 한 곳에서 키보드로 일반/이로치 전환, 폼·종 변경 시 일반으로 초기화, 같은 모드 GIF→PNG→정보 없음, 좁은 영역 대응·움직임 줄이기 유지. 아래 별도 이미지·일반/이로치 버튼은 제거하고 기존 울음소리 접기·재생·중지·오류 시 포커스 복구는 유지한다.
+- 조회 조건: 상세에서 이미 받은 이미지 후보를 토글에 전달하므로 이로치 전환 때문에 포켓몬 API를 다시 호출하지 않는다. 검증은 단위/통합·상세 모델·브라우저 시나리오 및 lint/typecheck/test/build로 수행한다. 독립 QA·최종 사람 확인·추가 PR 제출은 별도다.
+
+### 대표 이미지 토글 검증 결과
+
+| 명령 | 결과 |
+|---|---|
+| `npm.cmd run lint` | 종료 0, 공개 API·모듈 경계 검사 통과 |
+| `npm.cmd run typecheck` | 종료 0 |
+| `npm.cmd run build` | 종료 0, 기존 500 kB 청크 경고 유지 |
+| `npm.cmd test -- tests/integration/battle-tools/PokemonImageToggle.test.tsx tests/integration/battle-tools/PokemonToolsSection.test.tsx tests/unit/pokemon-detail/detail.test.ts tests/integration/pokemon-detail/PokemonDetailPage.test.tsx` | 종료 0, 4개 파일·51개 통과 |
+| `npm.cmd test` | 종료 0, 45개 파일·322개 통과 |
+| `npm.cmd run test:e2e -- tests/e2e/battle-tools/tools.spec.ts --workers=1 --reporter=line --output=test-results/task011-inline-shiny` | 종료 0, 10개 통과(28.5초) |
+| `npm.cmd run test:e2e -- --workers=1 --reporter=line --output=test-results/task011-inline-full` | 종료 0, 전체 67개 통과(1.2분) |
+| `git diff --check` | 통과 |
+
+- 첫 상세 통합 실행에서 일반 이미지의 대체 텍스트 변경으로 기존 검사 3건이 실패했다. 일반 이미지의 기존 이름을 유지하고 이로치에만 모드명을 붙여 호환성을 복구한 뒤 위 관련 51개와 전체 322개를 통과했다. 실패한 첫 실행은 PASS로 집계하지 않는다.
+- 대표 이미지 토글의 일반↔이로치·GIF/PNG 대체·누락·움직임 줄이기와, 폼 변경 시 일반 상태 초기화·API 추가 호출 없음·모바일 키보드·기존 음원 중지 및 오류 포커스 복구를 검증했다. 기존 페이지 전체 너비 조건도 유지한 상태에서 통과했다.
+- 실제 PokéAPI·GitHub 이미지로 기본 리자몽의 토글을 켜 `showdown/shiny/6.gif`, checked=true, 대표 이미지 1개를 확인했다. `test-results/task011-inline-visual/{desktop-normal,desktop-shiny,mobile-shiny}.png`를 생성하고 PC·모바일 화면을 직접 확인했다. 음원 E2E는 기존 WAV fixture이며 새 스피커 청취 검증은 수행하지 않았다.
+- 추가/수정 14개 파일: battle-tools 소스·작업 기록 7개, 해당 통합/E2E 테스트 3개, 위에 명시한 상세 연결·데이터·단위 테스트 4개. 이 결과는 구현 AI 자체 검증이며 상세 담당 확인·독립 QA·최종 사람 승인은 남아 있다. 아직 후속 커밋·푸시·PR 생성은 수행하지 않았다.
+
 ## PR 제출 범위 정리 — TASK-011 / FR-23
 
 - 사용자 지시: TASK-011 관련 변경만 PR로 제출·푸시. owner 성윤우, 기존 battle-tools 소스·단위/통합/E2E 테스트 경로만 허용하며 공통·상세·다른 feature·정책·CI 설정은 변경하지 않는다.

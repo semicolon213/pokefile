@@ -50,6 +50,20 @@ describe('toFormDetail (FR-11·12·14)', () => {
     expect(toFormDetail(charizardMegaX).imageUrls).toEqual(['gif', 'png'])
     expect(toFormDetail({ ...charizardMegaX, sprites: { front_default: 'png' } }).imageUrls).toEqual(['png'])
   })
+
+  it('이로치는 같은 폼의 shiny GIF → PNG만 전달하고 누락 시 일반 이미지로 채우지 않는다 (FR-23)', () => {
+    expect(toFormDetail({ ...charizardMegaX, sprites: {
+      ...charizardMegaX.sprites, front_shiny: 'shiny-png',
+      other: { showdown: { front_default: 'gif', front_shiny: 'shiny-gif' } },
+    } }).shinyImageUrls).toEqual(['shiny-gif', 'shiny-png'])
+    expect(toFormDetail(charizardMegaX).shinyImageUrls).toEqual([])
+  })
+
+  it('이미지와 같은 응답에서 울음소리 후보를 전달하고 누락·중복을 처리한다 (FR-23)', () => {
+    expect(toFormDetail({ ...charizardMegaX, cries: { latest: 'latest.ogg', legacy: 'legacy.ogg' } }).cryUrls).toEqual(['latest.ogg', 'legacy.ogg'])
+    expect(toFormDetail({ ...charizardMegaX, cries: { latest: 'cry.ogg', legacy: 'cry.ogg' } }).cryUrls).toEqual(['cry.ogg'])
+    expect(toFormDetail(charizardMegaX).cryUrls).toEqual([])
+  })
 })
 
 describe('도감 설명 버전 (OQ-17 제안값)', () => {

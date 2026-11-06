@@ -17,9 +17,11 @@ export type RawPokemon = {
   stats: { base_stat: number; stat: NamedResource }[]
   sprites: {
     front_default: string | null
-    other?: { showdown?: { front_default: string | null } }
+    front_shiny?: string | null
+    other?: { showdown?: { front_default: string | null; front_shiny?: string | null } }
   }
   forms: NamedResource[]
+  cries?: { latest?: string | null; legacy?: string | null }
 }
 
 export type RawPokemonForm = {
