@@ -60,14 +60,22 @@ describe('대표 이미지 이로치 토글 (FR-23 / TC-08·11)', () => {
     expect(image).toHaveStyle({ width: `${width}px`, height: `${height}px` })
   })
 
-  it('실제 가용 너비보다 큰 이로치 GIF는 같은 모드 PNG로 대체한다', () => {
+  it('실제 가용 너비보다 큰 이로치 GIF는 PNG로 바꾸지 않고 줄여서 표시한다', () => {
     render(<PokemonImageToggle {...current} />)
     fireEvent.click(screen.getByRole('switch'))
     const image = screen.getByRole('img')
     Object.defineProperty(image.parentElement, 'clientWidth', { value: 180 })
     Object.defineProperties(image, { naturalWidth: { value: 201 }, naturalHeight: { value: 166 } })
     fireEvent.load(image)
-    expect(screen.getByRole('img')).toHaveAttribute('src', current.shinyUrls[1])
+    expect(screen.getByRole('img')).toHaveAttribute('src', current.shinyUrls[0])
+    expect(image).toHaveStyle({ width: '180px', height: '149px' })
+  })
+
+  it('움직임 줄이기에서 PNG가 실패하면 GIF로 대체한다', () => {
+    vi.stubGlobal('matchMedia', () => ({ matches: true }))
+    render(<PokemonImageToggle {...current} />)
+    fireEvent.error(screen.getByRole('img'))
+    expect(screen.getByRole('img')).toHaveAttribute('src', current.normalUrls[0])
   })
 
   it('움직임 줄이기에서는 일반·이로치 모두 PNG를 사용한다', () => {
