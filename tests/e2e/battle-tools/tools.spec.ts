@@ -172,7 +172,7 @@ test('D-1: 이미지 아래 음원 실패·재시도에서 포커스를 유지�
   await expect.poll(() => audio.evaluate((element: HTMLAudioElement) => element.currentTime)).toBeGreaterThan(0)
 })
 for (const [width, height] of [[161, 107], [201, 166]]) {
-  test(`D-2: ${width}×${height} 대표 이미지를 전환하고 축소 시 같은 모드 PNG로 대체한다 (TC-08·11)`, async ({ page }, testInfo) => {
+  test(`D-2: ${width}×${height} 대표 이미지를 전환하고 영역이 줄면 GIF를 줄여서 유지한다 (TC-08·11)`, async ({ page }, testInfo) => {
     await mockLargeSprite(page, width, height)
     for (const viewportWidth of [1280, 320]) {
       await page.setViewportSize({ width: viewportWidth, height: 844 })
@@ -193,8 +193,8 @@ for (const [width, height] of [[161, 107], [201, 166]]) {
       if (viewportWidth === 320) {
         await portrait.screenshot({ path: testInfo.outputPath(`portrait-${width}-mobile.png`) })
         await portrait.locator('.pokemon-portrait__image').evaluate((element: HTMLElement) => { element.style.maxWidth = '150px' })
-        await expect(portrait.getByRole('img')).toHaveAttribute('src', /\/shiny\/10034.png$/)
-        await expect.poll(async () => (await portrait.getByRole('img').boundingBox())?.width).toBe(96)
+        await expect(portrait.getByRole('img')).toHaveAttribute('src', /showdown\/shiny\/10034.gif$/)
+        await expect.poll(async () => (await portrait.getByRole('img').boundingBox())?.width).toBe(150)
         await expectMediaContained(portrait)
       }
     }
@@ -225,9 +225,10 @@ test('PC의 좁은 대표 이미지 영역에서도 토글과 이미지가 경�
   const portrait = page.getByRole('group', { name: '대표 이미지', exact: true })
   await expect(portrait.getByRole('img')).toHaveAttribute('src', /showdown\/10034.gif$/)
   await portrait.evaluate((element: HTMLElement) => { element.style.width = '180px' })
-  await expect(portrait.getByRole('img')).toHaveAttribute('src', /\/10034.png$/)
+  await expect(portrait.getByRole('img')).toHaveAttribute('src', /showdown\/10034.gif$/)
+  await expect.poll(async () => (await portrait.getByRole('img').boundingBox())?.width).toBe(180)
   await expectMediaContained(portrait)
   await portrait.evaluate((element: HTMLElement) => { element.style.width = '216px' })
-  await expect.poll(async () => (await portrait.getByRole('img').boundingBox())?.width).toBe(192)
+  await expect.poll(async () => (await portrait.getByRole('img').boundingBox())?.width).toBe(201)
   await expectMediaContained(portrait)
 })
