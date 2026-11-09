@@ -5,7 +5,6 @@ import { useSmogonSets } from '../hooks/useSmogonSets'
 import { selectSmogonSets } from '../model/smogon'
 import type { SmogonIdentity } from '../model/smogon'
 import { SmogonSetCard } from './SmogonSetCard'
-import { PokemonToolsSection } from './PokemonToolsSection'
 import './SmogonSetsSection.css'
 
 type Props = {
@@ -16,13 +15,6 @@ type Props = {
 
 // FR-17~18 / TC-06: 상세 화면이 확정한 종·폼만 표시한다. 이전 호출부와의 호환을 위해 identity는 선택적이다.
 export function SmogonSetsSection({ pokemonId, identity, onRetryIdentity }: Props) {
-  return <>
-    <SmogonSetsContent pokemonId={pokemonId} identity={identity} onRetryIdentity={onRetryIdentity} />
-    {identity?.status === 'success' && <PokemonToolsSection pokemonId={pokemonId} {...identity.data} />}
-  </>
-}
-
-function SmogonSetsContent({ pokemonId, identity, onRetryIdentity }: Props) {
   return (
     <section className="detail-section smogon-section" aria-label="실전 추천 세팅" data-pokemon-id={pokemonId}>
       <h2>실전 추천 세팅</h2>

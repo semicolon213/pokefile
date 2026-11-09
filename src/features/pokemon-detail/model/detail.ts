@@ -30,6 +30,9 @@ export type PokemonFormDetail = {
   stats: BaseStat[]
   /** ADR-013: showdown GIF → PNG 순서. 대체 아이콘은 화면에서 처리 */
   imageUrls: string[]
+  /** FR-23: 같은 폼의 이로치 후보. 일반 이미지로 대체하지 않는다. */
+  shinyImageUrls: string[]
+  cryUrls: string[]
   formResourceName?: string
 }
 
@@ -66,6 +69,8 @@ export function toFormDetail(raw: RawPokemon): PokemonFormDetail {
       return stat ? [{ key, label: STAT_LABELS[key], value: stat.base_stat }] : []
     }),
     imageUrls: [showdown, raw.sprites.front_default].filter((url): url is string => !!url),
+    shinyImageUrls: [raw.sprites.other?.showdown?.front_shiny, raw.sprites.front_shiny].filter((url): url is string => !!url),
+    cryUrls: [...new Set([raw.cries?.latest, raw.cries?.legacy].filter((url): url is string => !!url))],
     formResourceName: raw.forms[0]?.name,
   }
 }

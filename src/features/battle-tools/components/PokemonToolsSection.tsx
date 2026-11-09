@@ -16,11 +16,11 @@ export function PokemonToolsSection({ pokemonId, speciesName, formKey }: Pokemon
   const contentId = useId()
   const selection = { id: pokemonId, speciesName, formKey }
   return (
-    <section className="detail-section pokemon-tools" aria-label="이로치와 울음소리">
+    <section className="detail-section pokemon-tools" aria-label="울음소리">
       <div className="pokemon-tools__header">
-        <h2>이로치·울음소리</h2>
+        <h2>울음소리</h2>
         <button type="button" aria-expanded={open} aria-controls={contentId} onClick={() => setOpen((value) => !value)}>
-          {open ? '미디어 접기' : '미디어 열기'}
+          {open ? '울음소리 접기' : '울음소리 열기'}
         </button>
       </div>
       <div id={contentId} hidden={!open}>
@@ -37,10 +37,10 @@ function PokemonToolsData({ selection }: { selection: PokemonSelection }) {
   const selectedForm = summary?.forms.find((form) => form.key === selection.formKey)
   const label = FORM_LABELS[selection.formKey] ?? (selectedForm ? formLabel(selectedForm) : selection.formKey)
   const name = `${summary ? displayName(summary) : `${formatDexNumber(selection.id)} ${selection.speciesName}`} · ${label}`
-  if (query.isPending) return <LoadingState message="이로치·울음소리 정보를 불러오는 중입니다." />
+  if (query.isPending) return <LoadingState message="울음소리 정보를 불러오는 중입니다." />
   if (query.isError) return <div>
-    <ErrorState message="이로치·울음소리 정보를 불러오지 못했습니다." />
-    <button type="button" onClick={() => void query.refetch()}>미디어 다시 시도</button>
+    <ErrorState message="울음소리 정보를 불러오지 못했습니다." />
+    <button type="button" onClick={() => void query.refetch()}>울음소리 정보 다시 시도</button>
   </div>
   return (
     <div className="pokemon-tools__content">
