@@ -5,7 +5,7 @@ const entry = (version: string): VersionEncounters => ({
   version,
   label: version,
   generation: 'generation-i',
-  locations: [{ area: 'a', label: 'A', minLevel: 3, maxLevel: 5 }],
+  locations: [{ location: 'a', label: 'A', minLevel: 3, maxLevel: 5, methods: [] }],
 })
 
 describe('filterEncountersByGame (FR-26)', () => {

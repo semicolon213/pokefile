@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { RawEncounter, RawEvolutionDetail, RawEvolutionNode } from '@/features/pokemon-detail/api/pokeapi'
-import { formatLocationArea, toVersionEncounters } from '@/features/pokemon-detail/model/encounters'
+import { formatLocationArea, resolveLocation, toVersionEncounters } from '@/features/pokemon-detail/model/encounters'
 import {
   collectConditionRefs,
   isSingleStage,
@@ -148,13 +148,13 @@ describe('pickEvolutionConditions (TASK-016, FR-28)', () => {
 })
 
 describe('toVersionEncounters (FR-16, ADR-016)', () => {
-  const encounter = (area: string, versions: [string, number, number][]): RawEncounter => ({
+  const encounter = (area: string, versions: [string, number, number][], method = 'walk'): RawEncounter => ({
     location_area: { name: area, url: '' },
     version_details: versions.map(([version, min, max]) => ({
       version: { name: version, url: '' },
       encounter_details: [
-        { min_level: min, max_level: min, method: { name: 'walk', url: '' } },
-        { min_level: max, max_level: max, method: { name: 'walk', url: '' } },
+        { min_level: min, max_level: min, method: { name: method, url: '' } },
+        { min_level: max, max_level: max, method: { name: method, url: '' } },
       ],
     })),
   })
@@ -168,13 +168,37 @@ describe('toVersionEncounters (FR-16, ADR-016)', () => {
         ['lets-go-pikachu', 3, 5],
         ['red-japan', 3, 5],
       ]),
-      encounter('power-plant-area', [['red', 21, 24]]),
+      encounter('unknown-place-area', [['red', 21, 24]]),
     ])
     expect(result.map((v) => v.version)).toEqual(['red', 'yellow', 'lets-go-pikachu', 'sword'])
     expect(result[0]).toMatchObject({ label: '레드', generation: 'generation-i' })
     expect(result[0].locations).toEqual([
-      { area: 'viridian-forest-area', label: 'Viridian Forest', minLevel: 3, maxLevel: 5 },
-      { area: 'power-plant-area', label: 'Power Plant', minLevel: 21, maxLevel: 24 },
+      { location: 'viridian-forest', label: '상록숲', minLevel: 3, maxLevel: 5, methods: ['풀숲·동굴'] },
+      // 이름표에 없는 장소는 영문 표기
+      { location: 'unknown-place', label: 'Unknown Place', minLevel: 21, maxLevel: 24, methods: ['풀숲·동굴'] },
+    ])
+  })
+
+  it('같은 장소의 구역은 한 줄로 합치고 레벨 범위·만나는 방법을 모은다 (TASK-006 재구현)', () => {
+    const result = toVersionEncounters([
+      encounter('mt-moon-1f', [['red', 7, 9]]),
+      encounter('mt-moon-b2f', [['red', 10, 12]]),
+      encounter('mt-moon-b1f', [['red', 8, 10]], 'rock-smash'),
+    ])
+    expect(result[0].locations).toEqual([
+      { location: 'mt-moon', label: '달맞이산', minLevel: 7, maxLevel: 12, methods: ['풀숲·동굴', '바위깨기'] },
+    ])
+  })
+
+  it('비슷한 방법은 하나로, 모르는 방법은 기타로 표시한다', () => {
+    const result = toVersionEncounters([
+      encounter('kanto-route-2-south-towards-viridian-city', [['red', 3, 5]], 'headbutt-low'),
+      encounter('kanto-route-2-north-towards-pewter-city', [['red', 4, 6]], 'headbutt-high'),
+      encounter('kanto-sea-route-20-area', [['red', 30, 30]], 'new-method'),
+    ])
+    expect(result[0].locations).toEqual([
+      { location: 'kanto-route-2', label: '2번도로', minLevel: 3, maxLevel: 6, methods: ['박치기(나무)'] },
+      { location: 'kanto-sea-route-20', label: '20번수로', minLevel: 30, maxLevel: 30, methods: ['기타'] },
     ])
   })
 
@@ -183,7 +207,15 @@ describe('toVersionEncounters (FR-16, ADR-016)', () => {
     expect(toVersionEncounters([])).toEqual([])
   })
 
-  it('장소 식별자를 임의 번역 없이 영문 표기로 바꾼다 (OQ-18 임시)', () => {
+  it('구역 이름에서 가장 긴 장소 이름으로 장소를 찾는다', () => {
+    expect(resolveLocation('kanto-route-2-south-towards-viridian-city')).toEqual({ location: 'kanto-route-2', label: '2번도로' })
+    // 'motostoke'(엔진시티)가 'motostoke-riverbank'(엔진 리버사이드)를 삼키지 않는다
+    expect(resolveLocation('motostoke-riverbank-area')).toEqual({ location: 'motostoke-riverbank', label: '엔진 리버사이드' })
+    expect(resolveLocation('motostoke-area')).toEqual({ location: 'motostoke', label: '엔진시티' })
+    expect(resolveLocation('roaming-kanto-area')).toEqual({ location: 'roaming-kanto', label: '관동 각지 (배회)' })
+  })
+
+  it('이름표에 없는 장소 식별자는 영문 표기로 바꾼다', () => {
     expect(formatLocationArea('kanto-route-2-south-towards-viridian-city')).toBe('Kanto Route 2 South Towards Viridian City')
     expect(formatLocationArea('aquacorde-town-area')).toBe('Aquacorde Town')
   })
