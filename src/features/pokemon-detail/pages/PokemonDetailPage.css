@@ -245,10 +245,25 @@
   gap: var(--space-1);
 }
 
+/* 특성 설명(FR-30)이 들어가므로 한 줄 전체를 쓴다 */
+.detail-basic__ability-fact {
+  grid-column: 1 / -1;
+}
+
 .detail-basic__abilities {
+  display: grid;
+  gap: var(--space-2);
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.detail-basic__ability-desc {
+  max-width: 65ch;
+  margin: 2px 0 0;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .detail-basic__hidden {

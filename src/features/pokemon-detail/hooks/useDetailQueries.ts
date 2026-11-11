@@ -10,7 +10,7 @@ import {
   fetchSpecies,
 } from '../api/pokeapi'
 import { pokemonDetailQueryKeys } from '../api/queryKeys'
-import { abilityNameKo, formNameKo, toFormDetail, toSpeciesDetail } from '../model/detail'
+import { formNameKo, toAbilityInfo, toFormDetail, toSpeciesDetail } from '../model/detail'
 import { toVersionEncounters } from '../model/encounters'
 import { toEvolutionTree } from '../model/evolution'
 import { pokemonResourceName } from '../model/forms'
@@ -58,13 +58,13 @@ export function useMegaFormName(formResourceName: string | undefined, enabled: b
   })
 }
 
-/** 특성 한국어 이름. 실패한 특성은 API 식별자를 그대로 보여준다 */
-export function useAbilityNames(names: readonly string[]) {
+/** 특성 한국어 이름·설명. 실패한 특성은 API 식별자를 그대로 보여준다 */
+export function useAbilities(names: readonly string[]) {
   return useQueries({
     queries: names.map((name) => ({
       queryKey: pokemonDetailQueryKeys.ability(name),
       queryFn: () => fetchAbility(name),
-      select: abilityNameKo,
+      select: toAbilityInfo,
       staleTime: Infinity,
     })),
   })

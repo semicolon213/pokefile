@@ -51,9 +51,25 @@ const FIXTURES: Record<string, unknown> = {
     flavor_text_entries: [{ flavor_text: '입에서 작렬하는 불꽃을\n토해낸다.', language: lang('ko'), version: res('x') }],
     evolution_chain: { url: `${API}/evolution-chain/2/` },
   },
-  '/ability/blaze': { name: 'blaze', names: [{ name: '맹화', language: lang('ko') }] },
-  '/ability/solar-power': { name: 'solar-power', names: [{ name: '선파워', language: lang('ko') }] },
-  '/ability/tough-claws': { name: 'tough-claws', names: [{ name: '단단한발톱', language: lang('ko') }] },
+  '/ability/blaze': {
+    name: 'blaze',
+    names: [{ name: '맹화', language: lang('ko') }],
+    flavor_text_entries: [
+      { flavor_text: '위급할 때 불꽃타입의\n위력이 올라간다.', language: lang('ko'), version_group: res('x-y') },
+      { flavor_text: 'HP가 줄었을 때\n불꽃타입 기술의\n위력이 올라간다.', language: lang('ko'), version_group: res('sword-shield') },
+    ],
+  },
+  // 한국어 설명이 없는 특성 (FR-30 '정보 없음')
+  '/ability/solar-power': {
+    name: 'solar-power',
+    names: [{ name: '선파워', language: lang('ko') }],
+    flavor_text_entries: [{ flavor_text: 'Boosts Sp. Atk in sunshine.', language: lang('en'), version_group: res('x-y') }],
+  },
+  '/ability/tough-claws': {
+    name: 'tough-claws',
+    names: [{ name: '단단한발톱', language: lang('ko') }],
+    flavor_text_entries: [{ flavor_text: '상대에게 접촉하는\n기술의 위력이 올라간다.', language: lang('ko'), version_group: res('sword-shield') }],
+  },
   '/evolution-chain/2': {
     id: 2,
     chain: {
@@ -288,11 +304,30 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
     expect(await within(section('출현 정보')).findByText('레드에서는 야생에서 만날 수 없습니다.')).toBeInTheDocument()
   })
 
+  it('특성마다 한국어 설명을 표시하고, 없으면 정보 없음을 표시한다 (FR-30, TC-13)', async () => {
+    mockFetch()
+    renderAt('/pokemon/6')
+    const blaze = (await screen.findByText('맹화')).closest('li')!
+    expect(within(blaze).getByText('HP가 줄었을 때 불꽃타입 기술의 위력이 올라간다.')).toBeInTheDocument()
+    const solarPower = (await screen.findByText('선파워')).closest('li')!
+    expect(await within(solarPower).findByText('정보 없음')).toBeInTheDocument()
+    expect(within(solarPower).getByText('(숨겨진 특성)')).toBeInTheDocument()
+  })
+
+  it('메가 폼으로 바꾸면 그 폼의 특성 설명을 표시한다 (FR-30)', async () => {
+    mockFetch()
+    renderAt('/pokemon/6?form=mega-x')
+    const toughClaws = (await screen.findByText('단단한발톱')).closest('li')!
+    expect(await within(toughClaws).findByText('상대에게 접촉하는 기술의 위력이 올라간다.')).toBeInTheDocument()
+    expect(basic().queryByText('맹화')).not.toBeInTheDocument()
+  })
+
   it('특성 이름 요청이 실패해도 나머지 상세는 유지하고 API 식별자를 표시한다 (NFR-07)', async () => {
     mockFetch({ '/ability/blaze': () => new Response('', { status: 500 }) })
     renderAt('/pokemon/6')
     expect(await screen.findByText('선파워')).toBeInTheDocument()
-    expect(screen.getByText('blaze')).toBeInTheDocument()
+    const blaze = (await screen.findByText('blaze')).closest('li')!
+    expect(await within(blaze).findByText('정보 없음')).toBeInTheDocument()
     expect(screen.getByRole('table', { name: '종족값 수치' })).toBeInTheDocument()
   })
 
