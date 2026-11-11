@@ -3,6 +3,7 @@ import { POKEMON_TYPES } from '@/shared/models'
 import type { PokemonType } from '@/shared/models'
 import type { RawAbility, RawPokemon, RawPokemonForm, RawSpecies } from '../api/pokeapi'
 import { idFromResourceUrl } from '../api/pokeapi'
+import { ABILITY_DESCRIPTIONS_KO, ABILITY_NAMES_KO } from './abilityDescriptionsKo'
 
 export const STAT_KEYS = ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed'] as const
 export type StatKey = (typeof STAT_KEYS)[number]
@@ -107,9 +108,36 @@ export function formNameKo(raw: RawPokemonForm): string | undefined {
   return localized(raw.form_names, 'ko')?.name
 }
 
-/** 특성 표시 이름: 한국어 → 영어 → API 식별자 */
-export function abilityNameKo(raw: RawAbility): string {
-  return localized(raw.names, 'ko')?.name ?? localized(raw.names, 'en')?.name ?? raw.name
+/** 특성 이름과 효과 설명 (FR-12, FR-30) */
+export type AbilityInfo = {
+  /** API 한국어 → 보충 이름표 → 영어 → API 식별자 */
+  name: string
+  /** 한국어 설명: API ko → 보충 설명표. 둘 다 없으면 undefined → 화면에서 '정보 없음' */
+  description?: string
+}
+
+/** 특성 설명은 최신 판 문구를 우선한다(효과가 판마다 보정됨). 목록에 없는 판의 ko가 생기면 그중 마지막 것을 쓴다 */
+export const ABILITY_TEXT_VERSION_GROUPS = [
+  'sword-shield',
+  'lets-go-pikachu-lets-go-eevee',
+  'ultra-sun-ultra-moon',
+  'sun-moon',
+  'omega-ruby-alpha-sapphire',
+  'x-y',
+] as const
+
+export function pickAbilityDescription(entries: RawAbility['flavor_text_entries']): string | undefined {
+  const ko = entries.filter((entry) => entry.language.name === 'ko')
+  const entry =
+    ABILITY_TEXT_VERSION_GROUPS.map((group) => ko.find((e) => e.version_group.name === group)).find((e) => e) ?? ko.at(-1)
+  return entry?.flavor_text.replace(/[\s­]+/g, ' ').trim() || undefined
+}
+
+export function toAbilityInfo(raw: RawAbility): AbilityInfo {
+  return {
+    name: localized(raw.names, 'ko')?.name ?? ABILITY_NAMES_KO[raw.name] ?? localized(raw.names, 'en')?.name ?? raw.name,
+    description: pickAbilityDescription(raw.flavor_text_entries ?? []) ?? ABILITY_DESCRIPTIONS_KO[raw.name],
+  }
 }
 
 export function statTotal(stats: readonly BaseStat[]): number {

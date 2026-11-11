@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import type { RawPokemon, RawSpecies } from '@/features/pokemon-detail/api/pokeapi'
-import { pickFlavorText, statTotal, toFormDetail, toSpeciesDetail } from '@/features/pokemon-detail/model/detail'
+import type { RawAbility, RawPokemon, RawSpecies } from '@/features/pokemon-detail/api/pokeapi'
+import { pickAbilityDescription, pickFlavorText, statTotal, toAbilityInfo, toFormDetail, toSpeciesDetail } from '@/features/pokemon-detail/model/detail'
 import { availableForms, pokemonResourceName, resolveFormKey } from '@/features/pokemon-detail/model/forms'
 import type { PokemonForm } from '@/shared/models'
 
@@ -145,5 +145,52 @@ describe('폼 결정 (ADR-011·016)', () => {
   it('메가 리소스 이름은 {species-name}-{formKey}', () => {
     expect(pokemonResourceName('charizard', 'mega-x')).toBe('charizard-mega-x')
     expect(pokemonResourceName('venusaur', 'mega')).toBe('venusaur-mega')
+  })
+})
+
+describe('특성 설명 (TASK-018, FR-30)', () => {
+  const text = (flavor_text: string, language: string, group: string) => ({ flavor_text, language: lang(language), version_group: res(group) })
+
+  it('한국어 설명 중 최신 판(sword-shield)을 우선하고 줄바꿈을 공백으로 바꾼다', () => {
+    const entries = [
+      text('위급할 때 불꽃타입의\n위력이 올라간다.', 'ko', 'x-y'),
+      text('HP가 줄었을 때\n불꽃타입 기술의\n위력이 올라간다.', 'ko', 'sword-shield'),
+      text('Powers up Fire-type moves in a pinch.', 'en', 'scarlet-violet'),
+    ]
+    expect(pickAbilityDescription(entries)).toBe('HP가 줄었을 때 불꽃타입 기술의 위력이 올라간다.')
+  })
+
+  it('우선순위 목록에 없는 판만 한국어가 있으면 그중 마지막 것을 쓴다', () => {
+    expect(pickAbilityDescription([text('첫 문구', 'ko', 'future-a'), text('새 문구', 'ko', 'future-b')])).toBe('새 문구')
+  })
+
+  it('한국어 설명이 없으면 undefined (화면에서 정보 없음)', () => {
+    expect(pickAbilityDescription([text('Boosts Sp. Atk in sunshine.', 'en', 'x-y')])).toBeUndefined()
+    expect(pickAbilityDescription([])).toBeUndefined()
+  })
+
+  it('API에 한국어 설명이 없으면 보충 설명표를 쓰고, 있으면 API를 우선한다', () => {
+    const goodAsGold = (flavor_text_entries: RawAbility['flavor_text_entries']): RawAbility => ({
+      name: 'good-as-gold',
+      names: [{ name: '황금몸', language: lang('ko') }],
+      flavor_text_entries,
+    })
+    expect(toAbilityInfo(goodAsGold([text('Immune to status moves.', 'en', 'scarlet-violet')])).description).toBe(
+      '산화하지 않는 튼튼한 황금몸 덕분에 상대의 변화 기술의 영향을 받지 않는다.',
+    )
+    expect(toAbilityInfo(goodAsGold([text('API 문구', 'ko', 'scarlet-violet')])).description).toBe('API 문구')
+  })
+
+  it('API에 한국어 이름이 없으면 보충 이름표를 영어보다 먼저 쓴다', () => {
+    const fireMane: RawAbility = { name: 'fire-mane', names: [{ name: 'Fire Mane', language: lang('en') }], flavor_text_entries: [] }
+    expect(toAbilityInfo(fireMane).name).toBe('불꽃의갈기')
+    expect(toAbilityInfo({ ...fireMane, names: [{ name: 'API 이름', language: lang('ko') }] }).name).toBe('API 이름')
+  })
+
+  it('이름은 한국어 → 영어 → API 식별자 순으로 대체한다', () => {
+    const raw = (names: RawAbility['names']): RawAbility => ({ name: 'test-ability', names, flavor_text_entries: [] })
+    expect(toAbilityInfo(raw([{ name: '맹화', language: lang('ko') }]))).toEqual({ name: '맹화', description: undefined })
+    expect(toAbilityInfo(raw([{ name: 'Test Ability', language: lang('en') }])).name).toBe('Test Ability')
+    expect(toAbilityInfo(raw([])).name).toBe('test-ability')
   })
 })

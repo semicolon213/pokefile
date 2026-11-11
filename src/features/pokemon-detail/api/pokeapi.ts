@@ -42,6 +42,8 @@ export type RawSpecies = {
 export type RawAbility = {
   name: string
   names: LocalizedName[]
+  /** 게임 내 특성 설명. ko는 x-y~sword-shield에만 있고 9세대 신규 특성 47개는 없다 (2026-11-11 실측) */
+  flavor_text_entries: { flavor_text: string; language: NamedResource; version_group: NamedResource }[]
 }
 
 export type RawEvolutionNode = {

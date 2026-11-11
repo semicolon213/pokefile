@@ -1,6 +1,6 @@
 import { TypeBadge } from '@/shared/ui'
 import { PokemonImageToggle } from '@/features/battle-tools'
-import { useAbilityNames } from '../hooks/useDetailQueries'
+import { useAbilities } from '../hooks/useDetailQueries'
 import type { PokemonFormDetail, SpeciesDetail } from '../model/detail'
 
 type Props = {
@@ -12,9 +12,9 @@ type Props = {
 
 const formatNumber = (value: number) => value.toLocaleString('ko-KR', { maximumFractionDigits: 1 })
 
-// FR-11~13: 일러스트, 분류·타입·특성, 도감 설명. 값이 없으면 '정보 없음'(DR-06).
+// FR-11~13·30: 일러스트, 분류·타입·특성(설명 포함), 도감 설명. 값이 없으면 '정보 없음'(DR-06).
 export function BasicInfoSection({ form, species, name }: Props) {
-  const abilityQueries = useAbilityNames(form.abilities.map((a) => a.name))
+  const abilityQueries = useAbilities(form.abilities.map((a) => a.name))
 
   return (
     <section className="detail-section detail-basic" aria-labelledby="detail-basic-title">
@@ -35,16 +35,23 @@ export function BasicInfoSection({ form, species, name }: Props) {
             ))}
           </dd>
         </div>
-        <div>
+        <div className="detail-basic__ability-fact">
           <dt>특성</dt>
           <dd>
             <ul className="detail-basic__abilities">
-              {form.abilities.map((ability, i) => (
-                <li key={ability.name}>
-                  {abilityQueries[i]?.data ?? ability.name}
-                  {ability.hidden && <span className="detail-basic__hidden"> (숨겨진 특성)</span>}
-                </li>
-              ))}
+              {form.abilities.map((ability, i) => {
+                const query = abilityQueries[i]
+                return (
+                  <li key={ability.name}>
+                    {query?.data?.name ?? ability.name}
+                    {ability.hidden && <span className="detail-basic__hidden"> (숨겨진 특성)</span>}
+                    {/* FR-30: 불러오는 중에는 비워 두고, 실패하거나 한국어 설명이 없으면 '정보 없음' */}
+                    {query && !query.isPending && (
+                      <p className="detail-basic__ability-desc">{query.data?.description ?? '정보 없음'}</p>
+                    )}
+                  </li>
+                )
+              })}
             </ul>
           </dd>
         </div>
