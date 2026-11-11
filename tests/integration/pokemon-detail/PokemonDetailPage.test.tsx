@@ -233,6 +233,43 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
     expect(within(evolution).getByText('Lv.36')).toBeInTheDocument()
   })
 
+  it('레벨 외 진화 조건을 도구·기술 한국어 이름과 함께 표시한다 (FR-28, TC-13)', async () => {
+    // 조건 표시만 확인하기 위한 가상 체인: 파이리 →(금속코트 지니고 통신교환) 리자드 →(친밀도·밤 또는 원시의힘) 리자몽
+    mockFetch({
+      '/evolution-chain/2': Response.json({
+        id: 2,
+        chain: {
+          species: { name: 'charmander', url: `${API}/pokemon-species/4/` },
+          evolution_details: [],
+          evolves_to: [
+            {
+              species: { name: 'charmeleon', url: `${API}/pokemon-species/5/` },
+              evolution_details: [{ min_level: null, trigger: res('trade'), held_item: res('metal-coat'), version_group: res('gold-silver') }],
+              evolves_to: [
+                {
+                  species: { name: 'charizard', url: `${API}/pokemon-species/6/` },
+                  evolution_details: [
+                    { min_level: null, trigger: res('level-up'), min_happiness: 160, time_of_day: 'night', version_group: res('sword-shield') },
+                    { min_level: null, trigger: res('level-up'), known_move: res('ancient-power'), version_group: res('sword-shield') },
+                  ],
+                  evolves_to: [],
+                },
+              ],
+            },
+          ],
+        },
+      }),
+      '/item/metal-coat': Response.json({ name: 'metal-coat', names: [{ name: '금속코트', language: lang('ko') }] }),
+      // 기술 이름 조회 실패 → API 식별자로 표시하고 나머지는 유지
+      '/move/ancient-power': new Response('', { status: 500 }),
+    })
+    renderAt('/pokemon/6')
+    const evolution = section('진화')
+    expect(await within(evolution).findByText('금속코트 지니고 통신교환')).toBeInTheDocument()
+    expect(within(evolution).getByText('친밀도 높음 · 밤 · 레벨업')).toBeInTheDocument()
+    expect(await within(evolution).findByText(/또는 ancient-power 배운 상태 · 레벨업/)).toBeInTheDocument()
+  })
+
   it('출현 장소를 게임별로 표시한다 (FR-16)', async () => {
     mockFetch({
       '/pokemon/6/encounters': Response.json([

@@ -46,9 +46,45 @@ export type RawAbility = {
   flavor_text_entries: { flavor_text: string; language: NamedResource; version_group: NamedResource }[]
 }
 
+/**
+ * 진화 조건 하나. 같은 진화에 게임(version_group)·폼별로 여러 개가 온다 (2026-11-11 전체 540개 체인 실측).
+ * 값이 없는 필드는 null/false/'' 이며, 실측에서 쓰이지 않는 필드(condition_expression 등)는 선언하지 않는다.
+ */
+export type RawEvolutionDetail = {
+  trigger: NamedResource
+  min_level: number | null
+  version_group?: NamedResource | null
+  region?: NamedResource | null
+  /** 진화 전 폼 (예: vulpix-alola). 리전폼 진화 판별에 쓴다 */
+  required_pokemon_form?: NamedResource | null
+  evolved_pokemon_form?: NamedResource | null
+  item?: NamedResource | null
+  held_item?: NamedResource | null
+  known_move?: NamedResource | null
+  known_move_type?: NamedResource | null
+  used_move?: NamedResource | null
+  min_move_count?: number | null
+  location?: NamedResource | null
+  near_special_rock?: boolean
+  time_of_day?: string
+  gender?: number | null
+  min_happiness?: number | null
+  min_affection?: number | null
+  min_beauty?: number | null
+  min_damage_taken?: number | null
+  min_steps?: number | null
+  party_species?: NamedResource | null
+  party_type?: NamedResource | null
+  trade_species?: NamedResource | null
+  relative_physical_stats?: number | null
+  needs_overworld_rain?: boolean
+  needs_multiplayer?: boolean
+  turn_upside_down?: boolean
+}
+
 export type RawEvolutionNode = {
   species: NamedResource
-  evolution_details: { min_level: number | null; trigger: NamedResource }[]
+  evolution_details: RawEvolutionDetail[]
   evolves_to: RawEvolutionNode[]
 }
 
@@ -80,6 +116,21 @@ export function fetchSpecies(id: number) {
 
 export function fetchAbility(name: string) {
   return fetchJson<RawAbility>(`${POKEAPI_BASE_URL}/ability/${name}`)
+}
+
+/** 진화 조건의 도구 이름 (`names[ko]`) */
+export function fetchItem(name: string) {
+  return fetchJson<{ name: string; names: LocalizedName[] }>(`${POKEAPI_BASE_URL}/item/${name}`)
+}
+
+/** 진화 조건의 기술 이름 (`names[ko]`) */
+export function fetchMove(name: string) {
+  return fetchJson<{ name: string; names: LocalizedName[] }>(`${POKEAPI_BASE_URL}/move/${name}`)
+}
+
+/** 진화 조건의 장소 이름 (`names[ko]`, 없으면 en). 번역표에 없는 장소만 조회한다 */
+export function fetchLocation(name: string) {
+  return fetchJson<{ name: string; names: LocalizedName[] }>(`${POKEAPI_BASE_URL}/location/${name}`)
 }
 
 export function fetchEvolutionChain(chainId: number) {

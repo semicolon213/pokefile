@@ -1,8 +1,9 @@
 import { Link } from 'react-router'
 import type { PokemonId, PokemonSummary } from '@/shared/models'
+import { TYPE_LABELS } from '@/shared/ui'
 import { displayName, formatDexNumber } from '@/shared/utils'
-import { useEvolutionTree } from '../hooks/useDetailQueries'
-import type { EvolutionNode } from '../model/evolution'
+import { useConditionNames, useEvolutionTree } from '../hooks/useDetailQueries'
+import type { ConditionToken, EvolutionCondition, EvolutionNode } from '../model/evolution'
 import { isSingleStage } from '../model/evolution'
 import { pokemonDetailPath } from '../paths'
 import { showdownImageUrls } from '../model/images'
@@ -18,9 +19,11 @@ type Props = {
 }
 
 // FR-15 진화 트리 (#722 이후 진화형 제외, ADR-008). 진화는 종 단위이므로 폼 전환과 무관하다.
+// FR-28 진화 조건: 레벨·돌·통신교환·친밀도·시간대·장소 등을 카드 앞에 표시한다(최신 게임 기준).
 export function EvolutionSection({ currentId, species, index }: Props) {
   const chainId = species.status === 'success' ? species.chainId : undefined
   const query = useEvolutionTree(chainId)
+  const names = useConditionNames(query.data)
 
   let body
   if (species.status === 'error')
@@ -36,7 +39,7 @@ export function EvolutionSection({ currentId, species, index }: Props) {
   else
     body = (
       <ul className="evolution-tree" aria-label="진화 단계">
-        <EvolutionBranch node={query.data} currentId={currentId} index={index} />
+        <EvolutionBranch node={query.data} currentId={currentId} index={index} names={names} />
       </ul>
     )
 
@@ -52,10 +55,12 @@ function EvolutionBranch({
   node,
   currentId,
   index,
+  names,
 }: {
   node: EvolutionNode
   currentId: PokemonId
   index: ReadonlyMap<PokemonId, PokemonSummary>
+  names: ReadonlyMap<string, string>
 }) {
   const summary = index.get(node.id)
   const name = summary ? displayName(summary) : node.speciesName
@@ -63,7 +68,16 @@ function EvolutionBranch({
 
   return (
     <li className="evolution-tree__item">
-      {node.minLevel != null && <span className="evolution-tree__condition">Lv.{node.minLevel}</span>}
+      {node.conditions.length > 0 && (
+        <span className="evolution-tree__condition">
+          {node.conditions.map((condition, i) => (
+            <span key={i} className="evolution-tree__condition-line">
+              {i > 0 && '또는 '}
+              {conditionText(condition, index, names)}
+            </span>
+          ))}
+        </span>
+      )}
       <Link
         to={pokemonDetailPath(node.id)}
         className="evolution-tree__card"
@@ -76,10 +90,28 @@ function EvolutionBranch({
       {node.children.length > 0 && (
         <ul className="evolution-tree__children">
           {node.children.map((child) => (
-            <EvolutionBranch key={child.id} node={child} currentId={currentId} index={index} />
+            <EvolutionBranch key={child.id} node={child} currentId={currentId} index={index} names={names} />
           ))}
         </ul>
       )}
     </li>
   )
+}
+
+/** 조건 → 표시 문자열. 이름 참조는 한국어 이름으로, 아직 없으면 API 식별자로 표시한다 */
+function conditionText(
+  condition: EvolutionCondition,
+  index: ReadonlyMap<PokemonId, PokemonSummary>,
+  names: ReadonlyMap<string, string>,
+): string {
+  const token = (t: ConditionToken): string => {
+    if (typeof t === 'string') return t
+    if (t.kind === 'type') return TYPE_LABELS[t.type]
+    if (t.kind === 'species') {
+      const summary = t.id != null ? index.get(t.id) : undefined
+      return summary ? displayName(summary) : t.name
+    }
+    return names.get(`${t.kind}:${t.name}`) ?? t.name
+  }
+  return condition.map((part) => part.map(token).join('')).join(' · ')
 }

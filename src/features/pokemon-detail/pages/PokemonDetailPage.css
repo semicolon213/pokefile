@@ -366,10 +366,24 @@
 
 .evolution-tree__condition {
   order: -1;
+  /* 레벨 외 조건(FR-28)은 문장이 길어지므로 폭을 제한해 줄바꿈한다 */
+  max-width: 132px;
   color: var(--color-text-muted);
   font-size: 12px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+  text-align: center;
+  word-break: keep-all;
+}
+
+/* 분기 진화(이브이 등)는 조건 폭을 고정해 카드 세로줄을 맞춘다 */
+.evolution-tree__children:not(:has(> li:only-child)) > li > .evolution-tree__condition {
+  width: 132px;
+}
+
+/* '또는'으로 이어지는 조건은 한 줄씩 */
+.evolution-tree__condition-line {
+  display: block;
 }
 
 .evolution-tree__card {

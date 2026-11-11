@@ -1,14 +1,24 @@
 import { describe, expect, it } from 'vitest'
-import type { RawEncounter, RawEvolutionNode } from '@/features/pokemon-detail/api/pokeapi'
+import type { RawEncounter, RawEvolutionDetail, RawEvolutionNode } from '@/features/pokemon-detail/api/pokeapi'
 import { formatLocationArea, toVersionEncounters } from '@/features/pokemon-detail/model/encounters'
-import { isSingleStage, toEvolutionTree } from '@/features/pokemon-detail/model/evolution'
+import {
+  collectConditionRefs,
+  isSingleStage,
+  pickEvolutionConditions,
+  toEvolutionTree,
+} from '@/features/pokemon-detail/model/evolution'
 
 const species = (name: string, id: number) => ({ name, url: `https://pokeapi.co/api/v2/pokemon-species/${id}/` })
-const levelUp = (min_level: number | null) => ({ min_level, trigger: { name: 'level-up', url: '' } })
-const useItem = { min_level: null, trigger: { name: 'use-item', url: '' } }
+const res = (name: string) => ({ name, url: '' })
+const levelUp = (min_level: number | null) => ({ min_level, trigger: res('level-up') })
+const useItem = { min_level: null, trigger: res('use-item'), item: res('water-stone') }
+const detail = (fields: Omit<Partial<RawEvolutionDetail>, 'trigger'> & { trigger: string; version?: string }): RawEvolutionDetail => {
+  const { trigger, version, ...rest } = fields
+  return { min_level: null, ...rest, trigger: res(trigger), version_group: version ? res(version) : null }
+}
 
 describe('toEvolutionTree (FR-15, ADR-008)', () => {
-  it('분기 진화를 유지하고 레벨업 진화의 최소 레벨을 담는다', () => {
+  it('분기 진화를 유지하고 진화 조건을 담는다', () => {
     const raw: RawEvolutionNode = {
       species: species('eevee', 133),
       evolution_details: [],
@@ -20,7 +30,9 @@ describe('toEvolutionTree (FR-15, ADR-008)', () => {
     const tree = toEvolutionTree(raw)!
     expect(tree.id).toBe(133)
     expect(tree.children.map((c) => c.id)).toEqual([134, 700])
-    expect(tree.children[0].minLevel).toBeUndefined()
+    expect(tree.conditions).toEqual([])
+    expect(tree.children[0].conditions).toEqual([[[{ kind: 'item', name: 'water-stone' }, ' 사용']]])
+    expect(tree.children[1].conditions).toEqual([[['레벨업']]])
   })
 
   it('지원 범위(#1025) 밖 진화형은 가지째 제외한다', () => {
@@ -36,12 +48,102 @@ describe('toEvolutionTree (FR-15, ADR-008)', () => {
       ],
     }
     const tree = toEvolutionTree(raw)!
-    expect(tree.children[0]).toEqual({ id: 625, speciesName: 'bisharp', minLevel: 52, children: [] })
+    expect(tree.children[0]).toEqual({ id: 625, speciesName: 'bisharp', conditions: [[['Lv.52']]], children: [] })
   })
 
   it('진화하지 않는 종을 구분한다', () => {
     const tree = toEvolutionTree({ species: species('tauros', 128), evolution_details: [], evolves_to: [] })!
     expect(isSingleStage(tree)).toBe(true)
+  })
+})
+
+describe('pickEvolutionConditions (TASK-016, FR-28)', () => {
+  it('친밀도·시간대처럼 레벨 없는 레벨업 조건은 끝에 레벨업을 붙인다 (에브이)', () => {
+    expect(pickEvolutionConditions([detail({ trigger: 'level-up', min_happiness: 160, time_of_day: 'day', version: 'gold-silver' })])).toEqual([
+      [['친밀도 높음'], ['낮'], ['레벨업']],
+    ])
+  })
+
+  it('통신교환, 도구를 지닌 통신교환, 특정 포켓몬과의 통신교환 (TC-13)', () => {
+    expect(pickEvolutionConditions([detail({ trigger: 'trade', version: 'red-blue' })])).toEqual([[['통신교환']]])
+    expect(pickEvolutionConditions([detail({ trigger: 'trade', held_item: res('metal-coat') })])).toEqual([
+      [[{ kind: 'item', name: 'metal-coat' }, ' 지니고 통신교환']],
+    ])
+    const escavalier = detail({ trigger: 'trade', trade_species: { name: 'shelmet', url: 'https://pokeapi.co/api/v2/pokemon-species/616/' } })
+    expect(pickEvolutionConditions([escavalier])).toEqual([[[{ kind: 'species', id: 616, name: 'shelmet' }, '와(과) 통신교환']]])
+  })
+
+  it('장소·기술·타입·파티 조건을 이름 참조로 담는다', () => {
+    expect(
+      pickEvolutionConditions([
+        detail({ trigger: 'level-up', min_level: 32, party_type: res('dark') }),
+        detail({ trigger: 'level-up', known_move: res('ancient-power') }),
+      ]),
+    ).toEqual([
+      [['Lv.32'], ['파티에 ', { kind: 'type', type: 'dark' }, '타입']],
+      [[{ kind: 'move', name: 'ancient-power' }, ' 배운 상태'], ['레벨업']],
+    ])
+    const runerigus = pickEvolutionConditions([detail({ trigger: 'take-damage', min_damage_taken: 49, location: res('dusty-bowl') })])
+    expect(runerigus).toEqual([[['데미지 49 이상 받은 뒤 바위 아치 통과'], [{ kind: 'location', name: 'dusty-bowl' }, '에서']]])
+  })
+
+  it('게임마다 다르면 최신 게임 조건만 남긴다 (자포코일: 장소 → 천둥의돌)', () => {
+    const magnezone = [
+      detail({ trigger: 'level-up', location: res('mt-coronet'), version: 'diamond-pearl' }),
+      detail({ trigger: 'use-item', item: res('thunder-stone'), version: 'sword-shield' }),
+      detail({ trigger: 'level-up', location: res('new-mauville'), version: 'omega-ruby-alpha-sapphire' }),
+    ]
+    expect(pickEvolutionConditions(magnezone)).toEqual([[[{ kind: 'item', name: 'thunder-stone' }, ' 사용']]])
+  })
+
+  it('리전폼 진화 조건은 빼고 기본 폼 조건을 쓴다 (region 또는 폼 이름으로 판별)', () => {
+    const ninetales = [
+      detail({ trigger: 'use-item', item: res('fire-stone'), version: 'red-blue' }),
+      detail({ trigger: 'use-item', item: res('ice-stone'), version: 'sun-moon', required_pokemon_form: res('vulpix-alola') }),
+    ]
+    expect(pickEvolutionConditions(ninetales)).toEqual([[[{ kind: 'item', name: 'fire-stone' }, ' 사용']]])
+    const typhlosion = [
+      detail({ trigger: 'level-up', min_level: 36, version: 'gold-silver' }),
+      detail({ trigger: 'level-up', min_level: 36, version: 'legends-arceus', region: res('hisui') }),
+    ]
+    expect(pickEvolutionConditions(typhlosion)).toEqual([[['Lv.36']]])
+    // 리전폼 조건뿐이면(가라르 나옹 → 나이킹) 그대로 쓴다
+    const perrserker = [detail({ trigger: 'level-up', min_level: 28, required_pokemon_form: res('meowth-galar') })]
+    expect(pickEvolutionConditions(perrserker)).toEqual([[['Lv.28']]])
+  })
+
+  it('서로 다른 조건은 또는으로 모두, 같은 조건은 하나로, 양쪽 성별이면 성별을 뺀다', () => {
+    const lycanroc = ['day', 'night', 'dusk'].map((time_of_day) => detail({ trigger: 'level-up', min_level: 25, time_of_day }))
+    expect(pickEvolutionConditions(lycanroc)).toEqual([[['Lv.25'], ['낮']], [['Lv.25'], ['밤']], [['Lv.25'], ['황혼']]])
+    const meowstic = [1, 2].map((gender) => detail({ trigger: 'level-up', min_level: 25, gender }))
+    expect(pickEvolutionConditions(meowstic)).toEqual([[['Lv.25']]])
+    expect(pickEvolutionConditions([detail({ trigger: 'use-item', item: res('dawn-stone'), gender: 2 })])).toEqual([
+      [[{ kind: 'item', name: 'dawn-stone' }, ' 사용'], ['수컷']],
+    ])
+  })
+
+  it('마휘핑(회전)은 사탕공예·시간대와 관계없이 하나로 표시한다', () => {
+    const alcremie = ['strawberry-sweet', 'love-sweet'].flatMap((sweet) =>
+      ['day', 'night'].map((time_of_day) => detail({ trigger: 'spin', held_item: res(sweet), time_of_day })),
+    )
+    expect(pickEvolutionConditions(alcremie)).toEqual([[['사탕공예를 지니고 회전']]])
+  })
+
+  it('조건이 없으면 빈 배열, 도구·기술·장소 이름 참조를 중복 없이 모은다', () => {
+    expect(pickEvolutionConditions([])).toEqual([])
+    const tree = toEvolutionTree({
+      species: species('eevee', 133),
+      evolution_details: [],
+      evolves_to: [
+        { species: species('vaporeon', 134), evolution_details: [useItem], evolves_to: [] },
+        { species: species('jolteon', 135), evolution_details: [{ ...useItem, item: res('thunder-stone') }], evolves_to: [] },
+        { species: species('glaceon', 471), evolution_details: [{ ...useItem }], evolves_to: [] },
+      ],
+    })
+    expect(collectConditionRefs(tree)).toEqual([
+      { kind: 'item', name: 'water-stone' },
+      { kind: 'item', name: 'thunder-stone' },
+    ])
   })
 })
 
