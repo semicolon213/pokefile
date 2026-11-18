@@ -20,12 +20,10 @@ const INDEX: PokemonSummary[] = [
   { id: 9, nameEn: 'Blastoise', nameKo: '거북왕', types: ['water'], generation: 'generation-i', forms: [] },
 ]
 
-let location = ''
 function LocationProbe() {
-  const current = useLocation()
-  location = current.search
-  return null
+  return <output data-testid="location">{useLocation().search}</output>
 }
+const location = () => screen.getByTestId('location').textContent
 
 function renderAt(path: string) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } })
@@ -65,7 +63,7 @@ describe('파티 분석 화면 (FR-33, TASK-026)', () => {
 
     await user.type(screen.getByRole('combobox', { name: '파티에 추가할 포켓몬 검색' }), '이상해')
     await user.click(screen.getByRole('option', { name: /이상해꽃/ }))
-    expect(location).toBe('?p=3')
+    expect(location()).toBe('?p=3')
     expect(localStorage.getItem(TEAM_STORAGE_KEY)).toBe('3')
     expect(screen.getByRole('combobox', { name: '파티에 추가할 포켓몬 검색' })).toHaveValue('')
 
@@ -100,10 +98,10 @@ describe('파티 분석 화면 (FR-33, TASK-026)', () => {
     const search = await screen.findByRole('combobox', { name: '파티에 추가할 포켓몬 검색' })
     expect(search).toBeDisabled()
     await user.click(screen.getByRole('button', { name: '리자몽 빼기' }))
-    expect(location).toBe('?p=9&p=9&p=9&p=9&p=9')
+    expect(location()).toBe('?p=9&p=9&p=9&p=9&p=9')
     expect(search).toBeEnabled()
     await user.click(screen.getByRole('button', { name: '모두 비우기' }))
-    expect(location).toBe('')
+    expect(location()).toBe('')
     expect(localStorage.getItem(TEAM_STORAGE_KEY)).toBeNull()
   })
 
@@ -111,6 +109,6 @@ describe('파티 분석 화면 (FR-33, TASK-026)', () => {
     localStorage.setItem(TEAM_STORAGE_KEY, '9,6:mega-x')
     renderAt('/team')
     expect(await screen.findByText('거북왕', { selector: '.team-slot__name' })).toBeInTheDocument()
-    expect(location).toBe('?p=9&p=6%3Amega-x')
+    expect(location()).toBe('?p=9&p=6%3Amega-x')
   })
 })
