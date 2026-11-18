@@ -8,6 +8,7 @@ export {
   parsePokemonId,
 } from './pokemon'
 export type {
+  BaseStats,
   FormCategory,
   FormKey,
   Generation,

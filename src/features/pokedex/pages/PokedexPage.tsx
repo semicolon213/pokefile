@@ -6,11 +6,13 @@ import { ErrorState, GENERATION_LABELS, useDocumentTitle } from '@/shared/ui'
 import { GenerationNav } from '../components/GenerationNav'
 import { PokemonGrid } from '../components/PokemonGrid'
 import { SortSelect } from '../components/SortSelect'
+import { StatFilter } from '../components/StatFilter'
 import { TypeFilter } from '../components/TypeFilter'
 import { usePokedexFilters } from '../hooks/usePokedexFilters'
 import { useRegionalDexes, useSearchIndex } from '../hooks/useSearchIndex'
 import { applyFilters, countByGeneration, isDefaultFilters, toSearchParams } from '../model/filters'
 import { dexesFor, editionLabel, regionalOrder } from '../model/regional'
+import { isStatKey } from '../model/stats'
 import './PokedexPage.css'
 
 const SKELETON_COUNT = 12
@@ -36,6 +38,8 @@ export function PokedexPage() {
   const filtered = !isDefaultFilters(filters)
   // 필터가 바뀌면 목록을 처음(첫 묶음)부터 다시 보여준다
   const listKey = toSearchParams(filters).toString()
+  // 종족값으로 정렬하거나 거르면 카드에 그 값을 함께 보여 준다 (정렬이 우선)
+  const shownStat = isStatKey(filters.sort) ? filters.sort : filters.min?.stat
   // 상세의 '도감 목록으로'가 이 주소(필터 포함)로 돌아오도록 기억한다
   const { search } = useLocation()
   useEffect(() => rememberListSearch(search), [search])
@@ -91,7 +95,10 @@ export function PokedexPage() {
                 <b className="tabular">{results.length}</b>
                 {filtered ? '마리' : '마리의 포켓몬'}
               </p>
-              <SortSelect value={filters.sort} regional={!!regional} onChange={(sort) => update({ sort })} />
+              <div className="pokedex-toolbar__controls">
+                <StatFilter value={filters.min} onChange={(min) => update({ min })} />
+                <SortSelect value={filters.sort} regional={!!regional} onChange={(sort) => update({ sort })} />
+              </div>
             </div>
             {filters.gen && regional && (
               <p className="pokedex-edition">
@@ -101,7 +108,7 @@ export function PokedexPage() {
             )}
 
             {results.length > 0 ? (
-              <PokemonGrid key={listKey} pokemon={results} regional={regional} listKey={listKey} />
+              <PokemonGrid key={listKey} pokemon={results} regional={regional} listKey={listKey} stat={shownStat} />
             ) : (
               <div className="pokedex-empty">
                 <p>검색 결과가 없습니다. 검색어나 필터를 확인해 주세요.</p>
