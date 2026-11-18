@@ -270,7 +270,7 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
     expect(await within(evolution).findByText(/또는 ancient-power 배운 상태 · 레벨업/)).toBeInTheDocument()
   })
 
-  it('출현 장소를 게임별로 표시한다 (FR-16)', async () => {
+  it('출현 장소를 게임별로 한국어 장소 이름·만나는 방법과 함께 표시한다 (FR-16)', async () => {
     mockFetch({
       '/pokemon/6/encounters': Response.json([
         {
@@ -280,16 +280,67 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
             { version: res('red-japan'), encounter_details: [{ min_level: 10, max_level: 12, method: res('walk') }] },
           ],
         },
+        {
+          location_area: { name: 'santalune-forest-area', url: '' },
+          version_details: [
+            {
+              version: res('x'),
+              encounter_details: [
+                { min_level: 3, max_level: 4, method: res('walk') },
+                { min_level: 5, max_level: 5, method: res('old-rod') },
+              ],
+            },
+          ],
+        },
       ]),
     })
+    const user = userEvent.setup()
+    renderAt('/pokemon/6')
+    const encounters = section('출현 정보')
+    // 게임 카드(이름·세대·장소 수)는 보이고 장소 목록은 접혀 있다
+    const x = await within(encounters).findByRole('region', { name: 'X 출현 장소' })
+    expect(within(x).getByText('6세대')).toBeInTheDocument()
+    expect(within(x).getByText('2곳')).toBeInTheDocument()
+    expect(within(x).getByText('백단숲')).not.toBeVisible()
+    const toggle = within(x).getByRole('button', { name: 'X 출현 정보 열기' })
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+    await user.click(toggle)
+    expect(within(x).getByRole('button', { name: 'X 출현 정보 닫기' })).toHaveAttribute('aria-expanded', 'true')
+    // 이름표에 없는 장소는 영문 표기
+    expect(within(x).getByText('Kalos Route 1')).toBeInTheDocument()
+    expect(within(x).getByText('Lv.10~12')).toBeInTheDocument()
+    const santalune = within(x).getByText('백단숲').closest('li')!
+    expect(within(santalune).getByText('풀숲·동굴 · 낡은낚싯대')).toBeInTheDocument()
+    expect(within(santalune).getByText('Lv.3~5')).toBeInTheDocument()
+    expect(within(encounters).queryAllByRole('region', { name: /출현 장소/ })).toHaveLength(1)
+    expect(within(encounters).queryByRole('region', { name: /japan/i })).not.toBeInTheDocument()
+    // 다시 닫으면 목록이 숨겨진다
+    await user.click(within(x).getByRole('button', { name: 'X 출현 정보 닫기' }))
+    expect(within(x).getByText('백단숲')).not.toBeVisible()
+  })
+
+  it('게임 카드마다 따로 열고 닫는다', async () => {
+    mockFetch({
+      '/pokemon/6/encounters': () =>
+        Response.json([
+          {
+            location_area: { name: 'santalune-forest-area', url: '' },
+            version_details: [
+              { version: res('x'), encounter_details: [{ min_level: 3, max_level: 4, method: res('walk') }] },
+              { version: res('y'), encounter_details: [{ min_level: 5, max_level: 6, method: res('old-rod') }] },
+            ],
+          },
+        ]),
+    })
+    const user = userEvent.setup()
     renderAt('/pokemon/6')
     const encounters = section('출현 정보')
     const x = await within(encounters).findByRole('region', { name: 'X 출현 장소' })
-    expect(within(x).getByText('6세대')).toBeInTheDocument()
-    expect(within(x).getByText('Kalos Route 1')).toBeInTheDocument()
-    expect(within(x).getByText('Lv.10~12')).toBeInTheDocument()
-    expect(within(encounters).queryAllByRole('region', { name: /출현 장소/ })).toHaveLength(1)
-    expect(within(encounters).queryByRole('region', { name: /japan/i })).not.toBeInTheDocument()
+    const y = within(encounters).getByRole('region', { name: 'Y 출현 장소' })
+    await user.click(within(y).getByRole('button', { name: 'Y 출현 정보 열기' }))
+    expect(within(y).getByText('낡은낚싯대')).toBeInTheDocument()
+    expect(within(x).getByText('백단숲')).not.toBeVisible()
+    expect(within(x).getByRole('button', { name: 'X 출현 정보 열기' })).toHaveAttribute('aria-expanded', 'false')
   })
 
   it('출현 데이터 없음과 요청 실패를 구분해 안내한다 (FR-18)', async () => {
