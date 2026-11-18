@@ -1,6 +1,6 @@
-import { SMOGON_FORMAT_GEN } from '@/shared/config/scope'
+import { SCOPE } from '@/shared/config/scope'
 
 export const battleToolsQueryKeys = {
-  smogonSets: () => ['smogon', SMOGON_FORMAT_GEN] as const,
+  smogonSets: (generation = SCOPE.smogon.generation) => ['smogon', `gen${generation}`] as const,
   smogon: (formKey: string, format: string) => ['smogon', formKey, format] as const,
 }

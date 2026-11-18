@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
   }
   await page.route('**/data/pokedex-index.json', respond)
   await page.route('https://pokeapi.co/api/v2/**', respond)
-  await page.route('https://data.pkmn.cc/sets/gen6.json', respond)
+  await page.route('https://data.pkmn.cc/sets/gen*.json', respond)
 })
 
 test('기본 → 메가X → 메가Y 전환과 URL 새로고침에서 정확한 세팅을 표시한다 (TC-06)', async ({ page }) => {
@@ -47,11 +47,11 @@ test('세팅 오류가 상세 화면을 중단시키지 않으며 재시도할 �
   })
   await page.goto('#/pokemon/6')
   const section = page.getByRole('region', { name: '실전 추천 세팅' })
-  await expect(section.getByRole('alert')).toHaveText('실전 세팅을 불러오지 못했습니다.')
+  await expect(section.getByRole('alert')).toHaveText('6세대 실전 세팅을 불러오지 못했습니다.')
   await expect(page.getByRole('heading', { level: 1, name: '리자몽' })).toBeVisible()
   await expect(page.getByRole('table', { name: '종족값 수치' })).toBeVisible()
   fails = false
-  await section.getByRole('button', { name: '다시 시도' }).click()
+  await section.getByRole('button', { name: '6세대 다시 시도' }).click()
   await section.getByRole('combobox').selectOption('ou')
   await expect(section.getByText('Base attacker', { exact: true })).toBeVisible()
 })

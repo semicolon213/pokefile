@@ -41,12 +41,12 @@ describe('선택 폼에 맞는 세팅 추출 (TC-06)', () => {
     expect(JSON.stringify(data)).toBe(before)
   })
 
-  it('미지원 폼·데이터 부재·메가레쿠쟈를 다른 폼으로 대체하지 않는다', () => {
+  it('미지원 폼·데이터 부재를 다른 폼으로 대체하지 않는다', () => {
     const data = normalizeGen6SmogonSets(raw)
     expect(selectSmogonSets(data, { speciesName: 'charizard', formKey: 'mega' })).toEqual([])
     expect(selectSmogonSets(data, { speciesName: 'pikachu', formKey: 'mega' })).toEqual([])
     expect(selectSmogonSets(data, { speciesName: 'caterpie', formKey: 'default' })).toEqual([])
-    expect(selectSmogonSets(data, { speciesName: 'rayquaza', formKey: 'mega' })).toEqual([])
-    expect(selectSmogonSets(data, { speciesName: 'rayquaza', formKey: 'default' })).toHaveLength(1)
+    expect(selectSmogonSets(data, { speciesName: 'rayquaza', formKey: 'mega' })[0].sets.map((set) => set.name)).toEqual(['Base'])
+    expect(selectSmogonSets(data, { speciesName: 'rayquaza', formKey: 'default' })).toEqual([])
   })
 })
