@@ -100,9 +100,12 @@ const CONDITION_FETCHERS: Record<ConditionRefKind, (name: string) => Promise<{ n
 
 /**
  * 진화 조건의 도구·기술·장소 한국어 이름 (FR-28). `kind:name` → 표시 이름.
- * 장소는 번역표를 먼저 쓰고(OQ-18), 조회에 실패하거나 아직 없으면 화면에서 API 식별자를 보여준다.
+ * 장소는 번역표를 먼저 쓰고(OQ-18), 조회 중인 이름은 pending에 담는다(화면은 식별자 대신 '…'). 실패하면 화면에서 API 식별자를 보여준다.
  */
-export function useConditionNames(tree: EvolutionNode | null | undefined): ReadonlyMap<string, string> {
+export function useConditionNames(tree: EvolutionNode | null | undefined): {
+  names: ReadonlyMap<string, string>
+  pending: ReadonlySet<string>
+} {
   const refs = collectConditionRefs(tree).filter((ref) => !(ref.kind === 'location' && EVOLUTION_LOCATION_NAMES_KO[ref.name]))
   const queries = useQueries({
     queries: refs.map((ref) => ({
@@ -113,10 +116,17 @@ export function useConditionNames(tree: EvolutionNode | null | undefined): Reado
       staleTime: Infinity,
     })),
   })
-  const names = new Map<string, string>(Object.entries(EVOLUTION_LOCATION_NAMES_KO).map(([name, ko]) => [`location:${name}`, ko]))
+  const names = new Map<string, string>()
+  const pending = new Set<string>()
+  for (const ref of collectConditionRefs(tree)) {
+    const ko = ref.kind === 'location' ? EVOLUTION_LOCATION_NAMES_KO[ref.name] : undefined
+    if (ko) names.set(`location:${ref.name}`, ko)
+  }
   refs.forEach((ref, i) => {
-    const name = queries[i]?.data
-    if (name) names.set(`${ref.kind}:${ref.name}`, name)
+    const key = `${ref.kind}:${ref.name}`
+    const query = queries[i]
+    if (query?.data) names.set(key, query.data)
+    else if (query?.isPending) pending.add(key)
   })
-  return names
+  return { names, pending }
 }
