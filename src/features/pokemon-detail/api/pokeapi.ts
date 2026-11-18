@@ -151,7 +151,8 @@ export function fetchEncounters(id: number) {
 export const POKEDEX_INDEX_URL = `${import.meta.env.BASE_URL}data/pokedex-index.json`
 
 export async function fetchPokedexIndex(): Promise<PokemonSummary[]> {
-  const file = await fetchJson<{ version: number; pokemon: PokemonSummary[] }>(POKEDEX_INDEX_URL)
+  // 배포 직후 이전 인덱스 캐시를 쓰지 않도록 서버에 확인한다(ETag, 같으면 304)
+  const file = await fetchJson<{ version: number; pokemon: PokemonSummary[] }>(POKEDEX_INDEX_URL, { cache: 'no-cache' })
   if (file.version !== 2 || !Array.isArray(file.pokemon)) {
     throw new Error('검색 인덱스 형식이 올바르지 않습니다.')
   }

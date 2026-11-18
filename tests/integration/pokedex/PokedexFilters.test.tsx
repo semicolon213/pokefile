@@ -153,6 +153,8 @@ describe('PokedexPage 필터·정렬·URL 동기화 (TASK-004)', () => {
     const user = userEvent.setup()
     renderAt()
     await findCount('5마리의 포켓몬')
+    // 배포 직후 이전 인덱스(종족값 없음) 캐시를 쓰지 않도록 서버에 확인하며 받는다
+    expect(fetch).toHaveBeenCalledWith(expect.stringContaining('data/pokedex-index.json'), { cache: 'no-cache' })
     await user.selectOptions(screen.getByRole('combobox', { name: '정렬' }), 'speed')
     expect(search()).toBe('?sort=speed')
     expect(names()).toEqual(['리자몽', '피카츄', '파이리', '브케인', '님피아'])
@@ -163,14 +165,17 @@ describe('PokedexPage 필터·정렬·URL 동기화 (TASK-004)', () => {
     expect(search()).toBe('?sort=speed&min=total:500')
     expect(names()).toEqual(['리자몽', '님피아'])
     const input = screen.getByRole('spinbutton', { name: '합계 최솟값' })
+    // Enter 없이 입력하는 대로 반영한다
     await user.clear(input)
-    await user.type(input, '530{Enter}')
-    expect(search()).toBe('?sort=speed&min=total:530')
+    await user.type(input, '530')
+    await vi.waitFor(() => expect(search()).toBe('?sort=speed&min=total:530'))
     expect(names()).toEqual(['리자몽'])
-    // 범위 밖 값은 반영하지 않고 되돌린다
+    // 범위 밖 값은 반영하지 않고, 포커스가 빠지면 되돌린다
     await user.clear(input)
-    await user.type(input, '0{Enter}')
+    await user.type(input, '0')
+    await user.tab()
     expect(input).toHaveValue(530)
+    expect(search()).toBe('?sort=speed&min=total:530')
 
     await user.selectOptions(screen.getByRole('combobox', { name: '종족값 조건 능력치' }), '')
     expect(search()).toBe('?sort=speed')

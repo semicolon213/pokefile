@@ -18,7 +18,8 @@ export type SearchIndex = { pokemon: PokemonSummary[]; regionalDexes?: RegionalD
 export const SEARCH_INDEX_URL = `${import.meta.env.BASE_URL}data/pokedex-index.json`
 
 export async function fetchSearchIndex(): Promise<SearchIndex> {
-  const file = await fetchJson<SearchIndexFile>(SEARCH_INDEX_URL)
+  // 주소가 배포마다 같아서, 브라우저가 이전 배포의 인덱스(최대 10분 캐시)를 쓰지 않도록 서버에 바뀌었는지 확인한다(ETag, 같으면 304)
+  const file = await fetchJson<SearchIndexFile>(SEARCH_INDEX_URL, { cache: 'no-cache' })
   if (file.version !== 2 || !Array.isArray(file.pokemon)) {
     throw new Error('검색 인덱스 형식이 올바르지 않습니다.')
   }

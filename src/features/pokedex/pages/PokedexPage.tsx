@@ -96,7 +96,7 @@ export function PokedexPage() {
                 {filtered ? '마리' : '마리의 포켓몬'}
               </p>
               <div className="pokedex-toolbar__controls">
-                <StatFilter value={filters.min} onChange={(min) => update({ min })} />
+                <StatFilter value={filters.min} onChange={(min, options) => update({ min }, options)} />
                 <SortSelect value={filters.sort} regional={!!regional} onChange={(sort) => update({ sort })} />
               </div>
             </div>
