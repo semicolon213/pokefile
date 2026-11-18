@@ -1,5 +1,6 @@
 // 출현 장소의 만나는 방법(encounter-method) 한국어 표기 (FR-16 보강, TASK-006 재구현).
 // PokéAPI encounter-method에는 ko 이름이 없다(64종 모두, 2026-11-11 실측). 지원 게임에 나오는 59종을 직접 옮겼다.
+// TASK-024: 소드·실드에 확장팩(갑옷섬·왕관설원) 출현을 합치면서 나오는 2종(다이맥스 어드벤처·물속 추격)을 더했다.
 // 도구·기술 이름은 게임 한국어판 표기(낡은낚싯대·파도타기·바위깨기 등), 나머지는 뜻을 옮긴 설명이다.
 // 같은 표기는 화면에서 하나로 합친다(예: 박치기 나무 출현률 저·중·고 → '박치기(나무)').
 export const ENCOUNTER_METHOD_LABELS: Readonly<Record<string, string>> = {
@@ -41,12 +42,14 @@ export const ENCOUNTER_METHOD_LABELS: Readonly<Record<string, string>> = {
   'overworld-dirt': '필드 심볼(땅속)',
   wanderer: '필드 심볼(정해진 위치)',
   'wanderer-water': '필드 심볼(물 위, 정해진 위치)',
+  'chase-water': '필드 심볼(물 위, 쫓아옴)',
   'sky-ambush': '기습(하늘)',
   'ground-ambush': '기습(땅)',
   'ceiling-ambush': '기습(동굴 천장)',
   'trash-can-ambush': '기습(쓰레기통)',
   'rustling-bush-ambush': '기습(흔들리는 덤불)',
   'max-raid': '맥스레이드배틀',
+  'dynamax-adventure': '다이맥스 어드벤처',
   static: '고정 심볼',
   'roaming-grass': '배회',
   'roaming-water': '배회(물 위)',
