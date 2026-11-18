@@ -1,4 +1,5 @@
 import type { SortKey } from '../model/filters'
+import { STAT_KEYS, STAT_LABELS } from '../model/stats'
 
 type Props = {
   value: SortKey
@@ -7,7 +8,7 @@ type Props = {
   onChange: (sort: SortKey) => void
 }
 
-// 정렬 (FR-06·31): 도감 번호순(기본), 이름순(한국어 이름 기준)
+// 정렬 (FR-06·31·34): 도감 번호순(기본), 이름순(한국어 이름 기준), 종족값 높은 순
 export function SortSelect({ value, regional, onChange }: Props) {
   const current = !regional && value === 'national' ? 'id' : value
   return (
@@ -17,6 +18,13 @@ export function SortSelect({ value, regional, onChange }: Props) {
         <option value="id">{regional ? '지방 도감 순' : '도감 번호순'}</option>
         {regional && <option value="national">전국 도감 번호순</option>}
         <option value="name">이름순</option>
+        <optgroup label="종족값 높은 순">
+          {STAT_KEYS.map((stat) => (
+            <option key={stat} value={stat}>
+              {STAT_LABELS[stat]} 높은 순
+            </option>
+          ))}
+        </optgroup>
       </select>
     </label>
   )

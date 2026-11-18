@@ -93,11 +93,11 @@
 - 승인자/일자: 팀 결정(semicolon213 전달) / 2026-10-28
 
 ## ADR-010: 한국어 검색 인덱스 — 정적 JSON
-- 상태: **승인** (OQ-07) — 2026-11-04 개정(ADR-016, TASK-023): 범위 #1~#1025, `megaForms` → `forms`, 파일 `version` 2
+- 상태: **승인** (OQ-07) — 2026-11-04 개정(ADR-016, TASK-023): 범위 #1~#1025, `megaForms` → `forms`, 파일 `version` 2 — 2026-11-18 개정(FR-34, TASK-027): `stats` 추가(호환되는 추가라 `version` 2 유지)
 - 결정: `scripts/build-pokedex-index.mjs`가 PokéAPI에서 지원 범위(scope.json) 정보를 수집해 `public/data/pokedex-index.json`을 생성하고, 생성 결과를 **저장소에 커밋**한다. 앱은 이 파일 하나로 검색·필터·정렬을 처리한다.
-- 항목: `id`, `nameEn`, `nameKo`, `types`, `generation`, `forms`(기본 폼이 아닌 폼 목록: `key`, `nameKo`, `nameEn`, `category`(mega·gmax·regional·other), `types`, `battleOnly`. 상세 탭·폼 이름 표시용)
+- 항목: `id`, `nameEn`, `nameKo`, `types`, `generation`, `forms`(기본 폼이 아닌 폼 목록: `key`, `nameKo`, `nameEn`, `category`(mega·gmax·regional·other), `types`, `battleOnly`. 상세 탭·폼 이름 표시용), `stats`(기본 폼 종족값 6개: HP·공격·방어·특수공격·특수방어·스피드 순서. 종족값 정렬·조건용)
 - 메가는 목록·검색 결과에 **별도 카드로 넣지 않는다**(ADR-011).
-- 근거: 실측상 1025종 모두 한국어 이름 보유. 런타임에 species를 1025번 요청하지 않아도 된다. 파일 크기 약 158KB(폼 포함).
+- 근거: 실측상 1025종 모두 한국어 이름 보유. 런타임에 species를 1025번 요청하지 않아도 된다. 파일 크기 약 158KB(폼 포함), 종족값 추가 후 약 209KB(2026-11-18 실측, 추가분 약 30KB).
 - 갱신: 데이터 변경이 필요할 때 수동으로 `npm run build:index` 실행 후 커밋(CI에서 매번 생성하지 않음)
 - 승인자/일자: 팀 결정(semicolon213 전달) / 2026-10-28
 

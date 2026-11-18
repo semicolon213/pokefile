@@ -43,6 +43,14 @@ async function pool(items, fn) {
 
 const nameIn = (names, lang) => names.find((n) => n.language.name === lang)?.name
 const titleCase = (key) => key.split('-').map((w) => w[0].toUpperCase() + w.slice(1)).join(' ')
+// 종족값 순서: HP·공격·방어·특수공격·특수방어·스피드 (FR-34, TASK-027)
+const STAT_ORDER = ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed']
+const statsOf = (pokemon) =>
+  STAT_ORDER.map((name) => {
+    const value = pokemon.stats.find((s) => s.stat.name === name)?.base_stat
+    if (typeof value !== 'number') throw new Error(`${pokemon.name}: 종족값 ${name} 없음`)
+    return value
+  })
 const typesOf = (pokemon) => [...pokemon.types].sort((a, b) => a.slot - b.slot).map((t) => t.type.name)
 
 async function main() {
@@ -99,6 +107,7 @@ async function main() {
       nameEn,
       ...(nameKo ? { nameKo } : {}),
       types: typesOf(p),
+      stats: statsOf(p),
       generation: s.generation.name,
       forms: formsBySpecies.get(id) ?? [],
     }
