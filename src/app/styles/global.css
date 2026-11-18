@@ -367,9 +367,9 @@ img {
   padding: var(--space-5);
 }
 
-/* 768~1279px: 메뉴 4개와 도구(내 게임·검색·테마)가 한 줄에 들어가지 않으므로 도구를 둘째 줄 오른쪽으로 내린다.
+/* 768~1439px: 메뉴 5개와 도구(내 게임·검색·테마)가 한 줄에 들어가지 않으므로(한 줄에 약 1,330px 필요) 도구를 둘째 줄 오른쪽으로 내린다.
    상단 바 높이 토큰도 함께 바꿔 사이드바 sticky 위치가 맞게 한다. */
-@media (min-width: 768px) and (max-width: 1279px) {
+@media (min-width: 768px) and (max-width: 1439px) {
   :root {
     --header-height: 112px;
   }
@@ -396,7 +396,7 @@ img {
     padding: var(--space-2) var(--space-4) var(--space-3);
   }
 
-  /* 메뉴 4개가 320px 한 줄에 들어가지 않으므로 줄바꿈한다 (TC-08) */
+  /* 메뉴 5개가 320px 한 줄에 들어가지 않으므로 줄바꿈한다 (TC-08) */
   .app-nav {
     flex-wrap: wrap;
   }

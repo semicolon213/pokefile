@@ -1,0 +1,340 @@
+/* 파티 분석 (FR-33, TASK-026, DESIGN §2.4.3) */
+.team-page {
+  display: grid;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+.team-page > h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.team-status,
+.team-empty {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.team-section {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+
+.team-section h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.team-section__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.team-section__count {
+  margin-left: var(--space-1);
+  color: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.team-clear,
+.team-slot__remove {
+  min-height: 32px;
+  padding: 0 var(--space-3);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.team-clear:hover,
+.team-slot__remove:hover {
+  border-color: var(--color-text-muted);
+  color: var(--color-text);
+}
+
+/* ---------- 파티 6칸 ---------- */
+.team-slots {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.team-slot {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  min-height: 132px;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+}
+
+.team-slot--empty {
+  display: grid;
+  place-items: center;
+  grid-template-columns: 1fr;
+  border-style: dashed;
+  border-color: var(--color-border-strong);
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.team-slot__plate {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--color-plate);
+}
+
+.team-slot__plate img {
+  image-rendering: pixelated;
+}
+
+.team-slot__body {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.team-slot__number {
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.team-slot__name {
+  overflow-wrap: anywhere;
+  font-weight: 700;
+}
+
+.team-slot__types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.team-slot__form {
+  grid-column: 1 / -1;
+}
+
+.team-slot__form select {
+  width: 100%;
+  min-height: 32px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.team-slot__remove {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+/* ---------- 요약 ---------- */
+.team-summary {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.team-summary__row {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-3);
+}
+
+.team-summary__row dt,
+.team-coverage__label {
+  padding-top: 2px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.team-summary__row dd {
+  margin: 0;
+}
+
+.team-summary__types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.team-suggestions {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.team-suggestions li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 14px;
+}
+
+.team-hint {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.team-coverage__score {
+  margin: 0;
+}
+
+.team-coverage__score strong {
+  margin-left: var(--space-1);
+  font-size: 20px;
+}
+
+/* ---------- 받는 피해 표 ---------- */
+.team-defense__scroll {
+  overflow-x: auto;
+  border-radius: var(--radius-control);
+}
+
+.team-defense__scroll:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.team-defense {
+  border-collapse: separate;
+  border-spacing: 2px;
+  font-size: 13px;
+}
+
+.team-defense th,
+.team-defense td {
+  height: 32px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.team-defense__corner {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 88px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.team-defense__member {
+  min-width: 64px;
+  max-width: 96px;
+  padding: 0 4px;
+  color: var(--color-text);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.team-defense__count {
+  min-width: 44px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.team-defense__type {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 88px;
+  padding: 0 var(--space-2);
+  background: var(--type-bg);
+  color: var(--color-on-type);
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: -2px 0 0 var(--color-surface), 2px 0 0 var(--color-surface);
+}
+
+.team-defense__caution {
+  margin-left: 6px;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-warning-ink);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.team-defense__cell {
+  background: var(--color-surface-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.team-defense__cell--weak {
+  background: var(--color-warning-soft);
+  color: var(--color-warning-ink);
+  font-weight: 800;
+}
+
+.team-defense__cell--resist {
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.team-defense__total {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+}
+
+.team-defense__total--weak {
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+/* 주의 행: 약점 수를 경고색으로 */
+.team-defense tr[data-caution] .team-defense__total--weak {
+  background: var(--color-warning-soft);
+  color: var(--color-warning-ink);
+}
+
+@media (max-width: 767px) {
+  .team-section {
+    padding: var(--space-4);
+  }
+
+  .team-slots {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .team-slot {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .team-summary__row {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+}

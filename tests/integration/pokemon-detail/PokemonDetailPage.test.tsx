@@ -311,6 +311,44 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
     expect(await within(evolution).findByText(/또는 ancient-power 배운 상태 · 레벨업/)).toBeInTheDocument()
   })
 
+  it('게임마다 다른 진화 방법을 기록된 게임과 함께 모두 보여 주고, 내 게임을 고르면 그 방법만 보여 준다 (FR-28, QA D-016-01)', async () => {
+    // 가상 체인: 파이리 →(파이리와 통신교환[레드·블루] 또는 연결의끈 사용[LEGENDS 아르세우스]) 리자드
+    const chain = Response.json({
+      id: 2,
+      chain: {
+        species: { name: 'charmander', url: `${API}/pokemon-species/4/` },
+        evolution_details: [],
+        evolves_to: [
+          {
+            species: { name: 'charmeleon', url: `${API}/pokemon-species/5/` },
+            evolution_details: [
+              { min_level: null, trigger: res('trade'), trade_species: { name: 'charmander', url: `${API}/pokemon-species/4/` }, version_group: res('red-blue') },
+              { min_level: null, trigger: res('use-item'), item: res('linking-cord'), version_group: res('legends-arceus') },
+            ],
+            evolves_to: [],
+          },
+        ],
+      },
+    })
+    mockFetch({
+      '/evolution-chain/2': chain,
+      '/item/linking-cord': Response.json({ name: 'linking-cord', names: [{ name: '연결의끈', language: lang('ko') }] }),
+    })
+    const user = userEvent.setup()
+    localStorage.setItem('pokefile:my-game', 'red')
+    renderAt('/pokemon/6')
+    const evolution = section('진화')
+    // 내 게임(레드)에 기록된 방법만, 게임 이름 없이
+    expect(await within(evolution).findByText('파이리와 통신교환')).toBeInTheDocument()
+    expect(within(evolution).getByText('내 게임 레드 기준입니다.')).toBeInTheDocument()
+    expect(within(evolution).queryByText(/연결의끈/)).not.toBeInTheDocument()
+
+    await user.click(within(evolution).getByRole('button', { name: '모든 게임 보기' }))
+    expect(within(evolution).getByText('레드·블루')).toBeInTheDocument()
+    expect(await within(evolution).findByText('또는 연결의끈 사용')).toBeInTheDocument()
+    expect(within(evolution).getByText('LEGENDS 아르세우스')).toBeInTheDocument()
+  })
+
   it('출현 장소를 게임별로 한국어 장소 이름·만나는 방법과 함께 표시한다 (FR-16)', async () => {
     mockFetch({
       '/pokemon/6/encounters': Response.json([

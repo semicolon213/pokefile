@@ -4,6 +4,7 @@ import { compareRoutes } from '@/features/compare'
 import { favoritesRoutes } from '@/features/favorites'
 import { pokedexRoutes } from '@/features/pokedex'
 import { pokemonDetailRoutes } from '@/features/pokemon-detail'
+import { teamRoutes } from '@/features/team'
 import { typeChartRoutes } from '@/features/type-chart'
 import { AppScrollRestoration } from '../layout/AppScrollRestoration'
 import { NotFoundPage } from '../layout/NotFoundPage'
@@ -27,6 +28,7 @@ export const routes: RouteObject[] = [
       ...battleToolsRoutes,
       ...typeChartRoutes,
       ...compareRoutes,
+      ...teamRoutes,
       { path: '*', element: <NotFoundPage /> },
     ],
   },

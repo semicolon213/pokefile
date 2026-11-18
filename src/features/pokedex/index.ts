@@ -2,5 +2,7 @@
 export { pokedexRoutes } from './routes'
 export { HeaderSearch } from './components/HeaderSearch'
 export { PokemonCard } from './components/PokemonCard'
+export { PokemonSearchBox } from './components/PokemonSearchBox'
 export { useSearchIndex } from './hooks/useSearchIndex'
 export { searchPokemon } from './model/search'
+export { pokemonImageUrls } from './model/image'

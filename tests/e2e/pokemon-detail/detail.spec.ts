@@ -38,6 +38,13 @@ test.describe('포켓몬 상세', () => {
     await expect(evolution.getByRole('link', { name: /대도각참/ })).toHaveAttribute('href', '#/pokemon/983')
   })
 
+  test('후딘 진화 조건에 통신교환이 기록된 게임과 함께 나온다 (TC-13, ADR-019)', async ({ page }) => {
+    await page.goto('#/pokemon/65')
+    const evolution = page.locator('section', { has: page.getByRole('heading', { name: '진화' }) })
+    await expect(evolution.locator('.evolution-tree__condition-line', { hasText: /^통신교환/ })).toBeVisible({ timeout: 20000 })
+    await expect(evolution.getByText('레드·블루')).toBeVisible()
+  })
+
   test('리전폼·거다이맥스를 폼 탭으로 고를 수 있다 (ADR-016)', async ({ page }) => {
     await page.goto('#/pokemon/26?form=alola')
     const tabs = page.getByRole('group', { name: '폼 선택' })

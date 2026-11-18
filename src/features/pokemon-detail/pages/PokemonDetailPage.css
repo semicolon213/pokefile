@@ -414,6 +414,17 @@
   display: block;
 }
 
+/* 게임마다 방법이 다를 때 방법 아래에 기록된 게임을 작게 붙인다 (FR-28) */
+.evolution-tree__games {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.evolution-tree__condition-line + .evolution-tree__condition-line {
+  margin-top: 2px;
+}
+
 .evolution-tree__card {
   display: grid;
   grid-template-rows: 96px auto auto;
@@ -467,7 +478,8 @@
 
 /* ---------- 출현 정보 ---------- */
 /* 내 게임 기준 안내 (FR-26) */
-.encounters__game {
+.encounters__game,
+.evolution__game {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -481,12 +493,14 @@
   font-size: 14px;
 }
 
-.encounters__game p {
+.encounters__game p,
+.evolution__game p {
   margin: 0;
   font-weight: 600;
 }
 
-.encounters__game button {
+.encounters__game button,
+.evolution__game button {
   min-height: 32px;
   padding: 0 var(--space-3);
   border: 1px solid var(--color-primary-ink);
