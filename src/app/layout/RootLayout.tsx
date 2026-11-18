@@ -21,6 +21,7 @@ export function RootLayout() {
           </NavLink>
           <NavLink to="/types">타입 상성</NavLink>
           <NavLink to="/compare">포켓몬 비교</NavLink>
+          <NavLink to="/team">파티 분석</NavLink>
           <NavLink to="/favorites">즐겨찾기</NavLink>
         </nav>
         <div className="app-header__tools">

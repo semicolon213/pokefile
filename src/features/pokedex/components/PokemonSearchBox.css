@@ -1,0 +1,60 @@
+/* 포켓몬 검색 콤보박스 (비교·파티 분석 공용, DESIGN §2.4.2·§2.4.3) */
+.pokemon-search-box {
+  position: relative;
+}
+
+.pokemon-search-box__input {
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.pokemon-search-box__input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.pokemon-search-box__list {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  left: 0;
+  z-index: 5;
+  margin: 0;
+  padding: var(--space-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-raise);
+  list-style: none;
+}
+
+.pokemon-search-box__option {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pokemon-search-box__option .tabular {
+  color: var(--color-text-muted);
+}
+
+.pokemon-search-box__option[aria-selected='true'] {
+  background: var(--color-surface-muted);
+}
+
+.pokemon-search-box__empty {
+  margin: var(--space-2) 0 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.pokemon-search-box__input:disabled {
+  background: var(--color-surface-muted);
+  cursor: not-allowed;
+}
