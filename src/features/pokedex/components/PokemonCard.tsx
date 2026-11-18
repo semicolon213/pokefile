@@ -8,8 +8,8 @@ import { displayName, formatDexNumber } from '@/shared/utils'
 import { pokemonImageUrls } from '../model/image'
 import './PokemonCard.css'
 
-/** regionalNumber: 지방을 골랐을 때 지방 번호('성도 #010', FR-31) */
-type Props = { pokemon: PokemonSummary; regionalNumber?: string }
+/** regionalNumber: 지방을 골랐을 때 지방 번호('성도 #010', FR-31). statLabel: 종족값 정렬·조건일 때 그 값('스피드 130', FR-34) */
+type Props = { pokemon: PokemonSummary; regionalNumber?: string; statLabel?: string }
 
 /**
  * 스프라이트 원판(104px) 안의 상자. 목록에서는 키우지 않고 원본 크기(1배)로 보여 포켓몬끼리 크기 비율을 지킨다.
@@ -18,7 +18,7 @@ type Props = { pokemon: PokemonSummary; regionalNumber?: string }
 const SPRITE_BOX = 96
 
 // DESIGN.md §5.1: 카드 본문은 상세로 이동, 즐겨찾기 버튼은 이동하지 않는다.
-export function PokemonCard({ pokemon, regionalNumber }: Props) {
+export function PokemonCard({ pokemon, regionalNumber, statLabel }: Props) {
   const name = displayName(pokemon)
   const urls = pokemonImageUrls(pokemon.id)
   const [imageIndex, setImageIndex] = useState(0)
@@ -58,6 +58,7 @@ export function PokemonCard({ pokemon, regionalNumber }: Props) {
             <TypeBadge key={type} type={type} size="sm" />
           ))}
         </span>
+        {statLabel && <span className="pokemon-card__stat tabular">{statLabel}</span>}
       </Link>
       <div className="pokemon-card__favorite">
         <FavoriteToggle pokemonId={pokemon.id} />
