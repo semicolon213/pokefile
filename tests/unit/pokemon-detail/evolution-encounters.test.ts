@@ -202,6 +202,30 @@ describe('toVersionEncounters (FR-16, ADR-016)', () => {
     ])
   })
 
+  it('확장팩 버전 출현은 본편 게임에 합친다 (ADR-016, QA D-014-02 야돈 + 소드)', () => {
+    const result = toVersionEncounters([
+      encounter('fields-of-honor-area', [['the-isle-of-armor-sword', 60, 63], ['the-isle-of-armor-shield', 60, 63]], 'overworld'),
+      encounter('giants-bed-area', [['the-crown-tundra-sword', 65, 67]], 'dynamax-adventure'),
+      encounter('galar-route-3-area', [['sword', 10, 12]]),
+    ])
+    expect(result.map((v) => v.version)).toEqual(['sword', 'shield'])
+    expect(result[0].locations).toEqual([
+      { location: 'fields-of-honor', label: '인사의 들판', minLevel: 60, maxLevel: 63, methods: ['필드 심볼'] },
+      { location: 'giants-bed', label: '거인의 침소', minLevel: 65, maxLevel: 67, methods: ['다이맥스 어드벤처'] },
+      { location: 'galar-route-3', label: '3번도로', minLevel: 10, maxLevel: 12, methods: ['풀숲·동굴'] },
+    ])
+    expect(result[1].locations.map((l) => l.label)).toEqual(['인사의 들판'])
+  })
+
+  it('본편과 확장팩에 같은 장소가 있으면 한 줄로 합친다', () => {
+    const result = toVersionEncounters([
+      encounter('wedgehurst-area', [['sword', 5, 6], ['the-isle-of-armor-sword', 50, 52]], 'chase-water'),
+    ])
+    expect(result[0].locations).toEqual([
+      { location: 'wedgehurst', label: '브래시마을', minLevel: 5, maxLevel: 52, methods: ['필드 심볼(물 위, 쫓아옴)'] },
+    ])
+  })
+
   it('지원 버전에 기록이 없으면 빈 배열 (DR-05 안내 대상)', () => {
     expect(toVersionEncounters([encounter('route-1', [['red-japan', 2, 4]])])).toEqual([])
     expect(toVersionEncounters([])).toEqual([])

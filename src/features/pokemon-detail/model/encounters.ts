@@ -7,8 +7,14 @@ import LOCATION_NAMES from './locationNamesKo.json'
 /**
  * 출현 장소를 표시할 게임 버전 (표시 순서). 한국어 이름은 PokéAPI `/version/{name}` `names[ko]` 실측값(2026-11-03).
  * 목록은 지원 범위 설정(shared/config/scope.json, ADR-015)에서 가져온다.
+ * `includes`는 본편에 합쳐 보여 줄 확장팩 버전이다(예: sword ← the-isle-of-armor-sword, ADR-016).
  */
-export const ENCOUNTER_VERSIONS: readonly { version: string; label: string; generation: Generation }[] = SCOPE.gameVersions
+export const ENCOUNTER_VERSIONS: readonly {
+  version: string
+  label: string
+  generation: Generation
+  includes?: readonly string[]
+}[] = SCOPE.gameVersions
 
 export const GENERATION_NAMES: Record<Generation, string> = Object.fromEntries(SCOPE.generations.map((g) => [g.id, g.name]))
 
@@ -33,6 +39,7 @@ export type VersionEncounters = {
  * 장소 이름표 (locationNamesKo.json, OQ-18 → 2026-11-11 한국어 표기로 변경).
  * 키는 PokéAPI location 식별자. 지원 게임에 나오는 563곳: PokéAPI ko 194 · 포켓몬 위키 '국가별 지역 이름 목록'과 문서 225 ·
  * 규칙(N번도로·N번수로·배회 등) 120, 한국어를 찾지 못한 24곳은 PokéAPI 영어 이름이다.
+ * TASK-024: 소드·실드에 합친 확장팩 장소 등 가라르 43곳을 더했다(포켓몬 위키 '가라르지방' 둘러보기 틀, 배회·동굴은 규칙).
  */
 const LOCATION_NAMES_KO: Readonly<Record<string, string>> = LOCATION_NAMES
 // 긴 이름부터 맞춰야 'mt-moon-square'가 'mt-moon'으로 잘못 묶이지 않는다
@@ -62,16 +69,20 @@ export function resolveLocation(area: string): { location: string; label: string
 /**
  * encounters 응답 → 지원 버전만, ADR-008 버전 순서로 묶는다.
  * 같은 장소의 여러 구역(1F·B1F·바깥 등)은 한 줄로 합치고 레벨은 최소~최대, 만나는 방법은 모두 모은다.
+ * 확장팩 버전(`includes`)의 출현은 본편 게임에 합친다 (ADR-016, QA D-014-02).
  */
 export function toVersionEncounters(raw: readonly RawEncounter[]): VersionEncounters[] {
-  return ENCOUNTER_VERSIONS.flatMap(({ version, label, generation }) => {
+  return ENCOUNTER_VERSIONS.flatMap(({ version, label, generation, includes = [] }) => {
+    const versions = new Set([version, ...includes])
     const byLocation = new Map<string, EncounterLocation>()
     for (const encounter of raw) {
-      const detail = encounter.version_details.find((v) => v.version.name === version)
-      if (!detail || detail.encounter_details.length === 0) continue
+      const details = encounter.version_details
+        .filter((v) => versions.has(v.version.name))
+        .flatMap((v) => v.encounter_details)
+      if (details.length === 0) continue
       const { location, label: locationLabel } = resolveLocation(encounter.location_area.name)
       const entry = byLocation.get(location) ?? { location, label: locationLabel, minLevel: Infinity, maxLevel: -Infinity, methods: [] }
-      for (const d of detail.encounter_details) {
+      for (const d of details) {
         entry.minLevel = Math.min(entry.minLevel, d.min_level)
         entry.maxLevel = Math.max(entry.maxLevel, d.max_level)
         const method = encounterMethodLabel(d.method.name)

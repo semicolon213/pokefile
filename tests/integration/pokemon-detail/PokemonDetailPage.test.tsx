@@ -16,6 +16,16 @@ const INDEX: PokemonSummary[] = [
   { id: 5, nameEn: 'Charmeleon', nameKo: '리자드', types: ['fire'], generation: 'generation-i', forms: [] },
   { id: 6, nameEn: 'Charizard', nameKo: '리자몽', types: ['fire', 'flying'], generation: 'generation-i', forms: [{ key: 'mega-x', nameKo: '메가리자몽X', nameEn: 'Mega Charizard X', category: 'mega', types: ['fire', 'dragon'], battleOnly: true }, { key: 'mega-y', nameKo: '메가리자몽Y', nameEn: 'Mega Charizard Y', category: 'mega', types: ['fire', 'flying'], battleOnly: true }] },
   { id: 128, nameEn: 'Tauros', nameKo: '켄타로스', types: ['normal'], generation: 'generation-i', forms: [] },
+  // 폼이 많은 종(TASK-024): 기본 포함 10개 → 선택 상자
+  {
+    id: 25, nameEn: 'Pikachu', nameKo: '피카츄', types: ['electric'], generation: 'generation-i',
+    forms: [
+      ...['rock-star', 'belle', 'pop-star', 'phd', 'libre', 'cosplay', 'original-cap', 'hoenn-cap'].map((key) => ({
+        key, nameKo: `${key} 피카츄`, nameEn: key, category: 'other' as const, types: ['electric' as const], battleOnly: false,
+      })),
+      { key: 'gmax', nameKo: '거다이맥스', nameEn: 'Gigantamax', category: 'gmax', types: ['electric'], battleOnly: true },
+    ],
+  },
 ]
 
 const stats = (values: number[]) =>
@@ -219,6 +229,37 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
     expect(screen.getByText('정보 없음')).toBeInTheDocument()
     expect(screen.getByText('등록된 정보가 없습니다.')).toBeInTheDocument()
     expect(await within(section('진화')).findByText('진화하지 않는 포켓몬입니다.')).toBeInTheDocument()
+  })
+
+  it('폼이 많은 종은 분류별로 묶은 선택 상자로 폼을 고르고 URL ?form=에 반영한다 (TASK-024)', async () => {
+    mockFetch({
+      '/pokemon/25': Response.json(pokemon(25, 'pikachu', ['electric'], ['static'], [35, 55, 40, 50, 50, 90])),
+      '/pokemon/pikachu-gmax': Response.json(pokemon(10199, 'pikachu-gmax', ['electric'], ['static'], [35, 55, 40, 50, 50, 90])),
+      '/pokemon-species/25': Response.json({
+        id: 25,
+        name: 'pikachu',
+        names: [{ name: '피카츄', language: lang('ko') }],
+        genera: [],
+        flavor_text_entries: [],
+        evolution_chain: null,
+      }),
+      '/pokemon/25/encounters': Response.json([]),
+    })
+    const user = userEvent.setup()
+    const router = renderAt('/pokemon/25?form=belle')
+    const select = await screen.findByRole('combobox', { name: '폼 선택' })
+    expect(screen.queryByRole('group', { name: '폼 선택' })).not.toBeInTheDocument()
+    expect(select).toHaveValue('belle')
+    expect(screen.getByText('폼 10개')).toBeInTheDocument()
+    expect(within(select).getAllByRole('group').map((g) => g.getAttribute('label'))).toEqual(['기본', '거다이맥스', '기타 폼'])
+
+    await user.selectOptions(select, '거다이맥스')
+    expect(router.state.location.search).toBe('?form=gmax')
+    expect(await screen.findByText('거다이맥스 피카츄')).toBeInTheDocument()
+    expect(await screen.findByRole('img', { name: '거다이맥스 피카츄' })).toHaveAttribute('src', 'pikachu-gmax.gif')
+
+    await user.selectOptions(select, '기본')
+    expect(router.state.location.search).toBe('')
   })
 
   it('진화 단계를 한국어 이름·레벨 조건과 함께 표시하고 현재 포켓몬을 표시한다 (FR-15)', async () => {

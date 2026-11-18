@@ -4,6 +4,7 @@ import type { PokemonType } from '@/shared/models'
 import type { RawAbility, RawPokemon, RawPokemonForm, RawSpecies } from '../api/pokeapi'
 import { idFromResourceUrl } from '../api/pokeapi'
 import { ABILITY_DESCRIPTIONS_KO, ABILITY_NAMES_KO } from './abilityDescriptionsKo'
+import { baseFormImageUrls } from './images'
 
 export const STAT_KEYS = ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed'] as const
 export type StatKey = (typeof STAT_KEYS)[number]
@@ -29,7 +30,7 @@ export type PokemonFormDetail = {
   types: PokemonType[]
   abilities: { name: string; hidden: boolean }[]
   stats: BaseStat[]
-  /** ADR-013: showdown GIF → PNG 순서. 대체 아이콘은 화면에서 처리 */
+  /** ADR-016: showdown GIF → PNG → HOME 일러스트 → (기본이 아닌 폼이면) 기본 폼 이미지. 대체 아이콘은 화면에서 처리 */
   imageUrls: string[]
   /** FR-23: 같은 폼의 이로치 후보. 일반 이미지로 대체하지 않는다. */
   shinyImageUrls: string[]
@@ -54,8 +55,13 @@ function localized<T extends { language: { name: string } }>(entries: T[], lang:
   return entries.find((entry) => entry.language.name === lang)
 }
 
-export function toFormDetail(raw: RawPokemon): PokemonFormDetail {
-  const showdown = raw.sprites.other?.showdown?.front_default
+const presentUrls = (urls: readonly (string | null | undefined)[]): string[] => [
+  ...new Set(urls.filter((url): url is string => !!url)),
+]
+
+/** baseId: 기본이 아닌 폼이면 그 종의 번호. 폼 이미지가 모두 없을 때 기본 폼 이미지로 대신한다 (ADR-016) */
+export function toFormDetail(raw: RawPokemon, baseId?: number): PokemonFormDetail {
+  const { showdown, home } = raw.sprites.other ?? {}
   return {
     resourceName: raw.name,
     // PokéAPI 단위: height = 데시미터, weight = 헥토그램
@@ -69,9 +75,15 @@ export function toFormDetail(raw: RawPokemon): PokemonFormDetail {
       const stat = raw.stats.find((s) => s.stat.name === key)
       return stat ? [{ key, label: STAT_LABELS[key], value: stat.base_stat }] : []
     }),
-    imageUrls: [showdown, raw.sprites.front_default].filter((url): url is string => !!url),
-    shinyImageUrls: [raw.sprites.other?.showdown?.front_shiny, raw.sprites.front_shiny].filter((url): url is string => !!url),
-    cryUrls: [...new Set([raw.cries?.latest, raw.cries?.legacy].filter((url): url is string => !!url))],
+    imageUrls: presentUrls([
+      showdown?.front_default,
+      raw.sprites.front_default,
+      home?.front_default,
+      ...(baseId !== undefined ? baseFormImageUrls(baseId) : []),
+    ]),
+    // 이로치는 같은 폼의 이미지만 쓴다(일반·기본 폼 이미지로 대체하지 않음, FR-23)
+    shinyImageUrls: presentUrls([showdown?.front_shiny, raw.sprites.front_shiny, home?.front_shiny]),
+    cryUrls: presentUrls([raw.cries?.latest, raw.cries?.legacy]),
     formResourceName: raw.forms[0]?.name,
   }
 }
