@@ -66,6 +66,15 @@ PokeFile은 **별도 백엔드 서버 없이 브라우저만으로 동작하는 
 - **부분 실패 허용** — 상세 화면의 각 섹션(진화, 출현 장소, 실전 세팅 등)이 독립적으로 로딩 · 오류 · 데이터 없음 상태를 가지므로 일부 데이터가 없어도 나머지 정보는 정상 표시됩니다.
 - **데이터 출처 간 매핑** — PokéAPI와 Smogon 데이터의 이름 · 폼 표기 차이를 매핑하고, 매핑에 실패하면 다른 포켓몬의 세팅으로 대체하지 않고 부재를 안내합니다.
 
+## 데이터 출처
+| 출처 | 사용 방식 | 사용하는 데이터 |
+|---|---|---|
+| [PokéAPI](https://pokeapi.co/) | 브라우저에서 실시간 조회 | 포켓몬 기본 정보, 종족값, 진화, 출현 장소, 특성·도구·기술 이름 등 |
+| [data.pkmn.cc](https://data.pkmn.cc/) | 브라우저에서 실시간 조회 | Smogon 기반 실전 세팅 |
+| [포켓몬 위키](https://pokemon.fandom.com/ko) ([CC BY-SA](https://www.fandom.com/licensing)) | 2026-11-11에 한 번 수집해 저장소에 포함 (실행 중에는 접속하지 않음) | PokéAPI에 한국어가 없는 장소 이름·특성 이름·특성 설명 (`src/features/pokemon-detail/model/`의 `locationNamesKo.json`, `abilityDescriptionsKo.ts`, `evolutionLocationsKo.ts`) |
+
+포켓몬 관련 이름·문구·이미지의 권리는 Nintendo · Creatures Inc. · GAME FREAK inc.에 있습니다. 이 프로젝트는 비상업 학습용입니다.
+
 ## 팀원 및 역할
 | 팀원 | 역할 | 담당 기능 |
 |---|---|---|

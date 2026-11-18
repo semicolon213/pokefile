@@ -51,9 +51,25 @@ const FIXTURES: Record<string, unknown> = {
     flavor_text_entries: [{ flavor_text: '입에서 작렬하는 불꽃을\n토해낸다.', language: lang('ko'), version: res('x') }],
     evolution_chain: { url: `${API}/evolution-chain/2/` },
   },
-  '/ability/blaze': { name: 'blaze', names: [{ name: '맹화', language: lang('ko') }] },
-  '/ability/solar-power': { name: 'solar-power', names: [{ name: '선파워', language: lang('ko') }] },
-  '/ability/tough-claws': { name: 'tough-claws', names: [{ name: '단단한발톱', language: lang('ko') }] },
+  '/ability/blaze': {
+    name: 'blaze',
+    names: [{ name: '맹화', language: lang('ko') }],
+    flavor_text_entries: [
+      { flavor_text: '위급할 때 불꽃타입의\n위력이 올라간다.', language: lang('ko'), version_group: res('x-y') },
+      { flavor_text: 'HP가 줄었을 때\n불꽃타입 기술의\n위력이 올라간다.', language: lang('ko'), version_group: res('sword-shield') },
+    ],
+  },
+  // 한국어 설명이 없는 특성 (FR-30 '정보 없음')
+  '/ability/solar-power': {
+    name: 'solar-power',
+    names: [{ name: '선파워', language: lang('ko') }],
+    flavor_text_entries: [{ flavor_text: 'Boosts Sp. Atk in sunshine.', language: lang('en'), version_group: res('x-y') }],
+  },
+  '/ability/tough-claws': {
+    name: 'tough-claws',
+    names: [{ name: '단단한발톱', language: lang('ko') }],
+    flavor_text_entries: [{ flavor_text: '상대에게 접촉하는\n기술의 위력이 올라간다.', language: lang('ko'), version_group: res('sword-shield') }],
+  },
   '/evolution-chain/2': {
     id: 2,
     chain: {
@@ -217,7 +233,82 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
     expect(within(evolution).getByText('Lv.36')).toBeInTheDocument()
   })
 
-  it('출현 장소를 게임별로 표시한다 (FR-16)', async () => {
+  it('레벨 외 진화 조건을 도구·기술 한국어 이름과 함께 표시한다 (FR-28, TC-13)', async () => {
+    // 조건 표시만 확인하기 위한 가상 체인: 파이리 →(금속코트 지니고 통신교환) 리자드 →(친밀도·밤 또는 원시의힘) 리자몽
+    mockFetch({
+      '/evolution-chain/2': Response.json({
+        id: 2,
+        chain: {
+          species: { name: 'charmander', url: `${API}/pokemon-species/4/` },
+          evolution_details: [],
+          evolves_to: [
+            {
+              species: { name: 'charmeleon', url: `${API}/pokemon-species/5/` },
+              evolution_details: [{ min_level: null, trigger: res('trade'), held_item: res('metal-coat'), version_group: res('gold-silver') }],
+              evolves_to: [
+                {
+                  species: { name: 'charizard', url: `${API}/pokemon-species/6/` },
+                  evolution_details: [
+                    { min_level: null, trigger: res('level-up'), min_happiness: 160, time_of_day: 'night', version_group: res('sword-shield') },
+                    { min_level: null, trigger: res('level-up'), known_move: res('ancient-power'), version_group: res('sword-shield') },
+                  ],
+                  evolves_to: [],
+                },
+              ],
+            },
+          ],
+        },
+      }),
+      '/item/metal-coat': Response.json({ name: 'metal-coat', names: [{ name: '금속코트', language: lang('ko') }] }),
+      // 기술 이름 조회 실패 → API 식별자로 표시하고 나머지는 유지
+      '/move/ancient-power': new Response('', { status: 500 }),
+    })
+    renderAt('/pokemon/6')
+    const evolution = section('진화')
+    expect(await within(evolution).findByText('금속코트 지니고 통신교환')).toBeInTheDocument()
+    expect(within(evolution).getByText('친밀도 높음 · 밤 · 레벨업')).toBeInTheDocument()
+    expect(await within(evolution).findByText(/또는 ancient-power 배운 상태 · 레벨업/)).toBeInTheDocument()
+  })
+
+  it('게임마다 다른 진화 방법을 기록된 게임과 함께 모두 보여 주고, 내 게임을 고르면 그 방법만 보여 준다 (FR-28, QA D-016-01)', async () => {
+    // 가상 체인: 파이리 →(파이리와 통신교환[레드·블루] 또는 연결의끈 사용[LEGENDS 아르세우스]) 리자드
+    const chain = Response.json({
+      id: 2,
+      chain: {
+        species: { name: 'charmander', url: `${API}/pokemon-species/4/` },
+        evolution_details: [],
+        evolves_to: [
+          {
+            species: { name: 'charmeleon', url: `${API}/pokemon-species/5/` },
+            evolution_details: [
+              { min_level: null, trigger: res('trade'), trade_species: { name: 'charmander', url: `${API}/pokemon-species/4/` }, version_group: res('red-blue') },
+              { min_level: null, trigger: res('use-item'), item: res('linking-cord'), version_group: res('legends-arceus') },
+            ],
+            evolves_to: [],
+          },
+        ],
+      },
+    })
+    mockFetch({
+      '/evolution-chain/2': chain,
+      '/item/linking-cord': Response.json({ name: 'linking-cord', names: [{ name: '연결의끈', language: lang('ko') }] }),
+    })
+    const user = userEvent.setup()
+    localStorage.setItem('pokefile:my-game', 'red')
+    renderAt('/pokemon/6')
+    const evolution = section('진화')
+    // 내 게임(레드)에 기록된 방법만, 게임 이름 없이
+    expect(await within(evolution).findByText('파이리와 통신교환')).toBeInTheDocument()
+    expect(within(evolution).getByText('내 게임 레드 기준입니다.')).toBeInTheDocument()
+    expect(within(evolution).queryByText(/연결의끈/)).not.toBeInTheDocument()
+
+    await user.click(within(evolution).getByRole('button', { name: '모든 게임 보기' }))
+    expect(within(evolution).getByText('레드·블루')).toBeInTheDocument()
+    expect(await within(evolution).findByText('또는 연결의끈 사용')).toBeInTheDocument()
+    expect(within(evolution).getByText('LEGENDS 아르세우스')).toBeInTheDocument()
+  })
+
+  it('출현 장소를 게임별로 한국어 장소 이름·만나는 방법과 함께 표시한다 (FR-16)', async () => {
     mockFetch({
       '/pokemon/6/encounters': Response.json([
         {
@@ -227,16 +318,67 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
             { version: res('red-japan'), encounter_details: [{ min_level: 10, max_level: 12, method: res('walk') }] },
           ],
         },
+        {
+          location_area: { name: 'santalune-forest-area', url: '' },
+          version_details: [
+            {
+              version: res('x'),
+              encounter_details: [
+                { min_level: 3, max_level: 4, method: res('walk') },
+                { min_level: 5, max_level: 5, method: res('old-rod') },
+              ],
+            },
+          ],
+        },
       ]),
     })
+    const user = userEvent.setup()
+    renderAt('/pokemon/6')
+    const encounters = section('출현 정보')
+    // 게임 카드(이름·세대·장소 수)는 보이고 장소 목록은 접혀 있다
+    const x = await within(encounters).findByRole('region', { name: 'X 출현 장소' })
+    expect(within(x).getByText('6세대')).toBeInTheDocument()
+    expect(within(x).getByText('2곳')).toBeInTheDocument()
+    expect(within(x).getByText('백단숲')).not.toBeVisible()
+    const toggle = within(x).getByRole('button', { name: 'X 출현 정보 열기' })
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+    await user.click(toggle)
+    expect(within(x).getByRole('button', { name: 'X 출현 정보 닫기' })).toHaveAttribute('aria-expanded', 'true')
+    // 이름표에 없는 장소는 영문 표기
+    expect(within(x).getByText('Kalos Route 1')).toBeInTheDocument()
+    expect(within(x).getByText('Lv.10~12')).toBeInTheDocument()
+    const santalune = within(x).getByText('백단숲').closest('li')!
+    expect(within(santalune).getByText('풀숲·동굴 · 낡은낚싯대')).toBeInTheDocument()
+    expect(within(santalune).getByText('Lv.3~5')).toBeInTheDocument()
+    expect(within(encounters).queryAllByRole('region', { name: /출현 장소/ })).toHaveLength(1)
+    expect(within(encounters).queryByRole('region', { name: /japan/i })).not.toBeInTheDocument()
+    // 다시 닫으면 목록이 숨겨진다
+    await user.click(within(x).getByRole('button', { name: 'X 출현 정보 닫기' }))
+    expect(within(x).getByText('백단숲')).not.toBeVisible()
+  })
+
+  it('게임 카드마다 따로 열고 닫는다', async () => {
+    mockFetch({
+      '/pokemon/6/encounters': () =>
+        Response.json([
+          {
+            location_area: { name: 'santalune-forest-area', url: '' },
+            version_details: [
+              { version: res('x'), encounter_details: [{ min_level: 3, max_level: 4, method: res('walk') }] },
+              { version: res('y'), encounter_details: [{ min_level: 5, max_level: 6, method: res('old-rod') }] },
+            ],
+          },
+        ]),
+    })
+    const user = userEvent.setup()
     renderAt('/pokemon/6')
     const encounters = section('출현 정보')
     const x = await within(encounters).findByRole('region', { name: 'X 출현 장소' })
-    expect(within(x).getByText('6세대')).toBeInTheDocument()
-    expect(within(x).getByText('Kalos Route 1')).toBeInTheDocument()
-    expect(within(x).getByText('Lv.10~12')).toBeInTheDocument()
-    expect(within(encounters).queryAllByRole('region', { name: /출현 장소/ })).toHaveLength(1)
-    expect(within(encounters).queryByRole('region', { name: /japan/i })).not.toBeInTheDocument()
+    const y = within(encounters).getByRole('region', { name: 'Y 출현 장소' })
+    await user.click(within(y).getByRole('button', { name: 'Y 출현 정보 열기' }))
+    expect(within(y).getByText('낡은낚싯대')).toBeInTheDocument()
+    expect(within(x).getByText('백단숲')).not.toBeVisible()
+    expect(within(x).getByRole('button', { name: 'X 출현 정보 열기' })).toHaveAttribute('aria-expanded', 'false')
   })
 
   it('출현 데이터 없음과 요청 실패를 구분해 안내한다 (FR-18)', async () => {
@@ -288,11 +430,30 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
     expect(await within(section('출현 정보')).findByText('레드에서는 야생에서 만날 수 없습니다.')).toBeInTheDocument()
   })
 
+  it('특성마다 한국어 설명을 표시하고, 없으면 정보 없음을 표시한다 (FR-30, TC-13)', async () => {
+    mockFetch()
+    renderAt('/pokemon/6')
+    const blaze = (await screen.findByText('맹화')).closest('li')!
+    expect(within(blaze).getByText('HP가 줄었을 때 불꽃타입 기술의 위력이 올라간다.')).toBeInTheDocument()
+    const solarPower = (await screen.findByText('선파워')).closest('li')!
+    expect(await within(solarPower).findByText('정보 없음')).toBeInTheDocument()
+    expect(within(solarPower).getByText('(숨겨진 특성)')).toBeInTheDocument()
+  })
+
+  it('메가 폼으로 바꾸면 그 폼의 특성 설명을 표시한다 (FR-30)', async () => {
+    mockFetch()
+    renderAt('/pokemon/6?form=mega-x')
+    const toughClaws = (await screen.findByText('단단한발톱')).closest('li')!
+    expect(await within(toughClaws).findByText('상대에게 접촉하는 기술의 위력이 올라간다.')).toBeInTheDocument()
+    expect(basic().queryByText('맹화')).not.toBeInTheDocument()
+  })
+
   it('특성 이름 요청이 실패해도 나머지 상세는 유지하고 API 식별자를 표시한다 (NFR-07)', async () => {
     mockFetch({ '/ability/blaze': () => new Response('', { status: 500 }) })
     renderAt('/pokemon/6')
     expect(await screen.findByText('선파워')).toBeInTheDocument()
-    expect(screen.getByText('blaze')).toBeInTheDocument()
+    const blaze = (await screen.findByText('blaze')).closest('li')!
+    expect(await within(blaze).findByText('정보 없음')).toBeInTheDocument()
     expect(screen.getByRole('table', { name: '종족값 수치' })).toBeInTheDocument()
   })
 

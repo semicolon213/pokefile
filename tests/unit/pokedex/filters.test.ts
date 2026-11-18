@@ -17,7 +17,17 @@ const p = (id: number, nameKo: string, types: PokemonSummary['types'], generatio
   types,
   generation,
   forms: [],
+  stats: STATS[id],
 })
+
+// 실제 종족값 (PokéAPI). 리자몽 534 · 파이리 309 · 브케인 309 · 피카츄 320 · 님피아 525
+const STATS: Record<number, PokemonSummary['stats']> = {
+  6: [78, 84, 78, 109, 85, 100],
+  4: [39, 52, 43, 60, 50, 65],
+  155: [39, 52, 43, 60, 50, 65],
+  25: [35, 55, 40, 50, 50, 90],
+  700: [95, 65, 65, 110, 130, 60],
+}
 
 const LIST = [
   p(6, '리자몽', ['fire', 'flying'], 'generation-i'),
@@ -35,6 +45,7 @@ describe('parseFilters / toSearchParams', () => {
       types: ['electric'],
       gen: 'generation-i',
       sort: 'name',
+      min: null,
     })
   })
 
@@ -53,7 +64,7 @@ describe('parseFilters / toSearchParams', () => {
 
   it('기본값은 URL에 쓰지 않고, 왕복 변환이 같다', () => {
     expect(toSearchParams(DEFAULT_FILTERS).toString()).toBe('')
-    const filters: PokedexFilters = { q: '리자몽', types: ['fire', 'flying'], gen: 'generation-vi', sort: 'name' }
+    const filters: PokedexFilters = { q: '리자몽', types: ['fire', 'flying'], gen: 'generation-vi', sort: 'speed', min: { stat: 'total', value: 500 } }
     expect(parseFilters(toSearchParams(filters))).toEqual(filters)
     expect(toSearchParams({ ...filters, types: ['flying', 'fire'] }).getAll('type')).toEqual(['fire', 'flying'])
     expect(toSearchParams(filters).get('gen')).toBe('6')
@@ -85,8 +96,8 @@ describe('applyFilters', () => {
   })
 
   it('검색어 AND 타입 AND 세대', () => {
-    expect(ids(applyFilters(LIST, { q: '리', types: ['fire'], gen: 'generation-i', sort: 'id' }))).toEqual([4, 6])
-    expect(ids(applyFilters(LIST, { q: '피카츄', types: ['fire'], gen: null, sort: 'id' }))).toEqual([])
+    expect(ids(applyFilters(LIST, { q: '리', types: ['fire'], gen: 'generation-i', sort: 'id', min: null }))).toEqual([4, 6])
+    expect(ids(applyFilters(LIST, { q: '피카츄', types: ['fire'], gen: null, sort: 'id', min: null }))).toEqual([])
   })
 
   it('FR-06 이름순은 한국어 가나다순', () => {
@@ -103,6 +114,31 @@ describe('applyFilters', () => {
     const before = ids(LIST)
     applyFilters(LIST, { ...DEFAULT_FILTERS, sort: 'name' })
     expect(ids(LIST)).toEqual(before)
+  })
+})
+
+describe('종족값 정렬·조건 (FR-34)', () => {
+  it('URL sort=종족값, min=능력치:값을 읽고 잘못된 값은 무시한다', () => {
+    expect(parseFilters(new URLSearchParams('sort=speed&min=total:500'))).toMatchObject({ sort: 'speed', min: { stat: 'total', value: 500 } })
+    expect(parseFilters(new URLSearchParams('sort=luck')).sort).toBe('id')
+    for (const bad of ['speed', 'speed:0', 'speed:256', 'total:1001', 'luck:100', 'speed:abc', 'speed:-1'])
+      expect(parseFilters(new URLSearchParams({ min: bad })).min).toBeNull()
+    expect(parseFilters(new URLSearchParams('min=total:1000')).min).toEqual({ stat: 'total', value: 1000 })
+    expect(isDefaultFilters({ ...DEFAULT_FILTERS, min: { stat: 'hp', value: 1 } })).toBe(false)
+  })
+
+  it('종족값 높은 순, 같으면 도감 번호순', () => {
+    expect(ids(applyFilters(LIST, { ...DEFAULT_FILTERS, sort: 'speed' }))).toEqual([6, 25, 4, 155, 700])
+    expect(ids(applyFilters(LIST, { ...DEFAULT_FILTERS, sort: 'total' }))).toEqual([6, 700, 25, 4, 155])
+    expect(ids(applyFilters(LIST, { ...DEFAULT_FILTERS, sort: 'sp-defense' }))).toEqual([700, 6, 4, 25, 155])
+  })
+
+  it('하한 조건은 다른 필터와 AND, 종족값이 없는 항목은 조건에서 빠지고 정렬에서 맨 뒤', () => {
+    expect(ids(applyFilters(LIST, { ...DEFAULT_FILTERS, min: { stat: 'speed', value: 90 } }))).toEqual([6, 25])
+    expect(ids(applyFilters(LIST, { ...DEFAULT_FILTERS, types: ['fire'], min: { stat: 'total', value: 500 } }))).toEqual([6])
+    const noStats = { ...LIST[0], id: 1, stats: undefined }
+    expect(ids(applyFilters([noStats, ...LIST], { ...DEFAULT_FILTERS, sort: 'hp' })).at(-1)).toBe(1)
+    expect(ids(applyFilters([noStats], { ...DEFAULT_FILTERS, min: { stat: 'hp', value: 1 } }))).toEqual([])
   })
 })
 

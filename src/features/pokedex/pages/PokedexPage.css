@@ -183,6 +183,49 @@
   font-weight: 800;
 }
 
+.pokedex-toolbar__controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+/* 종족값 조건 (FR-34): 능력치 select + 값 입력 + '이상' */
+.stat-filter {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.stat-filter select,
+.stat-filter input {
+  height: 40px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 14px;
+}
+
+.stat-filter select {
+  padding: 0 var(--space-6) 0 var(--space-3);
+  cursor: pointer;
+}
+
+.stat-filter__value {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.stat-filter input {
+  width: 76px;
+  padding: 0 var(--space-2);
+  font-variant-numeric: tabular-nums;
+}
+
 .sort-select select {
   height: 40px;
   padding: 0 var(--space-6) 0 var(--space-3);
@@ -344,5 +387,17 @@
   .pokedex-card-skeleton__plate,
   .pokedex-card-skeleton__line {
     animation: none;
+  }
+}
+
+/* 좁은 화면: 결과 수 아래로 종족값 조건·정렬을 내린다 (FR-34) */
+@media (max-width: 767px) {
+  .pokedex-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .pokedex-toolbar__controls {
+    flex-basis: 100%;
+    justify-content: flex-start;
   }
 }
