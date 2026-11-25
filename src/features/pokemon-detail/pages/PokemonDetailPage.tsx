@@ -12,6 +12,7 @@ import { BasicInfoSection } from '../components/BasicInfoSection'
 import { EncountersSection } from '../components/EncountersSection'
 import { EvolutionSection } from '../components/EvolutionSection'
 import { FormTabs } from '../components/FormTabs'
+import { MovesSection } from '../components/MovesSection'
 import { SectionState } from '../components/SectionState'
 import { StatChart } from '../components/StatChart'
 import { usePokedexIndex, usePokemonForm, useSpecies } from '../hooks/useDetailQueries'
@@ -161,6 +162,8 @@ function PokemonDetail({ pokemonId }: { pokemonId: PokemonId }) {
       />
 
       <EncountersSection pokemonId={pokemonId} />
+      {/* TASK-015: 선택한 폼의 게임별 기술 표 (FR-27) */}
+      <MovesSection pokemonId={pokemonId} formKey={formKey} speciesName={species?.name} />
       {/* TASK-007 / CR-007-INTEGRATION: 상세에서 확정한 종 이름·유효 폼과 조회 상태를 전달한다. */}
       <SmogonSetsSection
         pokemonId={pokemonId}
