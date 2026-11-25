@@ -28,16 +28,17 @@ export function usePokedexFilters() {
   }, [params])
 
   const write = useCallback(
-    (next: URLSearchParams) => {
+    (next: URLSearchParams, replace = false) => {
       latest.current = next
-      setParams(next)
+      setParams(next, { replace })
     },
     [setParams],
   )
 
+  /** replace: 입력 중 반영처럼 방문 기록을 늘리지 않을 때 */
   const update = useCallback(
-    (patch: Partial<PokedexFilters>) =>
-      write(withFilters(latest.current, { ...parseFilters(latest.current), ...patch })),
+    (patch: Partial<PokedexFilters>, { replace = false }: { replace?: boolean } = {}) =>
+      write(withFilters(latest.current, { ...parseFilters(latest.current), ...patch }), replace),
     [write],
   )
   const reset = useCallback(() => write(withFilters(latest.current, DEFAULT_FILTERS)), [write])
