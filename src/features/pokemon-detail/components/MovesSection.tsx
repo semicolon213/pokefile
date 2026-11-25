@@ -1,5 +1,5 @@
 import { useId, useMemo, useState } from 'react'
-import type { FormKey, PokemonId } from '@/shared/models'
+import type { FormKey, PokemonForm, PokemonId } from '@/shared/models'
 import { useMyGame } from '@/shared/state'
 import { TypeBadge } from '@/shared/ui'
 import { useMoveData, usePokemonMoves } from '../hooks/useMoves'
@@ -17,7 +17,7 @@ import {
 import { SectionState } from './SectionState'
 import './MovesSection.css'
 
-type Props = { pokemonId: PokemonId; formKey: FormKey | null; speciesName: string | undefined }
+type Props = { pokemonId: PokemonId; formKey: FormKey | null; speciesName: string | undefined; formResource?: PokemonForm['resource'] }
 type Method = keyof GameMoves
 
 const METHODS: { key: Method; label: string }[] = [
@@ -28,8 +28,8 @@ const METHODS: { key: Method; label: string }[] = [
 
 // FR-27 기술 표: 게임(판)을 고르면 그 게임의 레벨업(레벨 순)·기술머신·기술 가르침 기술을 보여 준다 (TASK-015, OQ-23).
 // FR-26: 내 게임이 있으면 그 게임으로 시작한다. 선택한 폼에 그 게임 기록이 없으면 다른 게임 기록으로 대신하지 않고 알린다.
-export function MovesSection({ pokemonId, formKey, speciesName }: Props) {
-  const learnsetQuery = usePokemonMoves(pokemonId, formKey, speciesName)
+export function MovesSection({ pokemonId, formKey, speciesName, formResource }: Props) {
+  const learnsetQuery = usePokemonMoves(pokemonId, formKey, speciesName, formResource)
   const dataQuery = useMoveData()
   const myGame = useMyGame()
   const [chosenGame, setChosenGame] = useState<string | null>(null)

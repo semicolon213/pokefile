@@ -44,6 +44,8 @@ export type PokemonForm = {
   types: PokemonType[]
   /** 전투 중에만 나오는 폼 (메가·거다이맥스·달마모드 등) */
   battleOnly: boolean
+  /** C-01: 별도 pokemon 없이 기본 종의 능력치를 공유하는 pokemon-form 리소스. */
+  resource?: { kind: 'pokemon-form'; name: string }
 }
 
 /** PokéAPI generation 식별자 (예: 'generation-i'). 지원 세대 목록은 shared/config/scope.json */

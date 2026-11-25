@@ -6,6 +6,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { formCategoryOf, formKeyOf, formNameKoOf } from './lib/form-names.mjs'
+import { fetchFormExtensions, mergeFormExtensions } from './lib/pokemon-form-extensions.mjs'
 
 const POKEAPI = 'https://pokeapi.co/api/v2'
 const CONCURRENCY = 12
@@ -153,14 +154,25 @@ async function main() {
     pokemon: entries,
     regionalDexes,
   }
+  const extensions = await fetchFormExtensions(getJson, new Map(pokemon.map((entry) => [entry.id, entry])))
+  const extendedIndex = mergeFormExtensions(index, extensions)
   mkdirSync(dirname(outFile), { recursive: true })
-  writeFileSync(outFile, JSON.stringify(index) + '\n')
+  writeFileSync(outFile, JSON.stringify(extendedIndex) + '\n')
   console.log(`완료: ${entries.length}종, 폼 ${allForms.length}개(${formSummary}), 한국어 이름 누락 ${missingKo}건 → ${outFile}`)
   console.log('지방 도감:', Object.entries(regionalDexes).map(([n, d]) => `${n} ${d.ids.length}`).join(', '))
   console.log(`한국어 폼 이름 없음(영문 표시) ${formsWithoutKo.length}개:`, formsWithoutKo.join(', ') || '없음')
+  console.log(`C-01 추가 폼 35개 포함: ${extendedIndex.pokemon.flatMap((entry) => entry.forms).length}개 폼`)
 }
 
-main().catch((err) => {
+// C-01만 갱신할 때 기존의 다른 종·지방 도감·추가 필드를 보존하고 3종의 폼만 조회한다.
+async function extendFormsOnly() {
+  const index = JSON.parse(readFileSync(outFile, 'utf8'))
+  const extended = mergeFormExtensions(index, await fetchFormExtensions(getJson))
+  writeFileSync(outFile, JSON.stringify(extended) + '\n')
+  console.log(`C-01: ${extended.pokemon.length}종, ${extended.pokemon.flatMap((entry) => entry.forms).length}개 폼`)
+}
+
+(process.argv.includes('--extend-forms') ? extendFormsOnly() : main()).catch((err) => {
   console.error(err)
   process.exit(1)
 })

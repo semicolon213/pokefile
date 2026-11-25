@@ -31,8 +31,8 @@ export function ComparePage() {
     !sel || !sum ? null : sel.form === 'default' || sum.forms.some((f) => f.key === sel.form) ? sel : { ...sel, form: 'default' }
   const a = valid(selA, sumA)
   const b = valid(selB, sumB)
-  const statsA = useCompareStats(a)
-  const statsB = useCompareStats(b)
+  const statsA = useCompareStats(a, sumA)
+  const statsB = useCompareStats(b, sumB)
 
   const set = (slot: Slot, selection: Selection | null) =>
     setParams((prev) => writeSelection(prev, slot, selection), { replace: true })

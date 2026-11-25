@@ -73,7 +73,7 @@ describe('세대별 폼 매핑 (TASK-025 / FR-17·18 / TC-06)', () => {
         checked++
       }
     }
-    expect(checked).toBe(326)
+    expect(checked).toBe(361)
   })
 
   it('최신 메가는 정확한 키가 있는 지원 세대만 연결하고 기본 폼으로 대체하지 않는다', () => {
