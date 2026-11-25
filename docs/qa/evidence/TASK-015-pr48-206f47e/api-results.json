@@ -1,0 +1,5435 @@
+[
+  {
+    "path": "pokemon/6",
+    "name": "charizard",
+    "groups": {
+      "red-blue": {
+        "count": 37,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "leer",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 9
+          },
+          {
+            "move": "leer",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "rage",
+            "method": "level-up",
+            "level": 24
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 46
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 55
+          }
+        ]
+      },
+      "yellow": {
+        "count": 38,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "leer",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 9
+          },
+          {
+            "move": "leer",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "rage",
+            "method": "level-up",
+            "level": 24
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 46
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 55
+          }
+        ]
+      },
+      "emerald": {
+        "count": 61,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 7
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 13
+          },
+          {
+            "move": "rage",
+            "method": "level-up",
+            "level": 20
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 27
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 34
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 44
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 54
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 64
+          }
+        ]
+      },
+      "firered-leafgreen": {
+        "count": 53,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "metal-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 7
+          },
+          {
+            "move": "metal-claw",
+            "method": "level-up",
+            "level": 13
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 20
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 27
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 34
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 44
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 54
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 64
+          }
+        ]
+      },
+      "sword-shield": {
+        "count": 80,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 0
+          },
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-breath",
+            "method": "level-up",
+            "level": 12
+          },
+          {
+            "move": "fire-fang",
+            "method": "level-up",
+            "level": 19
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 24
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 30
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 39
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 46
+          },
+          {
+            "move": "inferno",
+            "method": "level-up",
+            "level": 54
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 62
+          }
+        ]
+      },
+      "red-green-japan": {
+        "count": 37,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "leer",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 9
+          },
+          {
+            "move": "leer",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "rage",
+            "method": "level-up",
+            "level": 24
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 46
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 55
+          }
+        ]
+      },
+      "blue-japan": {
+        "count": 37,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "leer",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 9
+          },
+          {
+            "move": "leer",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "rage",
+            "method": "level-up",
+            "level": 24
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 46
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 55
+          }
+        ]
+      },
+      "gold-silver": {
+        "count": 47,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 7
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 13
+          },
+          {
+            "move": "rage",
+            "method": "level-up",
+            "level": 20
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 27
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 34
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 44
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 54
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 64
+          }
+        ]
+      },
+      "crystal": {
+        "count": 48,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 7
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 13
+          },
+          {
+            "move": "rage",
+            "method": "level-up",
+            "level": 20
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 27
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 34
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 44
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 54
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 64
+          }
+        ]
+      },
+      "platinum": {
+        "count": 76,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "shadow-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 7
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 10
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 17
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 21
+          },
+          {
+            "move": "fire-fang",
+            "method": "level-up",
+            "level": 28
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 32
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 42
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 49
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 59
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 66
+          }
+        ]
+      },
+      "heartgold-soulsilver": {
+        "count": 77,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "shadow-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 7
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 10
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 17
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 21
+          },
+          {
+            "move": "fire-fang",
+            "method": "level-up",
+            "level": 28
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 32
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 42
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 49
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 59
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 66
+          }
+        ]
+      },
+      "black-2-white-2": {
+        "count": 75,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "shadow-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 7
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 10
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 17
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 21
+          },
+          {
+            "move": "fire-fang",
+            "method": "level-up",
+            "level": 28
+          },
+          {
+            "move": "flame-burst",
+            "method": "level-up",
+            "level": 32
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 41
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 47
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 56
+          },
+          {
+            "move": "inferno",
+            "method": "level-up",
+            "level": 62
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 71
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 77
+          }
+        ]
+      },
+      "omega-ruby-alpha-sapphire": {
+        "count": 82,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "shadow-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 7
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 10
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 17
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 21
+          },
+          {
+            "move": "fire-fang",
+            "method": "level-up",
+            "level": 28
+          },
+          {
+            "move": "flame-burst",
+            "method": "level-up",
+            "level": 32
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 41
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 47
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 56
+          },
+          {
+            "move": "inferno",
+            "method": "level-up",
+            "level": 62
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 71
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 77
+          }
+        ]
+      },
+      "ultra-sun-ultra-moon": {
+        "count": 77,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 0
+          },
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "shadow-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 7
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 10
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 17
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 21
+          },
+          {
+            "move": "fire-fang",
+            "method": "level-up",
+            "level": 28
+          },
+          {
+            "move": "flame-burst",
+            "method": "level-up",
+            "level": 32
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 41
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 47
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 56
+          },
+          {
+            "move": "inferno",
+            "method": "level-up",
+            "level": 62
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 71
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 77
+          }
+        ]
+      },
+      "lets-go-pikachu-lets-go-eevee": {
+        "count": 44,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 0
+          },
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "counter",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "crunch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 4
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 9
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 13
+          },
+          {
+            "move": "fury-swipes",
+            "method": "level-up",
+            "level": 20
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 26
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 33
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 43
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 54
+          },
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 62
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 75
+          }
+        ]
+      },
+      "scarlet-violet": {
+        "count": 76,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 0
+          },
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-breath",
+            "method": "level-up",
+            "level": 12
+          },
+          {
+            "move": "fire-fang",
+            "method": "level-up",
+            "level": 19
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 24
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 30
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 39
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 46
+          },
+          {
+            "move": "inferno",
+            "method": "level-up",
+            "level": 54
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 62
+          }
+        ]
+      },
+      "legends-za": {
+        "count": 61,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "fire-blast",
+            "method": "level-up",
+            "level": 0
+          },
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 0
+          },
+          {
+            "move": "tackle",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 4
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "dragon-breath",
+            "method": "level-up",
+            "level": 12
+          },
+          {
+            "move": "fire-fang",
+            "method": "level-up",
+            "level": 17
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 20
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 24
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 30
+          },
+          {
+            "move": "dragon-rush",
+            "method": "level-up",
+            "level": 42
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 54
+          }
+        ]
+      },
+      "ruby-sapphire": {
+        "count": 41,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 7
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 13
+          },
+          {
+            "move": "rage",
+            "method": "level-up",
+            "level": 20
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 27
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 34
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 44
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 54
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 64
+          }
+        ]
+      },
+      "diamond-pearl": {
+        "count": 65,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "shadow-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 7
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 10
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 17
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 21
+          },
+          {
+            "move": "fire-fang",
+            "method": "level-up",
+            "level": 28
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 32
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 42
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 49
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 59
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 66
+          }
+        ]
+      },
+      "black-white": {
+        "count": 65,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "shadow-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 7
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 10
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 17
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 21
+          },
+          {
+            "move": "fire-fang",
+            "method": "level-up",
+            "level": 28
+          },
+          {
+            "move": "flame-burst",
+            "method": "level-up",
+            "level": 32
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 41
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 47
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 56
+          },
+          {
+            "move": "inferno",
+            "method": "level-up",
+            "level": 62
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 71
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 77
+          }
+        ]
+      },
+      "colosseum": {
+        "count": 41,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 7
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 13
+          },
+          {
+            "move": "rage",
+            "method": "level-up",
+            "level": 20
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 27
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 34
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 44
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 54
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 64
+          }
+        ]
+      },
+      "xd": {
+        "count": 47,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 7
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 13
+          },
+          {
+            "move": "rage",
+            "method": "level-up",
+            "level": 20
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 27
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 34
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 44
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 54
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 64
+          }
+        ]
+      },
+      "x-y": {
+        "count": 72,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "shadow-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 7
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 10
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 17
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 21
+          },
+          {
+            "move": "fire-fang",
+            "method": "level-up",
+            "level": 28
+          },
+          {
+            "move": "flame-burst",
+            "method": "level-up",
+            "level": 32
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 41
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 47
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 56
+          },
+          {
+            "move": "inferno",
+            "method": "level-up",
+            "level": 62
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 71
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 77
+          }
+        ]
+      },
+      "sun-moon": {
+        "count": 67,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 0
+          },
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "shadow-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 7
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 10
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 17
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 21
+          },
+          {
+            "move": "fire-fang",
+            "method": "level-up",
+            "level": 28
+          },
+          {
+            "move": "flame-burst",
+            "method": "level-up",
+            "level": 32
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 41
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 47
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 56
+          },
+          {
+            "move": "inferno",
+            "method": "level-up",
+            "level": 62
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 71
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 77
+          }
+        ]
+      },
+      "brilliant-diamond-shining-pearl": {
+        "count": 58,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 0
+          },
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-breath",
+            "method": "level-up",
+            "level": 12
+          },
+          {
+            "move": "fire-fang",
+            "method": "level-up",
+            "level": 19
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 24
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 30
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 39
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 46
+          },
+          {
+            "move": "inferno",
+            "method": "level-up",
+            "level": 54
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 62
+          }
+        ]
+      }
+    }
+  },
+  {
+    "path": "pokemon/charizard-mega-x",
+    "name": "charizard-mega-x",
+    "groups": {
+      "omega-ruby-alpha-sapphire": {
+        "count": 82,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "shadow-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 7
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 10
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 17
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 21
+          },
+          {
+            "move": "fire-fang",
+            "method": "level-up",
+            "level": 28
+          },
+          {
+            "move": "flame-burst",
+            "method": "level-up",
+            "level": 32
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 41
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 47
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 56
+          },
+          {
+            "move": "inferno",
+            "method": "level-up",
+            "level": 62
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 71
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 77
+          }
+        ]
+      },
+      "ultra-sun-ultra-moon": {
+        "count": 77,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 0
+          },
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "shadow-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 7
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 10
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 17
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 21
+          },
+          {
+            "move": "fire-fang",
+            "method": "level-up",
+            "level": 28
+          },
+          {
+            "move": "flame-burst",
+            "method": "level-up",
+            "level": 32
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 41
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 47
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 56
+          },
+          {
+            "move": "inferno",
+            "method": "level-up",
+            "level": 62
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 71
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 77
+          }
+        ]
+      },
+      "lets-go-pikachu-lets-go-eevee": {
+        "count": 44,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 0
+          },
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "counter",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "crunch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 4
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 9
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 13
+          },
+          {
+            "move": "fury-swipes",
+            "method": "level-up",
+            "level": 20
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 26
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 33
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 43
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 54
+          },
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 62
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 75
+          }
+        ]
+      },
+      "legends-za": {
+        "count": 61,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "fire-blast",
+            "method": "level-up",
+            "level": 0
+          },
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 0
+          },
+          {
+            "move": "tackle",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 4
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "dragon-breath",
+            "method": "level-up",
+            "level": 12
+          },
+          {
+            "move": "fire-fang",
+            "method": "level-up",
+            "level": 17
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 20
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 24
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 30
+          },
+          {
+            "move": "dragon-rush",
+            "method": "level-up",
+            "level": 42
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 54
+          }
+        ]
+      },
+      "x-y": {
+        "count": 72,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "shadow-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 7
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 10
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 17
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 21
+          },
+          {
+            "move": "fire-fang",
+            "method": "level-up",
+            "level": 28
+          },
+          {
+            "move": "flame-burst",
+            "method": "level-up",
+            "level": 32
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 41
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 47
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 56
+          },
+          {
+            "move": "inferno",
+            "method": "level-up",
+            "level": 62
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 71
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 77
+          }
+        ]
+      },
+      "sun-moon": {
+        "count": 67,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 0
+          },
+          {
+            "move": "scratch",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "wing-attack",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "dragon-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "air-slash",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "shadow-claw",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "ember",
+            "method": "level-up",
+            "level": 7
+          },
+          {
+            "move": "smokescreen",
+            "method": "level-up",
+            "level": 10
+          },
+          {
+            "move": "dragon-rage",
+            "method": "level-up",
+            "level": 17
+          },
+          {
+            "move": "scary-face",
+            "method": "level-up",
+            "level": 21
+          },
+          {
+            "move": "fire-fang",
+            "method": "level-up",
+            "level": 28
+          },
+          {
+            "move": "flame-burst",
+            "method": "level-up",
+            "level": 32
+          },
+          {
+            "move": "slash",
+            "method": "level-up",
+            "level": 41
+          },
+          {
+            "move": "flamethrower",
+            "method": "level-up",
+            "level": 47
+          },
+          {
+            "move": "fire-spin",
+            "method": "level-up",
+            "level": 56
+          },
+          {
+            "move": "inferno",
+            "method": "level-up",
+            "level": 62
+          },
+          {
+            "move": "heat-wave",
+            "method": "level-up",
+            "level": 71
+          },
+          {
+            "move": "flare-blitz",
+            "method": "level-up",
+            "level": 77
+          }
+        ]
+      }
+    }
+  },
+  {
+    "path": "pokemon/raichu-alola",
+    "name": "raichu-alola",
+    "groups": {
+      "sword-shield": {
+        "count": 78,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "psychic",
+            "method": "level-up",
+            "level": 0
+          },
+          {
+            "move": "slam",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "tail-whip",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunderbolt",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "psychic",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "agility",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "quick-attack",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "light-screen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "sweet-kiss",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "charm",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "spark",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "feint",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "nasty-plot",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "electro-ball",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "play-nice",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "nuzzle",
+            "method": "level-up",
+            "level": 1
+          }
+        ]
+      },
+      "lets-go-pikachu-lets-go-eevee": {
+        "count": 30,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "psychic",
+            "method": "level-up",
+            "level": 0
+          },
+          {
+            "move": "tail-whip",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "psychic",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "encore",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "fake-out",
+            "method": "level-up",
+            "level": 1
+          }
+        ]
+      },
+      "ultra-sun-ultra-moon": {
+        "count": 59,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "psychic",
+            "method": "level-up",
+            "level": 0
+          },
+          {
+            "move": "tail-whip",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunderbolt",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "psychic",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "quick-attack",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "speed-swap",
+            "method": "level-up",
+            "level": 1
+          }
+        ]
+      },
+      "scarlet-violet": {
+        "count": 78,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "psychic",
+            "method": "level-up",
+            "level": 0
+          },
+          {
+            "move": "tail-whip",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "agility",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "quick-attack",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "light-screen",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "sweet-kiss",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "charm",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "spark",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "iron-tail",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "feint",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "nasty-plot",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "electro-ball",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "play-nice",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "nuzzle",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunderbolt",
+            "method": "level-up",
+            "level": 5
+          }
+        ]
+      },
+      "legends-za": {
+        "count": 50,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "psychic",
+            "method": "level-up",
+            "level": 0
+          },
+          {
+            "move": "tail-whip",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "growl",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "quick-attack",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 4
+          },
+          {
+            "move": "nuzzle",
+            "method": "level-up",
+            "level": 12
+          },
+          {
+            "move": "spark",
+            "method": "level-up",
+            "level": 16
+          },
+          {
+            "move": "charm",
+            "method": "level-up",
+            "level": 20
+          },
+          {
+            "move": "thunderbolt",
+            "method": "level-up",
+            "level": 25
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 30
+          },
+          {
+            "move": "light-screen",
+            "method": "level-up",
+            "level": 35
+          },
+          {
+            "move": "thunder",
+            "method": "level-up",
+            "level": 40
+          },
+          {
+            "move": "volt-tackle",
+            "method": "level-up",
+            "level": 99
+          }
+        ]
+      },
+      "sun-moon": {
+        "count": 42,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "psychic",
+            "method": "level-up",
+            "level": 0
+          },
+          {
+            "move": "tail-whip",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunderbolt",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "psychic",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "quick-attack",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "speed-swap",
+            "method": "level-up",
+            "level": 1
+          }
+        ]
+      }
+    }
+  },
+  {
+    "path": "pokemon/rotom",
+    "name": "rotom",
+    "groups": {
+      "legends-za": {
+        "count": 41,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 12
+          },
+          {
+            "move": "parabolic-charge",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "parting-shot",
+            "method": "level-up",
+            "level": 17
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 20
+          },
+          {
+            "move": "psybeam",
+            "method": "level-up",
+            "level": 23
+          },
+          {
+            "move": "eerie-impulse",
+            "method": "level-up",
+            "level": 25
+          },
+          {
+            "move": "shadow-ball",
+            "method": "level-up",
+            "level": 30
+          },
+          {
+            "move": "taunt",
+            "method": "level-up",
+            "level": 34
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 40
+          },
+          {
+            "move": "light-screen",
+            "method": "level-up",
+            "level": 44
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 50
+          }
+        ]
+      },
+      "diamond-pearl": {
+        "count": 43,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 22
+          },
+          {
+            "move": "ominous-wind",
+            "method": "level-up",
+            "level": 29
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 43
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 50
+          }
+        ]
+      },
+      "platinum": {
+        "count": 53,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "thunder-shock",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 22
+          },
+          {
+            "move": "ominous-wind",
+            "method": "level-up",
+            "level": 29
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 43
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 50
+          }
+        ]
+      },
+      "heartgold-soulsilver": {
+        "count": 54,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "thunder-shock",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 22
+          },
+          {
+            "move": "ominous-wind",
+            "method": "level-up",
+            "level": 29
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 43
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 50
+          }
+        ]
+      },
+      "black-white": {
+        "count": 42,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "thunder-shock",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 22
+          },
+          {
+            "move": "ominous-wind",
+            "method": "level-up",
+            "level": 29
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "electro-ball",
+            "method": "level-up",
+            "level": 43
+          },
+          {
+            "move": "hex",
+            "method": "level-up",
+            "level": 50
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 57
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 64
+          }
+        ]
+      },
+      "black-2-white-2": {
+        "count": 52,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "thunder-shock",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 22
+          },
+          {
+            "move": "ominous-wind",
+            "method": "level-up",
+            "level": 29
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "electro-ball",
+            "method": "level-up",
+            "level": 43
+          },
+          {
+            "move": "hex",
+            "method": "level-up",
+            "level": 50
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 57
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 64
+          }
+        ]
+      },
+      "x-y": {
+        "count": 46,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "thunder-shock",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 22
+          },
+          {
+            "move": "ominous-wind",
+            "method": "level-up",
+            "level": 29
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "electro-ball",
+            "method": "level-up",
+            "level": 43
+          },
+          {
+            "move": "hex",
+            "method": "level-up",
+            "level": 50
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 57
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 64
+          }
+        ]
+      },
+      "omega-ruby-alpha-sapphire": {
+        "count": 57,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "thunder-shock",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 22
+          },
+          {
+            "move": "ominous-wind",
+            "method": "level-up",
+            "level": 29
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "electro-ball",
+            "method": "level-up",
+            "level": 43
+          },
+          {
+            "move": "hex",
+            "method": "level-up",
+            "level": 50
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 57
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 64
+          }
+        ]
+      },
+      "sun-moon": {
+        "count": 45,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "thunder-shock",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 22
+          },
+          {
+            "move": "ominous-wind",
+            "method": "level-up",
+            "level": 29
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "electro-ball",
+            "method": "level-up",
+            "level": 43
+          },
+          {
+            "move": "hex",
+            "method": "level-up",
+            "level": 50
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 57
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 64
+          }
+        ]
+      },
+      "ultra-sun-ultra-moon": {
+        "count": 58,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "thunder-shock",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 22
+          },
+          {
+            "move": "ominous-wind",
+            "method": "level-up",
+            "level": 29
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "electro-ball",
+            "method": "level-up",
+            "level": 43
+          },
+          {
+            "move": "hex",
+            "method": "level-up",
+            "level": 50
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 57
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 64
+          }
+        ]
+      },
+      "sword-shield": {
+        "count": 50,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "thunder-shock",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 5
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 10
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "electro-ball",
+            "method": "level-up",
+            "level": 20
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 25
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 30
+          },
+          {
+            "move": "hex",
+            "method": "level-up",
+            "level": 35
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 40
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 45
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 50
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 55
+          }
+        ]
+      },
+      "brilliant-diamond-shining-pearl": {
+        "count": 40,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "thunder-shock",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 5
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 10
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "electro-ball",
+            "method": "level-up",
+            "level": 20
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 25
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 30
+          },
+          {
+            "move": "hex",
+            "method": "level-up",
+            "level": 35
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 40
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 45
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 50
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 55
+          }
+        ]
+      },
+      "legends-arceus": {
+        "count": 15,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "thunder-shock",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "charge-beam",
+            "method": "level-up",
+            "level": 6
+          },
+          {
+            "move": "hex",
+            "method": "level-up",
+            "level": 11
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 18
+          },
+          {
+            "move": "shadow-ball",
+            "method": "level-up",
+            "level": 25
+          },
+          {
+            "move": "thunderbolt",
+            "method": "level-up",
+            "level": 34
+          },
+          {
+            "move": "thunder",
+            "method": "level-up",
+            "level": 43
+          }
+        ]
+      },
+      "scarlet-violet": {
+        "count": 53,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "thunder-shock",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 5
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 10
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "electro-ball",
+            "method": "level-up",
+            "level": 20
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 25
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 30
+          },
+          {
+            "move": "hex",
+            "method": "level-up",
+            "level": 35
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 40
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 45
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 50
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 55
+          }
+        ]
+      }
+    }
+  },
+  {
+    "path": "pokemon/rotom-wash",
+    "name": "rotom-wash",
+    "groups": {
+      "platinum": {
+        "count": 53,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "hydro-pump",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 22
+          },
+          {
+            "move": "ominous-wind",
+            "method": "level-up",
+            "level": 29
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 43
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 50
+          }
+        ]
+      },
+      "heartgold-soulsilver": {
+        "count": 54,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "hydro-pump",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 22
+          },
+          {
+            "move": "ominous-wind",
+            "method": "level-up",
+            "level": 29
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 43
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 50
+          }
+        ]
+      },
+      "black-white": {
+        "count": 42,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "hydro-pump",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 22
+          },
+          {
+            "move": "ominous-wind",
+            "method": "level-up",
+            "level": 29
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "electro-ball",
+            "method": "level-up",
+            "level": 43
+          },
+          {
+            "move": "hex",
+            "method": "level-up",
+            "level": 50
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 57
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 64
+          }
+        ]
+      },
+      "black-2-white-2": {
+        "count": 52,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "hydro-pump",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 22
+          },
+          {
+            "move": "ominous-wind",
+            "method": "level-up",
+            "level": 29
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "electro-ball",
+            "method": "level-up",
+            "level": 43
+          },
+          {
+            "move": "hex",
+            "method": "level-up",
+            "level": 50
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 57
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 64
+          }
+        ]
+      },
+      "x-y": {
+        "count": 46,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "hydro-pump",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 22
+          },
+          {
+            "move": "ominous-wind",
+            "method": "level-up",
+            "level": 29
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "electro-ball",
+            "method": "level-up",
+            "level": 43
+          },
+          {
+            "move": "hex",
+            "method": "level-up",
+            "level": 50
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 57
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 64
+          }
+        ]
+      },
+      "omega-ruby-alpha-sapphire": {
+        "count": 57,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "hydro-pump",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 22
+          },
+          {
+            "move": "ominous-wind",
+            "method": "level-up",
+            "level": 29
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "electro-ball",
+            "method": "level-up",
+            "level": 43
+          },
+          {
+            "move": "hex",
+            "method": "level-up",
+            "level": 50
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 57
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 64
+          }
+        ]
+      },
+      "sun-moon": {
+        "count": 45,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "hydro-pump",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 22
+          },
+          {
+            "move": "ominous-wind",
+            "method": "level-up",
+            "level": 29
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "electro-ball",
+            "method": "level-up",
+            "level": 43
+          },
+          {
+            "move": "hex",
+            "method": "level-up",
+            "level": 50
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 57
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 64
+          }
+        ]
+      },
+      "ultra-sun-ultra-moon": {
+        "count": 58,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "hydro-pump",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 22
+          },
+          {
+            "move": "ominous-wind",
+            "method": "level-up",
+            "level": 29
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 36
+          },
+          {
+            "move": "electro-ball",
+            "method": "level-up",
+            "level": 43
+          },
+          {
+            "move": "hex",
+            "method": "level-up",
+            "level": 50
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 57
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 64
+          }
+        ]
+      },
+      "sword-shield": {
+        "count": 50,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "hydro-pump",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 5
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 10
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "electro-ball",
+            "method": "level-up",
+            "level": 20
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 25
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 30
+          },
+          {
+            "move": "hex",
+            "method": "level-up",
+            "level": 35
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 40
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 45
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 50
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 55
+          }
+        ]
+      },
+      "brilliant-diamond-shining-pearl": {
+        "count": 40,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "hydro-pump",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 5
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 10
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "electro-ball",
+            "method": "level-up",
+            "level": 20
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 25
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 30
+          },
+          {
+            "move": "hex",
+            "method": "level-up",
+            "level": 35
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 40
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 45
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 50
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 55
+          }
+        ]
+      },
+      "legends-arceus": {
+        "count": 15,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "hydro-pump",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "charge-beam",
+            "method": "level-up",
+            "level": 6
+          },
+          {
+            "move": "hex",
+            "method": "level-up",
+            "level": 11
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 18
+          },
+          {
+            "move": "shadow-ball",
+            "method": "level-up",
+            "level": 25
+          },
+          {
+            "move": "thunderbolt",
+            "method": "level-up",
+            "level": 34
+          },
+          {
+            "move": "thunder",
+            "method": "level-up",
+            "level": 43
+          }
+        ]
+      },
+      "scarlet-violet": {
+        "count": 53,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "hydro-pump",
+            "method": "form-change",
+            "level": 0
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "astonish",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 5
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 10
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "electro-ball",
+            "method": "level-up",
+            "level": 20
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 25
+          },
+          {
+            "move": "shock-wave",
+            "method": "level-up",
+            "level": 30
+          },
+          {
+            "move": "hex",
+            "method": "level-up",
+            "level": 35
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 40
+          },
+          {
+            "move": "trick",
+            "method": "level-up",
+            "level": 45
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 50
+          },
+          {
+            "move": "uproar",
+            "method": "level-up",
+            "level": 55
+          }
+        ]
+      },
+      "legends-za": {
+        "count": 43,
+        "missingMachine": [],
+        "level": [
+          {
+            "move": "hydro-pump",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "thunder-shock",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "double-team",
+            "method": "level-up",
+            "level": 1
+          },
+          {
+            "move": "confuse-ray",
+            "method": "level-up",
+            "level": 8
+          },
+          {
+            "move": "charge",
+            "method": "level-up",
+            "level": 12
+          },
+          {
+            "move": "parabolic-charge",
+            "method": "level-up",
+            "level": 15
+          },
+          {
+            "move": "parting-shot",
+            "method": "level-up",
+            "level": 17
+          },
+          {
+            "move": "thunder-wave",
+            "method": "level-up",
+            "level": 20
+          },
+          {
+            "move": "psybeam",
+            "method": "level-up",
+            "level": 23
+          },
+          {
+            "move": "eerie-impulse",
+            "method": "level-up",
+            "level": 25
+          },
+          {
+            "move": "shadow-ball",
+            "method": "level-up",
+            "level": 30
+          },
+          {
+            "move": "taunt",
+            "method": "level-up",
+            "level": 34
+          },
+          {
+            "move": "substitute",
+            "method": "level-up",
+            "level": 40
+          },
+          {
+            "move": "light-screen",
+            "method": "level-up",
+            "level": 44
+          },
+          {
+            "move": "discharge",
+            "method": "level-up",
+            "level": 50
+          }
+        ]
+      }
+    }
+  },
+  {
+    "path": "move/flamethrower",
+    "current": {
+      "type": "fire",
+      "damageClass": "special",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 15
+    },
+    "past": [
+      {
+        "accuracy": null,
+        "power": 95,
+        "pp": null,
+        "effect_chance": null,
+        "effect_entries": [],
+        "type": null,
+        "version_group": {
+          "name": "x-y",
+          "url": "https://pokeapi.co/api/v2/version-group/15/"
+        }
+      }
+    ],
+    "stored": [
+      "화염방사",
+      "fire",
+      "special",
+      90,
+      100,
+      15
+    ]
+  },
+  {
+    "path": "move/thunder-punch",
+    "current": {
+      "type": "electric",
+      "damageClass": "physical",
+      "power": 75,
+      "accuracy": 100,
+      "pp": 15
+    },
+    "past": [],
+    "stored": [
+      "번개펀치",
+      "electric",
+      "physical",
+      75,
+      100,
+      15
+    ]
+  },
+  {
+    "path": "move/hydro-pump",
+    "current": {
+      "type": "water",
+      "damageClass": "special",
+      "power": 110,
+      "accuracy": 80,
+      "pp": 5
+    },
+    "past": [
+      {
+        "accuracy": null,
+        "power": 120,
+        "pp": null,
+        "effect_chance": null,
+        "effect_entries": [],
+        "type": null,
+        "version_group": {
+          "name": "x-y",
+          "url": "https://pokeapi.co/api/v2/version-group/15/"
+        }
+      }
+    ],
+    "stored": [
+      "하이드로펌프",
+      "water",
+      "special",
+      110,
+      80,
+      5
+    ]
+  },
+  {
+    "path": "machine/2023",
+    "item": "tm125",
+    "move": "flamethrower",
+    "group": "scarlet-violet",
+    "stored": "tm125"
+  },
+  {
+    "path": "machine/1613",
+    "item": "tr02",
+    "move": "flamethrower",
+    "group": "sword-shield",
+    "stored": "tr02"
+  },
+  {
+    "path": "machine/14",
+    "item": "tm01",
+    "move": "focus-punch",
+    "group": "xd",
+    "stored": "tm01"
+  }
+]

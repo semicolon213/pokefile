@@ -546,11 +546,15 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
     expect(await within(basic).findByRole('img', { name: '리자몽 이미지 없음' })).toBeInTheDocument()
   })
 
-  it('움직임 줄이기에서도 GIF만 있는 폼은 기본 폼 정적 이미지로 바뀌지 않는다 (#44 QA, ADR-016)', async () => {
+  it('움직임 줄이기에서 GIF만 있고 정지 변환 미지원이면 다른 폼 대신 안내한다 (TASK-028, #44 QA)', async () => {
     vi.stubGlobal('matchMedia', (query: string) => ({ matches: query.includes('reduce'), media: query, addEventListener() {}, removeEventListener() {} }))
+    vi.stubGlobal('createImageBitmap', undefined)
     const gifOnly = { ...pokemon(10034, 'charizard-mega-x', ['fire', 'dragon'], ['tough-claws'], [78, 130, 111, 130, 85, 100]), sprites: { front_default: null, other: { showdown: { front_default: 'charizard-mega-x.gif' } } } }
     mockFetch({ '/pokemon/charizard-mega-x': Response.json(gifOnly) })
-    renderAt('/pokemon/6?form=mega-x')
-    expect(await screen.findByRole('img', { name: '메가리자몽X' })).toHaveAttribute('src', 'charizard-mega-x.gif')
+    const router = renderAt('/pokemon/6?form=mega-x')
+    const image = await screen.findByRole('img', { name: '메가리자몽X 정적 이미지 없음' })
+    expect(image).not.toHaveAttribute('src')
+    expect(screen.queryByText('기본 모습으로 표시 중')).not.toBeInTheDocument()
+    expect(router.state.location.search).toBe('?form=mega-x')
   })
 })
