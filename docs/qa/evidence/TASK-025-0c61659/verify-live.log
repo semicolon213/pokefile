@@ -1,0 +1,22 @@
+[2m오전 9:41:03[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m Re-optimizing dependencies because vite config has changed
+{"generation":9,"url":"https://pkmn.github.io/smogon/data/sets/gen9.json","speciesKeys":656,"cors":"*","sha256":"2d284167299d7f057ed4d71db632c77047d8b6ce275e702f51711781cc021768"}
+{"generation":8,"url":"https://pkmn.github.io/smogon/data/sets/gen8.json","speciesKeys":624,"cors":"*","sha256":"92ac5c9da6869fb6491c8a4d5d2d11ca24a1f5f3669381885e99cf6f60c4107f"}
+{"generation":7,"url":"https://pkmn.github.io/smogon/data/sets/gen7.json","speciesKeys":830,"cors":"*","sha256":"45bd4e7c91212290ea56b26f522d4850a4707e33e4006c310d215ea91c4b2e43"}
+{"generation":6,"url":"https://pkmn.github.io/smogon/data/sets/gen6.json","speciesKeys":728,"cors":"*","sha256":"f69ba20a7ebff0038824df22af189f16d5ddde4168e0384aec64622daf9d5cd3"}
+{"generation":9,"speciesName":"raichu","formKey":"alola","formats":["zu","nationaldexmonotype"]}
+{"generation":9,"speciesName":"tauros","formKey":"paldea-blaze-breed","formats":["pu","nu","monotype","battlestadiumsingles"]}
+{"generation":8,"speciesName":"darmanitan","formKey":"galar-standard","formats":["1v1","monotype","battlestadiumsingles","ubers","nationaldexmonotype","anythinggoes"]}
+{"generation":9,"speciesName":"indeedee","formKey":"female","formats":["pu","vgc2025","vgc2024","vgc2023","zu","nationaldexdoubles","doublesou"]}
+{"generation":7,"speciesName":"charizard","formKey":"mega-x","formats":["ou","1v1","monotype","letsgoou","battlespotsingles"]}
+{"generation":6,"speciesName":"charizard","formKey":"mega-y","formats":["vgc2014","ou","monotype","doublesou","battlespotsingles","battlespotdoubles"]}
+{"generation":7,"speciesName":"rayquaza","formKey":"mega","formats":["anythinggoes"]}
+{"generation":9,"speciesName":"necrozma","formKey":"dusk","formats":["battlestadiumsingles","ubers","nationaldexubers","anythinggoes"]}
+{"generation":8,"speciesName":"necrozma","formKey":"dusk","formats":["battlestadiumdoubles","battlestadiumsingles","ubers","dlc1nationaldexag","anythinggoes"]}
+{"generation":7,"speciesName":"necrozma","formKey":"dusk","formats":["vgc2019","ubers","anythinggoes"]}
+{"generation":8,"speciesName":"necrozma","formKey":"dawn","formats":["ubers"]}
+{"generation":7,"speciesName":"necrozma","formKey":"dawn","formats":["vgc2019","ubers"]}
+{"generation":9,"speciesName":"ogerpon","formKey":"wellspring-mask","formats":["ou","1v1","monotype","vgc2024","nationaldexdoubles","nationaldex","battlestadiumsingles","doublesou","nationaldexmonotype"]}
+{"generation":9,"speciesName":"ogerpon","formKey":"hearthflame-mask","formats":["monotype","vgc2025","vgc2024","ubersuu","nationaldexdoubles","battlestadiumsingles","ubers","doublesou","inheritance"]}
+{"generation":9,"speciesName":"ogerpon","formKey":"cornerstone-mask","formats":["ou","monotype","vgc2025","vgc2024","nationaldex","battlestadiumsingles","doublesou","nationaldexmonotype"]}
+PASS: 세대 파일 4개 정규화 및 실제 폼 매핑 15건, 인덱스 326개 폼 × 4세대 조회·캐시 불변
+exit 0

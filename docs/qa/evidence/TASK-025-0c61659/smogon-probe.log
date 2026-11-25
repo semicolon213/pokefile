@@ -1,0 +1,52 @@
+species(기본 폼) 세팅 있음 911 없음 114
+기본 외 폼 326 세팅 있음 157
+
+== 앱이 한 번도 닿지 않는 Smogon 키 (세대별) ==
+gen9 (656키) 미도달 34: Beedrill, Pidgeot, Kangaskhan, Pinsir, Aerodactyl, Steelix, Scizor-Mega, Tyranitar-Mega, Mawile, Aggron, Manectric, Sharpedo, Camerupt-Mega, Banette, Absol, Lopunny, Arceus-Bug, Arceus-Dark, Arceus-Dragon, Arceus-Electric, Arceus-Fairy, Arceus-Fighting, Arceus-Fire, Arceus-Flying, Arceus-Ghost, Arceus-Grass, Arceus-Ground, Arceus-Ice, Arceus-Poison, Arceus-Psychic, Arceus-Rock, Arceus-Steel, Arceus-Water, Sinistcha-Masterpiece
+gen8 (624키) 미도달 25: Ampharos, Houndoom, Camerupt, Arceus-Dark, Arceus-Fairy, Arceus-Ghost, Arceus-Ground, Arceus-Poison, Arceus-Water, Silvally-Bug, Silvally-Dark, Silvally-Electric, Silvally-Fairy, Silvally-Fighting, Silvally-Fire, Silvally-Flying, Silvally-Ghost, Silvally-Grass, Silvally-Ground, Silvally-Ice, Silvally-Poison, Silvally-Psychic, Silvally-Rock, Silvally-Steel, Silvally-Water
+gen7 (830키) 미도달 34: Arceus-Bug, Arceus-Dark, Arceus-Dragon, Arceus-Electric, Arceus-Fairy, Arceus-Fighting, Arceus-Fire, Arceus-Flying, Arceus-Ghost, Arceus-Grass, Arceus-Ground, Arceus-Ice, Arceus-Poison, Arceus-Psychic, Arceus-Rock, Arceus-Steel, Arceus-Water, Silvally-Bug, Silvally-Dark, Silvally-Dragon, Silvally-Electric, Silvally-Fairy, Silvally-Fighting, Silvally-Fire, Silvally-Flying, Silvally-Ghost, Silvally-Grass, Silvally-Ground, Silvally-Ice, Silvally-Poison, Silvally-Psychic, Silvally-Rock, Silvally-Steel, Silvally-Water
+gen6 (728키) 미도달 17: Arceus-Bug, Arceus-Dark, Arceus-Dragon, Arceus-Electric, Arceus-Fairy, Arceus-Fighting, Arceus-Fire, Arceus-Flying, Arceus-Ghost, Arceus-Grass, Arceus-Ground, Arceus-Ice, Arceus-Poison, Arceus-Psychic, Arceus-Rock, Arceus-Steel, Arceus-Water
+
+== 주요 폼 ==
+#6 charizard/mega-x: 7,6
+#6 charizard/mega-y: 7,6
+#6 charizard/gmax: 8
+#384 rayquaza/default: 9,8,7,6
+#384 rayquaza/mega: 7,6
+#26 raichu/alola: 9,8,7
+#128 tauros/paldea-blaze-breed: 9
+#800 necrozma/dusk: 9,8,7
+#1017 ogerpon/wellspring-mask: 9
+#718 zygarde/complete: 없음
+#718 zygarde/10-power-construct: 없음
+#892 urshifu/rapid-strike: 9,8
+#925 maushold/family-of-three: 없음
+#29 nidoran-f/default: 7
+#32 nidoran-m/default: 7,6
+#122 mr-mime/default: 8,7,6
+#866 mr-rime/default: 8
+#250 ho-oh/default: 9,8,7,6
+#681 aegislash/blade: 없음
+#646 kyurem/black: 9,8,7,6
+#479 rotom/wash: 9,8,7,6
+#745 lycanroc/midnight: 8,7
+#745 lycanroc/dusk: 9,8,7
+#658 greninja/ash: 없음
+#26 raichu/mega-x: 없음
+
+레쿠쟈 gen7 default [
+  'vgc2019:Mixed Attacker/Swords Dance',
+  'ubers:Dragon Dance/Mixed Wallbreaker/Choice Scarf'
+]
+레쿠쟈 gen7 mega [ 'anythinggoes:Dragon Dance/Choice Scarf/Choice Band/Mixed Attacker' ]
+레쿠쟈 gen6 mega [
+  'anythinggoes:Dragon Dance/Choice Band/Swords Dance/Mixed Life Orb Attacker'
+]
+레쿠쟈 gen8 default [
+  'ubers:Choice Band/Swords Dance/MixQuaza',
+  'dlc1nationaldexag:Setup Sweeper/Mixed Life Orb/Choice Band',
+  'anythinggoes:Dynamax Sweeper'
+]
+
+남은 포맷 1v1 2v2doubles anythinggoes battlespotdoubles battlespotsingles battlespottriples battlestadiumdoubles battlestadiumsingles bdspou dlc1nationaldexag doublesou inheritance lc letsgoou middlecup monotype nationaldex nationaldexdoubles nationaldexmonotype nationaldexru nationaldexubers nationaldexuu nfe nu ou pu ru ubers ubersuu uu vgc2014 vgc2016 vgc2017 vgc2018 vgc2019 vgc2020 vgc2021 vgc2022 vgc2023 vgc2024 vgc2025 zu
+제외된 포맷 almostanyability balancedhackmons camomons cap godlygift mixandmega partnersincrime purehackmons stabmons

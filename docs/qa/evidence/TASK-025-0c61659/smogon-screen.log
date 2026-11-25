@@ -1,0 +1,12 @@
+﻿/pokemon/6 1280px | 탭 [9세대,8세대,7세대,6세대] 선택=9세대 | 포맷 3개 (PU,VGC2025,ZU) | 오류 0 | 부재안내 false | 요청 gen[6,7,8,9] | 첫 포맷 세팅카드 1 | 가로넘침 false
+/pokemon/6?form=mega-x 1280px | 탭 [7세대,6세대] 선택=7세대 | 포맷 5개 (OU,1V1,MONOTYPE,LETSGOOU,BATTLESPOTSINGLES) | 오류 0 | 부재안내 false | 요청 gen[6,7] | 첫 포맷 세팅카드 2 | 가로넘침 false
+/pokemon/384 1280px | 탭 [9세대,8세대,7세대,6세대] 선택=9세대 | 포맷 2개 (NATIONALDEXUBERS,UBERS) | 오류 0 | 부재안내 false | 요청 gen[6,7,8,9] | 첫 포맷 세팅카드 2 | 가로넘침 false
+/pokemon/384?form=mega 1280px | 탭 [7세대,6세대] 선택=7세대 | 포맷 1개 (ANYTHINGGOES) | 오류 0 | 부재안내 false | 요청 gen[6,7] | 첫 포맷 세팅카드 4 | 가로넘침 false
+/pokemon/26?form=alola 1280px | 탭 [9세대,8세대,7세대] 선택=9세대 | 포맷 2개 (ZU,NATIONALDEXMONOTYPE) | 오류 0 | 부재안내 false | 요청 gen[6,7,8,9] | 첫 포맷 세팅카드 1 | 가로넘침 false
+/pokemon/1017?form=wellspring-mask 1280px | 탭 [9세대] 선택=9세대 | 포맷 9개 (OU,1V1,MONOTYPE,VGC2024,NATIONALDEXDOUBLES,NATIONALDEX…) | 오류 0 | 부재안내 false | 요청 gen[6,7,8,9] | 첫 포맷 세팅카드 4 | 가로넘침 false
+/pokemon/800?form=dusk 1280px | 탭 [9세대,8세대,7세대] 선택=9세대 | 포맷 4개 (BATTLESTADIUMSINGLES,UBERS,NATIONALDEXUBERS,ANYTHINGGOES) | 오류 0 | 부재안내 false | 요청 gen[6,7,8,9] | 첫 포맷 세팅카드 1 | 가로넘침 false
+/pokemon/26?form=mega-x 1280px | 탭 [] 선택=null | 포맷 0개 () | 오류 0 | 부재안내 true | 요청 gen[6,7] | 가로넘침 false
+/pokemon/1025 1280px | 탭 [9세대] 선택=9세대 | 포맷 7개 (UBERSUU,OU,NATIONALDEX,1V1,MONOTYPE,BATTLESTADIUMSINGLES…) | 오류 0 | 부재안내 false | 요청 gen[6,7,8,9] | 첫 포맷 세팅카드 2 | 가로넘침 false
+/pokemon/10 1280px | 탭 [] 선택=null | 포맷 0개 () | 오류 0 | 부재안내 true | 요청 gen[6,7,8,9] | 가로넘침 false
+/pokemon/6 320px | 탭 [9세대,8세대,7세대,6세대] 선택=9세대 | 포맷 3개 (PU,VGC2025,ZU) | 오류 0 | 부재안내 false | 요청 gen[6,7,8,9] | 첫 포맷 세팅카드 1 | End→ 6세대 선택=6세대 | →(순환) 9세대 | 가로넘침 false
+/pokemon/384 320px | 탭 [9세대,8세대,7세대,6세대] 선택=9세대 | 포맷 2개 (NATIONALDEXUBERS,UBERS) | 오류 0 | 부재안내 false | 요청 gen[6,7,8,9] | 첫 포맷 세팅카드 2 | 가로넘침 false
