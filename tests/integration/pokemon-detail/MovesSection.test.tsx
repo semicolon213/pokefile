@@ -1,9 +1,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen, within } from '@testing-library/react'
+import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { MovesSection } from '@/features/pokemon-detail/components/MovesSection'
 import type { FormKey } from '@/shared/models'
+import { setMyGame } from '@/shared/state'
 
 // TASK-015 / FR-27·26 / TC-12: 기술 표. 기술 목록은 fixture, 한국어 이름·번호는 실제 정적 데이터(data/moves.json)를 쓴다.
 const res = (name: string) => ({ name, url: '' })
@@ -93,6 +94,32 @@ describe('MovesSection (FR-27)', () => {
     expect(rowTexts(screen.getByRole('table', { name: '소드·실드 기술 가르침 기술' }))).toEqual([
       ['블라스트번', '불꽃', '특수', '150', '90', '5'],
     ])
+  })
+
+  it('표에서 다른 게임을 고른 뒤 내 게임을 바꾸면 새 내 게임의 표로 돌아간다 (QA D-015-02)', async () => {
+    localStorage.setItem('pokefile:my-game', 'red')
+    mockFetch()
+    const user = userEvent.setup()
+    renderMoves()
+    const select = await screen.findByRole('combobox', { name: '게임' })
+    expect(select).toHaveValue('red-blue')
+    await user.selectOptions(select, 'scarlet-violet')
+    expect(screen.getByText('내 게임은 레드입니다.')).toBeInTheDocument()
+
+    act(() => setMyGame('shield'))
+    expect(screen.getByRole('combobox', { name: '게임' })).toHaveValue('sword-shield')
+    expect(screen.getByText('내 게임 실드 기준입니다.')).toBeInTheDocument()
+    // fixture의 소드·실드 기록은 기술 가르침뿐이라 레벨업은 빈 상태
+    expect(screen.getByText('소드·실드에서 레벨업으로 배우는 기술이 없습니다.')).toBeInTheDocument()
+  })
+
+  it('선택 게임 당시의 위력을 보여 준다 — 레드·블루 화염방사 95 (QA D-015-01)', async () => {
+    mockFetch()
+    const user = userEvent.setup()
+    renderMoves()
+    await user.selectOptions(await screen.findByRole('combobox', { name: '게임' }), 'red-blue')
+    const table = screen.getByRole('table', { name: '레드·블루 레벨업 기술' })
+    expect(rowTexts(table)).toContainEqual(['Lv.46', '화염방사', '불꽃', '특수', '95', '100', '15'])
   })
 
   it('내 게임에 이 폼의 기록이 없으면 알리고 최신 게임을 보여 준다', async () => {

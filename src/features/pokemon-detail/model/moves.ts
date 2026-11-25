@@ -20,9 +20,16 @@ export type RawPokemonMoves = {
 
 export type DamageClass = 'physical' | 'special' | 'status'
 
-/** 정적 기술 데이터. moves 값은 [한국어 이름, 타입, 분류, 위력, 명중, PP] */
+/** 이전 게임의 값: [바뀐 판, 타입, 위력, 명중, PP]. 바뀐 판보다 앞선 게임에서 쓰던 값이고 null은 그대로인 항목 */
+export type PastMoveValue = [string, string | null, number | null, number | null, number | null]
+
+/** 정적 기술 데이터. moves 값은 [한국어 이름, 타입, 분류, 위력, 명중, PP, 이전 값(바뀐 적이 있을 때만)] — 값은 최신 게임 기준 */
 export type MoveData = {
-  moves: Record<string, [string | null, string | null, DamageClass | null, number | null, number | null, number | null]>
+  moves: Record<
+    string,
+    | [string | null, string | null, DamageClass | null, number | null, number | null, number | null]
+    | [string | null, string | null, DamageClass | null, number | null, number | null, number | null, PastMoveValue[]]
+  >
   /** 판(version_group) → 기술 → 도구 이름(tm01·hm01·tr01). 확장팩 판은 본편 판에 합쳐져 있다 */
   machines: Record<string, Record<string, string>>
 }
@@ -74,7 +81,8 @@ export type MoveRow = {
   name: string
   /** 한국어 이름. 정적 데이터에 없으면 식별자 */
   label: string
-  type: PokemonType | null
+  /** 'unknown'은 2~4세대 저주의 ??? 타입 */
+  type: PokemonType | 'unknown' | null
   damageClass: DamageClass | null
   power: number | null
   accuracy: number | null
@@ -90,9 +98,32 @@ export type GameMoves = { levelUp: MoveRow[]; machine: MoveRow[]; tutor: MoveRow
 const isPokemonType = (value: string | null): value is PokemonType =>
   value !== null && (POKEMON_TYPES as readonly string[]).includes(value)
 
-function toRow(name: string, data: MoveData): MoveRow {
-  const [ko, type, damageClass, power, accuracy, pp] = data.moves[name] ?? [null, null, null, null, null, null]
-  return { name, label: ko ?? name, type: isPokemonType(type) ? type : null, damageClass, power, accuracy, pp }
+const groupRank = (group: string) => {
+  const rank = VERSION_GROUPS.findIndex((g) => g.name === group)
+  return rank === -1 ? VERSION_GROUPS.length : rank
+}
+
+/** 3세대까지는 물리·특수가 기술마다가 아니라 타입으로 정해졌다 (4세대 디아루가·펄기아부터 기술마다) */
+const SPLIT_RANK = groupRank('diamond-pearl')
+const PHYSICAL_TYPES: readonly string[] = ['normal', 'fighting', 'flying', 'poison', 'ground', 'rock', 'bug', 'ghost', 'steel']
+
+/** 선택한 게임(판) 당시의 타입·분류·위력·명중·PP (QA D-015-01: 레드·블루 화염방사 위력 95) */
+function toRow(name: string, data: MoveData, game: string): MoveRow {
+  const [ko, ...current] = data.moves[name] ?? [null, null, null, null, null, null]
+  let [type, damageClass, power, accuracy, pp] = current
+  const past = current[5] ?? []
+  const rank = groupRank(game)
+  // 선택 게임 뒤에 바뀐 값 중 가장 이른 변경의 이전 값이 그 게임의 값이다. 늦은 변경부터 덮어쓴다
+  for (const [group, pastType, pastPower, pastAccuracy, pastPp] of [...past].sort((a, b) => groupRank(b[0]) - groupRank(a[0]))) {
+    if (rank >= groupRank(group)) continue
+    type = pastType ?? type
+    power = pastPower ?? power
+    accuracy = pastAccuracy ?? accuracy
+    pp = pastPp ?? pp
+  }
+  if (rank < SPLIT_RANK && damageClass !== null && damageClass !== 'status' && isPokemonType(type))
+    damageClass = PHYSICAL_TYPES.includes(type) ? 'physical' : 'special'
+  return { name, label: ko ?? name, type: isPokemonType(type) || type === 'unknown' ? type : null, damageClass, power, accuracy, pp }
 }
 
 function parseMachine(item: string | undefined): MachineNumber | undefined {
@@ -115,11 +146,11 @@ export function movesForGame(learnset: Learnset, game: string, data: MoveData): 
   for (const record of learnset[game] ?? []) {
     if (record.method === 'level-up' || record.method === 'form-change') {
       const level = record.method === 'form-change' ? 'form' : record.level
-      levelUp.set(`${record.move}:${level}`, { ...toRow(record.move, data), level })
+      levelUp.set(`${record.move}:${level}`, { ...toRow(record.move, data, game), level })
     } else if (record.method === 'machine') {
-      machine.set(record.move, { ...toRow(record.move, data), machine: parseMachine(data.machines[game]?.[record.move]) })
+      machine.set(record.move, { ...toRow(record.move, data, game), machine: parseMachine(data.machines[game]?.[record.move]) })
     } else {
-      tutor.set(record.move, toRow(record.move, data))
+      tutor.set(record.move, toRow(record.move, data, game))
     }
   }
   return {

@@ -47,11 +47,17 @@ const rawMoves = await mapLimit(list, 16, (entry) => getJson(entry.url))
 
 const moves = {}
 const machineUrls = []
+const pastGroups = new Set()
 for (const move of rawMoves) {
   const ko = move.names.find((n) => n.language.name === 'ko')?.name ?? null
   const damageClass = move.damage_class?.name ?? null
   // [한국어 이름, 타입, 분류, 위력, 명중, PP] — 값이 없으면 null
-  moves[move.name] = [ko, move.type?.name ?? null, DAMAGE_CLASSES.includes(damageClass) ? damageClass : null, move.power, move.accuracy, move.pp]
+  const row = [ko, move.type?.name ?? null, DAMAGE_CLASSES.includes(damageClass) ? damageClass : null, move.power, move.accuracy, move.pp]
+  // 이전 게임의 값(QA D-015-01): [바뀐 판, 타입, 위력, 명중, PP]. 그 판보다 앞선 게임에서 쓰던 값이고 null은 바뀌지 않은 항목
+  const past = move.past_values.map((p) => [p.version_group.name, p.type?.name ?? null, p.power, p.accuracy, p.pp])
+  if (past.length) row.push(past)
+  moves[move.name] = row
+  for (const p of move.past_values) pastGroups.add(p.version_group.name)
   for (const machine of move.machines) machineUrls.push(machine.machine.url)
 }
 
@@ -79,3 +85,4 @@ const data = {
 writeFileSync(OUT, JSON.stringify(data))
 const missingKo = Object.entries(moves).filter(([, value]) => !value[0]).map(([name]) => name)
 console.log(`저장: ${OUT} (${(JSON.stringify(data).length / 1024).toFixed(0)}KB), 한국어 이름 없음 ${missingKo.length}개 ${missingKo.join(' ')}`)
+console.log(`이전 값이 바뀐 판: ${[...pastGroups].join(' ')}`)

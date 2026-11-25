@@ -113,6 +113,52 @@ describe('movesForGame', () => {
   })
 })
 
+describe('movesForGame — 선택 게임 당시의 값 (QA D-015-01)', () => {
+  const GAMES = ['red-blue', 'crystal', 'ruby-sapphire', 'diamond-pearl', 'black-white', 'x-y', 'scarlet-violet']
+  const raw: RawPokemonMoves = {
+    moves: ['flamethrower', 'bite', 'crunch', 'curse', 'tackle'].map((move) => learn(move, GAMES.map((group) => [group, 'level-up', 1]))),
+  }
+  const data: MoveData = {
+    moves: {
+      flamethrower: ['화염방사', 'fire', 'special', 90, 100, 15, [['x-y', null, 95, null, null]]],
+      bite: ['물기', 'dark', 'physical', 60, 100, 25, [['gold-silver', 'normal', null, null, null]]],
+      crunch: ['깨물어부수기', 'dark', 'physical', 80, 100, 15],
+      curse: ['저주', 'ghost', 'status', null, null, 10, [['black-white', 'unknown', null, null, null]]],
+      // 여러 번 바뀐 기술: 2세대 전 30·명중 95, 2세대부터 50(명중 100), 6세대부터 지금 값 40·PP 35
+      tackle: ['몸통박치기', 'normal', 'physical', 40, 100, 35, [['x-y', null, 50, null, 35], ['gold-silver', null, 30, 95, null]]],
+    },
+    machines: {},
+  }
+  const learnset = toLearnset(raw)
+  const row = (game: string, move: string) => movesForGame(learnset, game, data).levelUp.find((r) => r.name === move)!
+
+  it('기술이 바뀐 판보다 앞선 게임은 이전 값, 그 판부터는 지금 값', () => {
+    expect(row('red-blue', 'flamethrower').power).toBe(95)
+    expect(row('black-white', 'flamethrower').power).toBe(95)
+    expect(row('x-y', 'flamethrower').power).toBe(90)
+    expect(row('scarlet-violet', 'flamethrower').power).toBe(90)
+  })
+
+  it('여러 번 바뀌었으면 선택 게임 뒤의 가장 이른 변경의 이전 값을 쓴다', () => {
+    expect(row('red-blue', 'tackle')).toMatchObject({ power: 30, accuracy: 95, pp: 35 })
+    expect(row('crystal', 'tackle')).toMatchObject({ power: 50, accuracy: 100, pp: 35 })
+    expect(row('scarlet-violet', 'tackle')).toMatchObject({ power: 40, accuracy: 100, pp: 35 })
+  })
+
+  it('이전 타입을 쓰고, 3세대까지는 물리·특수를 타입으로 정한다', () => {
+    expect(row('red-blue', 'bite')).toMatchObject({ type: 'normal', damageClass: 'physical' })
+    expect(row('crystal', 'bite')).toMatchObject({ type: 'dark', damageClass: 'special' })
+    expect(row('ruby-sapphire', 'crunch')).toMatchObject({ type: 'dark', damageClass: 'special' })
+    expect(row('diamond-pearl', 'crunch')).toMatchObject({ type: 'dark', damageClass: 'physical' })
+    expect(row('red-blue', 'flamethrower').damageClass).toBe('special')
+  })
+
+  it('2~4세대 저주는 ??? 타입(unknown), 변화 기술 분류는 그대로', () => {
+    expect(row('diamond-pearl', 'curse')).toMatchObject({ type: 'unknown', damageClass: 'status' })
+    expect(row('black-white', 'curse').type).toBe('ghost')
+  })
+})
+
 describe('라벨', () => {
   it('머신 종류와 두 자리 번호', () => {
     expect(machineLabel({ kind: 'tm', number: 1 })).toBe('기술머신 01')

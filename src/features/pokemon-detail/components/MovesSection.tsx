@@ -32,14 +32,16 @@ export function MovesSection({ pokemonId, formKey, speciesName }: Props) {
   const learnsetQuery = usePokemonMoves(pokemonId, formKey, speciesName)
   const dataQuery = useMoveData()
   const myGame = useMyGame()
-  const [chosenGame, setChosenGame] = useState<string | null>(null)
+  // 표에서 고른 게임과 그때의 내 게임. 내 게임이 바뀌면 고른 게임은 버리고 새 내 게임으로 돌아간다 (QA D-015-02)
+  const [chosen, setChosen] = useState<{ game: string; myVersion: string | null } | null>(null)
   const [method, setMethod] = useState<Method>('levelUp')
   const selectId = useId()
 
+  const myVersion = myGame?.version ?? null
   const games = useMemo(() => (learnsetQuery.data ? gamesWithMoves(learnsetQuery.data) : []), [learnsetQuery.data])
-  const { game: initialGame, myGameMissing } = defaultGame(games, myGame?.version)
+  const { game: initialGame, myGameMissing } = defaultGame(games, myVersion)
   // 사용자가 고른 게임이 이 폼에 없으면(폼 전환 등) 기본 게임으로 돌아간다
-  const game = chosenGame && games.includes(chosenGame) ? chosenGame : initialGame
+  const game = chosen && chosen.myVersion === myVersion && games.includes(chosen.game) ? chosen.game : initialGame
   const moves = useMemo(
     () => (learnsetQuery.data && dataQuery.data && game ? movesForGame(learnsetQuery.data, game, dataQuery.data) : null),
     [learnsetQuery.data, dataQuery.data, game],
@@ -76,7 +78,7 @@ export function MovesSection({ pokemonId, formKey, speciesName }: Props) {
         )}
         <div className="moves__controls">
           <label htmlFor={selectId}>게임</label>
-          <select id={selectId} value={game} onChange={(event) => setChosenGame(event.target.value)}>
+          <select id={selectId} value={game} onChange={(event) => setChosen({ game: event.target.value, myVersion })}>
             {games.map((g) => (
               <option key={g} value={g}>
                 {versionGroupLabel(g)}
@@ -134,7 +136,7 @@ function MoveTable({ rows, method, caption }: { rows: MoveRow[]; method: Method;
               <th scope="row" className="moves__name">
                 {row.label}
               </th>
-              <td>{row.type ? <TypeBadge type={row.type} size="sm" /> : '—'}</td>
+              <td>{row.type === 'unknown' ? '???' : row.type ? <TypeBadge type={row.type} size="sm" /> : '—'}</td>
               <td>{row.damageClass ? DAMAGE_CLASS_LABELS[row.damageClass] : '—'}</td>
               <td className="moves__num">{row.power ?? '—'}</td>
               <td className="moves__num">{row.accuracy ?? '—'}</td>
