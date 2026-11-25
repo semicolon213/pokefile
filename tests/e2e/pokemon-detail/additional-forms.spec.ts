@@ -22,6 +22,9 @@ for (const [id, form, type, image] of [
     const basic = page.locator('.detail-basic')
     await expect(basic.getByRole('img')).toHaveAttribute('src', image)
     await expect(basic.getByText(type, { exact: true })).toBeVisible()
+    const moves = page.getByRole('region', { name: '기술', exact: true })
+    await moves.getByRole('button', { name: /기술머신/ }).click()
+    await expect(moves.getByRole('rowheader', { name: '방어', exact: true })).toBeVisible()
     await page.reload()
     await expect(basic.getByRole('img')).toHaveAttribute('src', image)
     await page.getByRole('link', { name: '비교하기' }).click()
@@ -39,4 +42,22 @@ test('C-01 320px에서 타입 폼을 선택해도 가로 넘침이 없다 (TC-08
   await expect(page).toHaveURL(/form=water/)
   await expect(page.locator('.detail-basic').getByRole('img')).toHaveAttribute('src', 'arceus-water.gif')
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})
+
+test('PR #48 통합: 추가 폼 요청 실패 후 기본 정보·기술 표를 함께 재시도한다 (TC-09·12)', async ({ page }) => {
+  let failing = true
+  const requested: string[] = []
+  page.on('request', request => requested.push(request.url()))
+  await page.route('https://pokeapi.co/api/v2/pokemon-form/arceus-fire', route => failing
+    ? route.fulfill({ status: 503, json: {} }) : route.fulfill({ json: additionalFixtureForUrl(route.request().url()) }))
+  await page.goto('#/pokemon/493?form=fire')
+  await expect(page.getByText('기본 정보를 불러오지 못했습니다.')).toBeVisible()
+  const moves = page.getByRole('region', { name: '기술', exact: true })
+  await expect(moves.getByText('기술 정보를 불러오지 못했습니다.')).toBeVisible()
+  failing = false
+  await moves.getByRole('button', { name: '다시 시도' }).click()
+  await expect(page.locator('.detail-basic .type--fire')).toBeVisible()
+  await moves.getByRole('button', { name: /기술머신/ }).click()
+  await expect(moves.getByRole('rowheader', { name: '방어', exact: true })).toBeVisible()
+  expect(requested.some(url => url.includes('/pokemon/arceus-fire'))).toBe(false)
 })

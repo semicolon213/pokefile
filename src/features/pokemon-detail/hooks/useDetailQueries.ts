@@ -1,4 +1,4 @@
-import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query'
+import { queryOptions, useQueries, useQuery, useQueryClient } from '@tanstack/react-query'
 import { fetchPokemonFormOverride } from '@/shared/api'
 import type { FormKey, PokemonForm, PokemonId } from '@/shared/models'
 import {
@@ -45,10 +45,11 @@ export function useSpecies(id: PokemonId) {
  * 폼 단위 데이터. 메가는 species 이름이 있어야 리소스 이름을 만들 수 있다.
  * formKey가 null이면(폼 확정 전) 요청하지 않는다.
  */
-export function usePokemonForm(id: PokemonId, formKey: FormKey | null, speciesName: string | undefined, formResource?: PokemonForm['resource']) {
+export function usePokemonFormQueryOptions(id: PokemonId, formKey: FormKey | null, speciesName: string | undefined, formResource?: PokemonForm['resource']) {
   const client = useQueryClient()
   const resource = formKey === 'default' || formResource ? id : formKey && speciesName ? pokemonResourceName(speciesName, formKey) : null
-  return useQuery({
+  // 기본 정보·기술 표가 같은 키에서 같은 조회 함수를 사용해야 재조회 순서에 영향을 받지 않는다.
+  return queryOptions({
     queryKey: pokemonDetailQueryKeys.pokemon(id, formKey ?? 'default'),
     queryFn: async ({ signal }) => {
       if (!formResource) return fetchPokemon(resource!)
@@ -62,8 +63,14 @@ export function usePokemonForm(id: PokemonId, formKey: FormKey | null, speciesNa
       return { ...base, name: form.name, types: form.types, sprites: form.sprites,
         forms: [{ name: form.name, url: '' }] }
     },
-    select: (raw) => toFormDetail(raw, formKey === 'default' || formResource ? undefined : id),
     enabled: resource !== null,
+  })
+}
+
+export function usePokemonForm(id: PokemonId, formKey: FormKey | null, speciesName: string | undefined, formResource?: PokemonForm['resource']) {
+  return useQuery({
+    ...usePokemonFormQueryOptions(id, formKey, speciesName, formResource),
+    select: (raw) => toFormDetail(raw, formKey === 'default' || formResource ? undefined : id),
   })
 }
 

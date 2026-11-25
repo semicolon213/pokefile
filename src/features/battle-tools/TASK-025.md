@@ -1,5 +1,36 @@
 # TASK-025 — 실전 세팅 세대 탭·폼 매핑
 
+## CR-025-C01-PR48 — 기술 표와 추가 폼 통합 수정 (2026-11-25)
+
+- 사용자 승인: `pr48을 병합할경우 54랑 충돌나서 기존에 변경사항이 바뀌게 되는데 pr48을 변경해서 생기는 오류나 변경사항을 p54에서 수정하자`. 기존 C-01의 공통·상세·비교 승인과 이번 지시에 따라 PR #54에서 #48과의 통합 오류를 수정하고 검증·커밋·푸시·PR 본문 갱신한다. #48 원격 수정·develop/PR 병합·배포는 포함하지 않는다.
+- TASK-025 / C-01 및 TASK-015 연결, 구현 Codex. 기존 소유자 임지섭(상세·기술 표), 김형균(공통), 성윤우(실전 세팅)를 유지한다. FR-11~12·17~18·27, DR-03·04·08, NFR-03~04·07 / TC-04·06·09·12.
+- 기준: PR #54 `83035a7`에 최신 develop `28fa33a`와 #48 `5dc5046`을 각각 정상 merge했다. 양쪽 코드는 자동 병합됐으며 원래 루트 및 다른 작업 사본은 변경하지 않는다. #48이 develop에 먼저 병합되면 #54의 후속 커밋으로 통합 수정을 검토할 수 있다. 병합으로 가져온 정책·타인 파일은 원문을 유지하며 직접 수정하지 않는다.
+- 변경 요청·허용 경로: `src/features/pokemon-detail/hooks/{useDetailQueries.ts,useMoves.ts}`, `src/features/pokemon-detail/components/MovesSection.tsx`, `src/features/pokemon-detail/pages/PokemonDetailPage.tsx`, `tests/integration/shared/additional-form-fixtures.ts`, `tests/integration/pokemon-detail/AdditionalFormMoves.test.tsx`, `tests/e2e/pokemon-detail/additional-forms.spec.ts`, 이 기록. #48 기술 표의 리소스 해석과 C-01의 pokemon-form 해석을 같은 조회 계약으로 연결하기 위해 상세 오너 경로를 이번 승인 범위에 포함한다.
+- 인수 조건: 기본 정보와 기술 표가 같은 폼 리소스·쿼리 함수를 공유한다. 35개 추가 폼은 연결된 기본 pokemon의 기술 기록을 사용하고 pokemon-form 타입·이미지를 유지한다. 최초 진입·전환·무효화 재조회·실패 후 재시도에서 `/pokemon/arceus-fire` 같은 404 경로를 요청하지 않으며, 기본 폼 캐시·기술 표·Smogon 연결을 덮어쓰지 않는다. 기존 pokemon 변형 경로와 #48의 내 게임·기술 표 동작을 보존한다.
+- 테스트 변경 요청: C-01 fixture에 기술 표 검증용 학습 기록을 추가하고, 기본 정보·기술 표 동시 조회/재조회·실패 복구·폼 전환 및 PC/320px 브라우저 회귀를 추가한다. 테스트 기준·공통 설정·패키지는 변경하지 않는다. #48 자체의 D-015-01-R1·02-R1 및 C-01 QA F-01은 이 통합 문제와 구분하고 원본 FAIL 보고서를 유지한다.
+
+### PR #48 통합 수정·자체 검증 결과
+
+- 원인: `usePokemonForm`과 `usePokemonMoves`가 같은 폼 Query Key에 서로 다른 queryFn을 등록했다. 기본 정보는 C-01 pokemon-form 메타데이터를 사용하지만 기술 표는 `/pokemon/arceus-fire` 등 존재하지 않는 경로를 만들어 최초 조회·무효화 재조회·재시도에서 기본 정보와 기술 표가 함께 실패할 수 있었다.
+- 수정: `usePokemonFormQueryOptions`로 원본 응답 조회 계약을 공유하고 각 소비자는 기본 정보/학습 기술의 select만 분리한다. `PokemonDetailPage → MovesSection → usePokemonMoves`에 선택 폼 resource를 전달한다. 일반 pokemon 변형은 기존 리소스를, 추가 폼은 연결된 기본 pokemon의 moves와 폼별 타입·이미지를 사용하며 기본 캐시는 유지한다.
+- 직접 수정 파일 8개: 위 허용 경로의 제품 4개, fixture 1개, 신규 통합 검사 1개, 기존 C-01 E2E 1개, 이 기록. 다른 제품·정책·패키지·공통 설정·QA 원문은 직접 수정하지 않았다. 두 merge 커밋에서 가져온 develop/#48 변경은 선행 코드로 구분한다.
+
+| 명령·검증 | 결과 |
+|---|---|
+| 수정 전 `npm.cmd test -- tests/integration/pokemon-detail/AdditionalFormMoves.test.tsx` (JSON reporter 포함) | 종료 1, 새 5개 검사 모두 실패로 추가 폼 기술 표 조회 오류 재현 |
+| 수정 후 관련 상세·기술 표 통합 4파일 실행 | 종료 0, **46/46 통과**. 3종 재조회·기술 표 선행 조회·실패/복구·기본 복귀·기본 pokemon 요청 공유 검증 |
+| `npm.cmd run typecheck` | 종료 0 |
+| `npm.cmd run lint` | 종료 0, 모듈 경계 통과. 기존 StatFilter 경고 1건 |
+| `npm.cmd test` (JSON reporter 포함) | 종료 0, **59파일 523/523 통과**. 기존 jsdom scrollTo 미구현 안내 있음 |
+| `npm.cmd run build` | 종료 0, JS 802.51kB 청크 크기 경고 있음 |
+| CI=1·원래 설정 상속·이번 빌드 별도 preview로 전체 E2E | 종료 0, **82개 통과·3개 SKIPPED**. 새 실패 후 재시도와 기존 C-01/기술 표/Smogon 회귀 포함. SKIPPED는 공통 다중 세대 설정 대기 3건 |
+| `node test-results/pr48-integration/verify-browser.mjs` | 종료 0, 실제 전체 pokemon 응답·기술 데이터·폼 이미지로 1280/320px × 3종 = 6개 경로 통과. 기술머신 행 수 각각 114·50·31, 폼 타입/이미지·새로고침·비교 선택 유지·잘못된 `/pokemon/{추가 폼}` 요청 0·가로 넘침/페이지 JS 오류 없음 |
+| `git diff --check` | 종료 0 |
+
+- 실패 이력: 첫 수정 후 통합 검사 1건은 실제 앱과 달리 staleTime=0인 테스트 클라이언트에서 기본 복귀 재요청 2회를 1회로 단정했다. 앱 기본 5분 캐시를 적용하고 강제 무효화 검사는 유지한 뒤 통과했다. 신규 테스트의 Testing Library role 옵션에 없는 exact 3건도 정리 후 typecheck를 재실행했다. 실제 브라우저 첫 시도는 이전 축약 스냅샷에 moves가 없어 대기 실패했고, 전체 pokemon 응답 3개를 새로 받아 보완한 후 위 6건을 통과했다. 실패 실행을 PASS로 기록하지 않는다.
+- 증거: 원래 루트 `test-results/task025-c01-pr/pr48-{before,focused,focused-final,all-tests}.json`, 이 작업 사본 `test-results/pr48-integration/{e2e-run.json,e2e.log,browser-report.json,pokemon-with-moves.json,verify-browser.mjs}` 및 실제 화면 스크린샷 6장. PC 실버디·320px 그우린차 화면을 직접 검토했다. fixture 검증과 실제 응답/이미지 검증을 구분한다.
+- 한계: 이번 통합 수정은 자체 검증이며 독립 QA PASS가 아니다. 기존 C-01 F-01과 #48 자체의 과거 기술 분류·내 게임 왕복 결함, 다중 세대 설정, 각 오너 사람 인수는 별도다. QA 원문·정식 TASK 상태·배포는 변경하지 않는다.
+
 ## C-01 새 PR 제출 — 2026-11-25
 
 - 사용자 지시: `새로운 pr 작성해서 올려줘`, `폼체인지 작업한거`, `C-01 구현 코드와 QA 결과를 함께 새 PR로 올리기`. C-01 구현·검증·QA 보고서 사본의 커밋·브랜치 푸시·새 PR 생성을 승인한 것으로 처리한다. 병합·배포는 포함하지 않는다.

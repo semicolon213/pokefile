@@ -36,6 +36,9 @@ for (const summary of ADDITIONAL_INDEX) {
     types: summary.types.map((type, index) => ({ slot: index + 1, type: resource(type, 'type') })),
     abilities: [], stats: ['hp', 'attack', 'defense', 'special-attack', 'special-defense', 'speed']
       .map((name, index) => ({ base_stat: stats[index], stat: resource(name, 'stat') })),
+    moves: [{ move: resource('protect', 'move'), version_group_details: [{ level_learned_at: 0,
+      move_learn_method: resource('machine', 'move-learn-method'),
+      version_group: resource(summary.id === 773 ? 'sword-shield' : 'scarlet-violet', 'version-group') }] }],
     sprites: { front_default: `${name}.png`, other: { showdown: { front_default: `${name}.gif` } } },
     forms: [resource(`${name}-${defaultName}`, 'pokemon-form'), ...summary.forms.map((form) => resource(form.resource!.name, 'pokemon-form')),
       ...(summary.id === 493 ? [resource('arceus-unknown', 'pokemon-form')] : [])],

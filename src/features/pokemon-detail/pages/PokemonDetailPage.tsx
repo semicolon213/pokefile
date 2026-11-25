@@ -163,7 +163,7 @@ function PokemonDetail({ pokemonId }: { pokemonId: PokemonId }) {
 
       <EncountersSection pokemonId={pokemonId} />
       {/* TASK-015: 선택한 폼의 게임별 기술 표 (FR-27) */}
-      <MovesSection pokemonId={pokemonId} formKey={formKey} speciesName={species?.name} />
+      <MovesSection pokemonId={pokemonId} formKey={formKey} speciesName={species?.name} formResource={formInfo?.resource} />
       {/* TASK-007 / CR-007-INTEGRATION: 상세에서 확정한 종 이름·유효 폼과 조회 상태를 전달한다. */}
       <SmogonSetsSection
         pokemonId={pokemonId}
