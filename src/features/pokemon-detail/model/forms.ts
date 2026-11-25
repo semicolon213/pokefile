@@ -1,5 +1,5 @@
 import { parseFormKey } from '@/shared/models'
-import type { FormCategory, FormKey, PokemonForm, PokemonId } from '@/shared/models'
+import type { FormCategory, FormKey, PokemonForm } from '@/shared/models'
 import { formLabel } from '@/shared/utils'
 
 /** 폼 탭 한 개. 기본 폼의 분류는 'default' */
@@ -26,20 +26,11 @@ function tabLabel(form: PokemonForm): string {
   return mega ? `메가${(mega[1] ?? '').toUpperCase()}` : formLabel(form)
 }
 
-/** 종이 가진 폼 목록. CR-025-D04-DETAIL: 파밀리쥐는 세 식구를 먼저 표시한다. */
-export function availableForms(forms: readonly PokemonForm[], pokemonId?: PokemonId): FormOption[] {
-  const options = forms.map((form) => ({ key: form.key, label: tabLabel(form), category: form.category }))
-  if (pokemonId === 925) {
-    const three = options.find(({ key }) => key === 'family-of-three')
-    return [
-      ...(three ? [three] : []),
-      { key: 'default', label: '네 식구', category: 'default' },
-      ...options.filter(({ key }) => key !== 'family-of-three'),
-    ]
-  }
+/** 종이 가진 폼 목록: 항상 기본 폼이 먼저, 그다음 인덱스 순서 (ADR-011·016) */
+export function availableForms(forms: readonly PokemonForm[]): FormOption[] {
   return [
     { key: 'default', label: '기본', category: 'default' },
-    ...options,
+    ...forms.map((form) => ({ key: form.key, label: tabLabel(form), category: form.category })),
   ]
 }
 
@@ -51,13 +42,10 @@ export function groupFormsByCategory(forms: readonly FormOption[]): { category: 
   })
 }
 
-/** 없거나 잘못된 값은 첫 폼으로. 명시적 default는 실제 기본 폼을 유지한다. */
+/** `?form=` 값 → 실제 표시할 폼. 없거나 잘못되었거나 이 종에 없는 폼이면 기본 폼 (ADR-011) */
 export function resolveFormKey(param: string | null | undefined, available: readonly FormOption[]): FormKey {
-  const initial = available[0]?.key ?? 'default'
-  if (!param) return initial
   const requested = parseFormKey(param)
-  if (requested === 'default' && param !== 'default') return initial
-  return available.some((form) => form.key === requested) ? requested : initial
+  return available.some((form) => form.key === requested) ? requested : 'default'
 }
 
 /** PokéAPI `/pokemon/{name}` 조회용 이름. `{species-name}-{formKey}` (ADR-016, 326개 폼 실측 일치) */

@@ -50,6 +50,28 @@ describe('실전 세팅 세대 탭 (TASK-025 / TC-06·08·09)', () => {
     client.clear()
   })
 
+  it.each([
+    ['default', 'ru', 'Four set', 'Three set'],
+    ['family-of-three', 'ou', 'Three set', 'Four set'],
+  ])('D-04: 상세 표시를 바꾸지 않고 %s 폼에 %s의 %s만 연결한다', (formKey, format, expected, other) => {
+    const { client, element } = setup({
+      9: {
+        Maushold: { ou: { 'Three set': { moves: ['Population Bomb'] } } },
+        'Maushold-Four': { ru: { 'Four set': { moves: ['Population Bomb'] } } },
+      },
+      8: {}, 7: {}, 6: {},
+    })
+    const cacheBefore = JSON.stringify(client.getQueryData(battleToolsQueryKeys.smogonSets(9)))
+    render(element('maushold', formKey, 925))
+    expect(screen.getByRole('tab', { name: '9세대' })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getAllByRole('option').map((option) => (option as HTMLOptionElement).value)).toEqual(['', format])
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: format } })
+    expect(screen.getByRole('article', { name: expected })).toBeInTheDocument()
+    expect(screen.queryByRole('article', { name: other })).not.toBeInTheDocument()
+    expect(JSON.stringify(client.getQueryData(battleToolsQueryKeys.smogonSets(9)))).toBe(cacheBefore)
+    client.clear()
+  })
+
   it('실제 세팅이 있는 세대만 최신순으로 표시하고 최신 세대를 연다', () => {
     const { client, element } = setup({ 9: {}, 8: raw('Gen 8'), 7: {}, 6: raw('Gen 6') })
     render(element())
