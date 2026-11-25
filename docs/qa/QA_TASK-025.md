@@ -32,18 +32,30 @@
 | 실제 앱(develop 설정) | 설정이 6세대만이라 탭은 6세대 하나. 다중 세대 기능은 실제 앱에서 **동작하지 않음** | **BLOCKED** |
 
 ## 3. 실행한 검증
-PR 헤드를 최신 develop(`0a56622`)에 병합한 QA 사본에서 실행했다. 로그는 QA 세션 scratchpad `qa025-logs/`.
+PR 헤드를 최신 develop(`0a56622`)에 병합한 QA 사본에서 실행했다. 원본 로그·검증 스크립트·스크린샷은 [`evidence/TASK-025-0c61659/`](evidence/TASK-025-0c61659/)에 그대로 보존했다(2026-11-25 문서 리뷰 반영, 내용 수정 없음). `summary.txt`는 기본 검증 5개 명령의 종료 코드다. 모의 적용 로그(`sim-*`)와 화면 자료(`smogon-screen.log`, `shots/`)는 QA 사본에만 CR-025 변경안(`generations: [9, 8, 7, 6]`)을 적용한 빌드 결과이고, 나머지는 실제 설정 결과다.
+
+실데이터 원본(data.pkmn.cc `sets/gen{9,8,7,6}.json`, PokéAPI species 목록)은 외부 데이터라 저장소에 넣지 않고 검증 당시 SHA-256만 남긴다.
+
+| 파일 | SHA-256 |
+|---|---|
+| gen9.json | `3f53a5752bbf2f1daa44bdfb4c78c94783cd71db9c11c8db5ca5707788149df2` |
+| gen8.json | `93b56f95f47818049068d0cd9d0ea4385a061979f1278069ac27d479b841e8c7` |
+| gen7.json | `816c2444c90ac30f082712a02edf16a4383415d8b942afce2da5a5b8622554be` |
+| gen6.json | `effec953364574bfbf6d16b4c50ad72304792df839005dc18ff69ab75585bab5` |
+| species.json | `b1ed6767d838412b0b3fbbe75f7e7967108236f781a4d76f4db1b1ac1545dfac` |
+
+`smogon-probe.mjs`는 `node smogon-probe.mjs <QA 사본 경로> <출력 폴더>`로 실행하며, 출력 폴더에 위 원본이 없으면 새로 받는다(그때는 데이터가 달라질 수 있다).
 
 | 명령/절차 | 실행 여부 | 결과 | 로그 |
 |---|---|---|---|
-| lint (`npm run lint`) | 실행 | PASS — 종료 0. 경고 1건은 타 영역(`pokedex/components/StatFilter.tsx:16`) | `lint.log` |
-| typecheck (`npx tsc -b`) | 실행 | PASS — 종료 0 | `tsc.log` |
-| test (`npx vitest run`) | 실행 | PASS — 50파일 406/406 | `vitest.log` |
-| build (`npm run build`) | 실행 | PASS — 기존 청크 크기 경고만 | `build.log` |
-| E2E (`npx playwright test`, 실제 설정) | 실행 | PASS — 69 통과, **다중 세대 3개 SKIPPED**(설정 대기) | `e2e.log` |
-| 실데이터 (`node tests/integration/battle-tools/verify-live-smogon.mjs`) | 실행 | PASS — 4개 세대 정규화, 폼 매핑 15건, 326폼 × 4세대 캐시 불변 | `verify-live.log` |
-| 모의 적용 후 typecheck·관련 테스트·battle-tools E2E(`CI=1`, 새 빌드) | 실행 | PASS — tsc 0, 관련 112/112, E2E 17/17(**다중 세대 3개 포함, SKIP 0**) | `sim-*.log` |
-| 수동: 전수 매핑(`smogon-probe.mjs`), 모의 적용 화면 12케이스(1280·320px) | 실행 | §2·§4 | `smogon-probe.log`, `smogon-screen.log`, `shots/` |
+| lint (`npm run lint`) | 실행 | PASS — 종료 0. 경고 1건은 타 영역(`pokedex/components/StatFilter.tsx:16`) | [lint.log](evidence/TASK-025-0c61659/lint.log) |
+| typecheck (`npx tsc -b`) | 실행 | PASS — 종료 0 | [tsc.log](evidence/TASK-025-0c61659/tsc.log) (출력 없음) |
+| test (`npx vitest run`) | 실행 | PASS — 50파일 406/406 | [vitest.log](evidence/TASK-025-0c61659/vitest.log) |
+| build (`npm run build`) | 실행 | PASS — 기존 청크 크기 경고만 | [build.log](evidence/TASK-025-0c61659/build.log) |
+| E2E (`npx playwright test`, 실제 설정) | 실행 | PASS — 69 통과, **다중 세대 3개 SKIPPED**(설정 대기) | [e2e.log](evidence/TASK-025-0c61659/e2e.log) |
+| 실데이터 (`node tests/integration/battle-tools/verify-live-smogon.mjs`) | 실행 | PASS — 4개 세대 정규화, 폼 매핑 15건, 326폼 × 4세대 캐시 불변 | [verify-live.log](evidence/TASK-025-0c61659/verify-live.log) |
+| 모의 적용 후 typecheck·관련 테스트·battle-tools E2E(`CI=1`, 새 빌드) | 실행 | PASS — tsc 0, 관련 112/112, E2E 17/17(**다중 세대 3개 포함, SKIP 0**) | [sim-tsc.log](evidence/TASK-025-0c61659/sim-tsc.log) (출력 없음), [sim-vitest.log](evidence/TASK-025-0c61659/sim-vitest.log), [sim-e2e.log](evidence/TASK-025-0c61659/sim-e2e.log) |
+| 수동: 전수 매핑(`smogon-probe.mjs`), 모의 적용 화면 12케이스(1280·320px) | 실행 | §2·§4 | [smogon-probe.log](evidence/TASK-025-0c61659/smogon-probe.log), [smogon-screen.log](evidence/TASK-025-0c61659/smogon-screen.log), [shots/](evidence/TASK-025-0c61659/shots/), 스크립트 [smogon-probe.mjs](evidence/TASK-025-0c61659/scripts/smogon-probe.mjs)·[smogon-screen.mjs](evidence/TASK-025-0c61659/scripts/smogon-screen.mjs) |
 
 ## 4. 결함 및 확인 사항
 | 심각도 | 재현 절차 | 기대/실제 | 담당 |
@@ -69,3 +81,12 @@ PR 헤드를 최신 develop(`0a56622`)에 병합한 QA 사본에서 실행했다
 - 재검증 조건: CR-025 적용 후 develop에서 다중 세대 E2E 3건이 SKIP 없이 통과하고, 실제 앱 화면에서 §2의 "모의" 항목을 다시 확인하면 PASS로 바꿀 수 있다.
 - 사람 승인자: 성윤우(기능 오너), CR-025는 김형균(공통)
 - 문서 갱신 별도 TASK: 8·9세대 메가 세트·National Dex AG 레쿠쟈·`inheritance` 결정을 ADR-016에 보완
+
+## 6. 후속 메모 (2026-11-25, 검증 이후 상태)
+
+위 1~5절은 `0c61659 + 0a56622` 검증 당시 기록이며 그대로 둔다. 이후 바뀐 상태:
+
+- PR #45는 D-02·03·04 수정(`0ce0600`)과 상세 표시 예외 제거(`1642cc2`)를 포함해 develop에 병합됐다(`015dd93`). 이 보고서는 그 수정분의 QA 증거가 아니다.
+- 기능 오너 결정: 8·9세대 National Dex 메가 세트 19개는 계속 숨기고 메가는 6·7세대 탭에만 표시한다.
+- C-01(아르세우스·실버디 타입 폼, 그우린차 걸작)은 PR #54에서 별도로 진행 중이다.
+- develop의 `scope.json` `smogon`은 여전히 `{ "generation": 6 }`이다. 실제 앱의 다중 세대 재검증이 남아 있어 TASK-025 전체 판정은 BLOCKED를 유지한다.
