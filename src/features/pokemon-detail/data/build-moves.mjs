@@ -14,6 +14,12 @@ const OUT = join(dirname(fileURLToPath(import.meta.url)), 'moves.json')
 const DLC_TO_BASE = { 'the-teal-mask': 'scarlet-violet', 'the-indigo-disk': 'scarlet-violet', 'mega-dimension': 'legends-za' }
 const DAMAGE_CLASSES = ['physical', 'special', 'status']
 
+// PokéAPI past_values에는 분류 변경이 없다. 4~8세대 개별 기술의 이전 분류는 Pokémon Showdown 세대별 기술 데이터에서 가져온다
+// (QA D-015-01-R1: 물수리검은 6세대까지 물리, 7세대부터 특수. 2026-11-25 기준 변경은 이 1건). 3세대까지는 타입으로 정해져 화면에서 계산한다.
+// genN 파일의 category는 N세대까지의 값이므로 N+1세대 첫 판을 '바뀐 판'으로 기록한다.
+const SHOWDOWN_MODS = 'https://raw.githubusercontent.com/smogon/pokemon-showdown/master/data/mods'
+const NEXT_GENERATION_GROUP = { 4: 'black-white', 5: 'x-y', 6: 'sun-moon', 7: 'sword-shield', 8: 'scarlet-violet' }
+
 async function getJson(url) {
   for (let attempt = 1; ; attempt++) {
     try {
@@ -45,6 +51,18 @@ const list = (await getJson(`${API}/move?limit=2000`)).results
 console.log(`기술 ${list.length}개 조회`)
 const rawMoves = await mapLimit(list, 16, (entry) => getJson(entry.url))
 
+// Showdown 기술 id(영숫자 소문자) → 세대별 이전 분류 [바뀐 판, 분류]
+const pastClasses = {}
+for (const [generation, changedAt] of Object.entries(NEXT_GENERATION_GROUP)) {
+  const response = await fetch(`${SHOWDOWN_MODS}/gen${generation}/moves.ts`)
+  if (!response.ok) throw new Error(`${response.status} Showdown gen${generation} moves`)
+  for (const [, id, body] of (await response.text()).matchAll(/\n\t(\w+): \{([\s\S]*?)\n\t\},/g)) {
+    const category = /\n\t\tcategory: "(Physical|Special|Status)"/.exec(body)?.[1]
+    if (category) (pastClasses[id] ??= []).push([changedAt, category.toLowerCase()])
+  }
+}
+console.log(`Showdown 이전 분류: ${JSON.stringify(pastClasses)}`)
+
 const moves = {}
 const machineUrls = []
 const pastGroups = new Set()
@@ -53,8 +71,14 @@ for (const move of rawMoves) {
   const damageClass = move.damage_class?.name ?? null
   // [한국어 이름, 타입, 분류, 위력, 명중, PP] — 값이 없으면 null
   const row = [ko, move.type?.name ?? null, DAMAGE_CLASSES.includes(damageClass) ? damageClass : null, move.power, move.accuracy, move.pp]
-  // 이전 게임의 값(QA D-015-01): [바뀐 판, 타입, 위력, 명중, PP]. 그 판보다 앞선 게임에서 쓰던 값이고 null은 바뀌지 않은 항목
+  // 이전 게임의 값(QA D-015-01): [바뀐 판, 타입, 위력, 명중, PP, 분류]. 그 판보다 앞선 게임에서 쓰던 값이고 null은 바뀌지 않은 항목
   const past = move.past_values.map((p) => [p.version_group.name, p.type?.name ?? null, p.power, p.accuracy, p.pp])
+  for (const [changedAt, pastClass] of pastClasses[move.name.replace(/[^a-z0-9]/g, '')] ?? []) {
+    const same = past.find((p) => p[0] === changedAt)
+    if (same) same[5] = pastClass
+    else past.push([changedAt, null, null, null, null, pastClass])
+    pastGroups.add(changedAt)
+  }
   if (past.length) row.push(past)
   moves[move.name] = row
   for (const p of move.past_values) pastGroups.add(p.version_group.name)

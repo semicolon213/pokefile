@@ -32,16 +32,22 @@ export function MovesSection({ pokemonId, formKey, speciesName, formResource }: 
   const learnsetQuery = usePokemonMoves(pokemonId, formKey, speciesName, formResource)
   const dataQuery = useMoveData()
   const myGame = useMyGame()
-  // 표에서 고른 게임과 그때의 내 게임. 내 게임이 바뀌면 고른 게임은 버리고 새 내 게임으로 돌아간다 (QA D-015-02)
-  const [chosen, setChosen] = useState<{ game: string; myVersion: string | null } | null>(null)
+  const [chosenGame, setChosenGame] = useState<string | null>(null)
   const [method, setMethod] = useState<Method>('levelUp')
   const selectId = useId()
 
+  // 내 게임이 바뀌면 표에서 고른 게임을 버리고 새 내 게임으로 돌아간다. 이전 내 게임으로 되돌려도 되살리지 않는다 (QA D-015-02·R1)
   const myVersion = myGame?.version ?? null
+  const [chosenFor, setChosenFor] = useState(myVersion)
+  if (chosenFor !== myVersion) {
+    setChosenFor(myVersion)
+    setChosenGame(null)
+  }
+
   const games = useMemo(() => (learnsetQuery.data ? gamesWithMoves(learnsetQuery.data) : []), [learnsetQuery.data])
   const { game: initialGame, myGameMissing } = defaultGame(games, myVersion)
   // 사용자가 고른 게임이 이 폼에 없으면(폼 전환 등) 기본 게임으로 돌아간다
-  const game = chosen && chosen.myVersion === myVersion && games.includes(chosen.game) ? chosen.game : initialGame
+  const game = chosenFor === myVersion && chosenGame && games.includes(chosenGame) ? chosenGame : initialGame
   const moves = useMemo(
     () => (learnsetQuery.data && dataQuery.data && game ? movesForGame(learnsetQuery.data, game, dataQuery.data) : null),
     [learnsetQuery.data, dataQuery.data, game],
@@ -78,7 +84,7 @@ export function MovesSection({ pokemonId, formKey, speciesName, formResource }: 
         )}
         <div className="moves__controls">
           <label htmlFor={selectId}>게임</label>
-          <select id={selectId} value={game} onChange={(event) => setChosen({ game: event.target.value, myVersion })}>
+          <select id={selectId} value={game} onChange={(event) => setChosenGame(event.target.value)}>
             {games.map((g) => (
               <option key={g} value={g}>
                 {versionGroupLabel(g)}

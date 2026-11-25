@@ -111,6 +111,11 @@ describe('MovesSection (FR-27)', () => {
     expect(screen.getByText('내 게임 실드 기준입니다.')).toBeInTheDocument()
     // fixture의 소드·실드 기록은 기술 가르침뿐이라 레벨업은 빈 상태
     expect(screen.getByText('소드·실드에서 레벨업으로 배우는 기술이 없습니다.')).toBeInTheDocument()
+
+    // 이전 내 게임으로 되돌려도 예전에 고른 게임(SV)을 되살리지 않는다 (QA D-015-02-R1)
+    act(() => setMyGame('red'))
+    expect(screen.getByRole('combobox', { name: '게임' })).toHaveValue('red-blue')
+    expect(screen.getByText('내 게임 레드 기준입니다.')).toBeInTheDocument()
   })
 
   it('선택 게임 당시의 위력을 보여 준다 — 레드·블루 화염방사 95 (QA D-015-01)', async () => {
@@ -120,6 +125,16 @@ describe('MovesSection (FR-27)', () => {
     await user.selectOptions(await screen.findByRole('combobox', { name: '게임' }), 'red-blue')
     const table = screen.getByRole('table', { name: '레드·블루 레벨업 기술' })
     expect(rowTexts(table)).toContainEqual(['Lv.46', '화염방사', '불꽃', '특수', '95', '100', '15'])
+  })
+
+  it('4세대 이후 분류가 바뀐 기술은 그 게임 당시 분류로 보여 준다 — X·Y 물수리검 물리 (QA D-015-01-R1)', async () => {
+    mockFetch({ '/pokemon/6': pokemon('charizard', [learn('water-shuriken', [['x-y', 'level-up', 1], ['sun-moon', 'level-up', 1]])]) })
+    const user = userEvent.setup()
+    renderMoves()
+    await user.selectOptions(await screen.findByRole('combobox', { name: '게임' }), 'x-y')
+    expect(rowTexts(screen.getByRole('table', { name: 'X·Y 레벨업 기술' }))).toEqual([['Lv.1', '물수리검', '물', '물리', '15', '100', '20']])
+    await user.selectOptions(screen.getByRole('combobox', { name: '게임' }), 'sun-moon')
+    expect(rowTexts(screen.getByRole('table', { name: '썬·문 레벨업 기술' }))[0][3]).toBe('특수')
   })
 
   it('내 게임에 이 폼의 기록이 없으면 알리고 최신 게임을 보여 준다', async () => {
