@@ -158,9 +158,9 @@ describe('세대별 폼 매핑 (TASK-025 / FR-17·18 / TC-06)', () => {
     expect(JSON.stringify(data)).toBe(original)
   })
 
-  it('ADR-016의 변칙 포맷 9종을 제거하고 일반 포맷을 유지한다', () => {
+  it('D-05: 기존 변칙 포맷 9종과 inheritance를 제거하고 일반 포맷을 유지한다', () => {
     const excluded = ['balancedhackmons', 'purehackmons', 'almostanyability', 'stabmons', 'cap',
-      'mixandmega', 'godlygift', 'camomons', 'partnersincrime']
+      'mixandmega', 'godlygift', 'camomons', 'partnersincrime', 'inheritance']
     const formats = Object.fromEntries([...excluded, 'ou', 'anythinggoes'].map((format) => [format, { Candidate: candidate }]))
     const data = normalizeSmogonSets({ Pikachu: formats })
     expect(selectSmogonSets(data, { speciesName: 'pikachu', formKey: 'default' }, 9).map((entry) => entry.format))

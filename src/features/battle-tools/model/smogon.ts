@@ -22,10 +22,10 @@ export type SmogonSet = {
 export type SmogonFormat = { format: string; sets: SmogonSet[] }
 export type SmogonSpecies = { speciesName: string; formats: SmogonFormat[] }
 
-// ADR-009에서 제외한 포맷. 일반 포맷의 표시 여부·우선순위는 OQ-19에서 결정한다.
+// ADR-009·016의 제외 포맷과 사용자 승인 D-05. 일반 포맷 선택·우선순위는 OQ-19에서 결정한다.
 const NON_STANDARD_FORMATS = new Set([
   'balancedhackmons', 'purehackmons', 'almostanyability', 'stabmons', 'cap',
-  'mixandmega', 'godlygift', 'camomons', 'partnersincrime',
+  'mixandmega', 'godlygift', 'camomons', 'partnersincrime', 'inheritance',
 ])
 
 function invalidData(): never {
