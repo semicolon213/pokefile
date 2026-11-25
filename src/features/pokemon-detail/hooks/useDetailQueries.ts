@@ -49,7 +49,8 @@ export function usePokemonForm(id: PokemonId, formKey: FormKey | null, speciesNa
   return useQuery({
     queryKey: pokemonDetailQueryKeys.pokemon(id, formKey ?? 'default'),
     queryFn: () => fetchPokemon(resource!),
-    select: toFormDetail,
+    // 기본이 아닌 폼은 이미지가 없으면 기본 폼 이미지로 대신한다 (ADR-016)
+    select: (raw) => toFormDetail(raw, formKey === 'default' ? undefined : id),
     enabled: resource !== null,
   })
 }
