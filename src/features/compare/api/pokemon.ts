@@ -1,4 +1,4 @@
-import { fetchJson, POKEAPI_BASE_URL } from '@/shared/api'
+import { fetchJson, fetchPokemonFormOverride, POKEAPI_BASE_URL } from '@/shared/api'
 import { POKEMON_TYPES, type PokemonType } from '@/shared/models'
 import { STATS, type CompareStats, type StatKey } from '../model/compare'
 
@@ -10,6 +10,17 @@ type RawPokemon = {
 }
 
 const isType = (name: string): name is PokemonType => (POKEMON_TYPES as readonly string[]).includes(name)
+
+/** C-01: 기본 종족값은 공유하고 pokemon-form의 타입·이미지를 사용한다. */
+export async function fetchCompareFormStats(base: CompareStats, formName: string): Promise<CompareStats> {
+  const form = await fetchPokemonFormOverride(formName, base.speciesName)
+  return {
+    ...base,
+    types: [...form.types].sort((a, b) => a.slot - b.slot).map((entry) => entry.type.name).filter(isType),
+    imageUrls: [form.sprites.other?.showdown?.front_default, form.sprites.front_default]
+      .filter((url): url is string => !!url),
+  }
+}
 
 /** PokéAPI /pokemon/{id 또는 이름} → 비교에 필요한 값. 종족값이 빠지면 0으로 두지 않고 오류로 본다 */
 export async function fetchCompareStats(idOrName: number | string): Promise<CompareStats> {

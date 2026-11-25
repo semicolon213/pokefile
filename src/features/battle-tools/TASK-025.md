@@ -1,5 +1,60 @@
 # TASK-025 — 실전 세팅 세대 탭·폼 매핑
 
+## C-01 새 PR 제출 — 2026-11-25
+
+- 사용자 지시: `새로운 pr 작성해서 올려줘`, `폼체인지 작업한거`, `C-01 구현 코드와 QA 결과를 함께 새 PR로 올리기`. C-01 구현·검증·QA 보고서 사본의 커밋·브랜치 푸시·새 PR 생성을 승인한 것으로 처리한다. 병합·배포는 포함하지 않는다.
+- 별도 작업 사본 `.worktrees/task025-c01-pr`, 브랜치 `feat/TASK-025-c01-additional-forms`. 기준은 기존 PR #45의 최신 `1642cc2f04335bfab5b11993107c46cb81dff8c1`이며 최신 develop `4df19f1903d964efd935772d65d3a6c86a6703fa`를 포함한다. 원래 루트의 29개 미커밋 변경은 보존한다.
+- 제출 범위는 아래 C-01 승인 경로 22개와 사용자 제공 QA 보고서의 원본 사본 `src/features/battle-tools/QA_TASK-025_C01.md` 1개, 총 23개다. 기존 PR #45의 D-02~04 코드·파밀리쥐 표시 예외 제거와 최신 상세·진화·이미지·종족값 인덱스 변경을 유지한다. 루트의 별도 D-02~05 수정은 이번 C-01 커밋에 덮어쓰지 않는다.
+- C-01 이식 시 최신 상세의 `toFormDetail(raw, baseId)` 계약을 유지하고 pokemon-form 추가 폼에는 기본 이미지 대체를 사용하지 않는다. 인덱스는 최신 기준의 1,025종·종족값·지방 도감 등 모든 기존 필드를 유지한 채 #493·773·1013에 35폼만 병합했다. 최신 상세의 많은 폼 선택 상자에 맞춰 C-01 단위/통합·E2E의 선택 동작을 버튼에서 select로 조정했다. 제품의 폼 선택 UI 정책은 변경하지 않는다.
+- 독립 QA 원본은 사용자가 제공한 `C:\Users\srsra\Downloads\QA_TASK-025_C01.md`다. 제출 사본은 바이트 단위 동일하며 SHA-256은 `b5b0873dfad041bb431534594a8edbad154768f0e1dbc0e12e6a3b9301b3e5f6`이다. **C-01 FAIL(F-01), 전체 TASK-025 FAIL(F-01 수정 후에도 BLOCKED)** 판정을 그대로 보존한다. F-01(비교의 폼 요청 실패/로딩 시 기본 타입 표시)은 이번 제출에서 수정하지 않았다.
+- 이 QA는 원래 루트 `0c61659`와 미커밋 변경을 검사한 이력이다. 이번 최신 기준 이식본의 독립 QA PASS를 뜻하지 않는다. 특히 QA 원문의 선행 D-04 표시 동작은 현재 PR #45의 `1642cc2`에서 제거한 예외와 다르다. 아래 자체 재검증과 원본 QA의 461개 테스트·71개 E2E 결과를 구분한다.
+- develop 대상 **초안 PR**로 제출한다. PR #45가 선행 의존성이므로 병합 전까지 develop 대비 전체 diff에는 선행 TASK-025 커밋이 함께 보인다. C-01 자체 변경은 `1642cc2..이 브랜치`로 검토하며, #45 병합 후 이 PR의 독립 변경 범위를 다시 확인해야 한다. 공통 계약·상세·비교 오너 확인, F-01 수정 및 독립 재QA, CR-025-SMOGON-SCOPE, 최종 사람 인수는 남긴다.
+
+### 제출본 자체 검증
+
+- `npm.cmd run lint` → 종료 0, 모듈 경계 통과. 기존 StatFilter 경고 1개.
+- `npm.cmd run typecheck` → 종료 0.
+- `npm.cmd test -- --reporter=default --reporter=json --outputFile=.../vitest-final.json` → 종료 0, 55파일 **481/481 통과**. 기존 jsdom scrollTo 미구현 안내 있음. 최초 실행은 최신 FormTabs의 선택 상자를 버튼으로 찾은 테스트 1건이 실패했고, 테스트 선택 동작을 맞춘 뒤 전체 재실행했다. 최초 실패 결과도 별도 보존했다.
+- `npm.cmd run build` → 종료 0, JS 792.36kB 청크 크기 경고 있음.
+- CI=1·원래 Playwright 설정 상속·이번 빌드의 자체 관리 preview로 전체 E2E → 종료 0, **72개 통과·1개 flaky(재시도 통과)·3개 SKIPPED**. flaky는 기존 `pokedex/list-return.spec.ts:24`의 상세 진입 직후 스크롤 0 검사였으며, 제품·테스트 코드는 변경하지 않았다. SKIPPED는 CR-025-SMOGON-SCOPE 대기 중인 다중 세대 3건이다. 이를 최초 실행 전부 PASS 또는 다중 세대 PASS로 표현하지 않는다.
+- `git diff --check` → 종료 0. QA 보고서 사본의 SHA-256 일치와 원래 루트의 추적 변경·C-01 미추적 파일 보존을 확인했다. 검증 생성물은 원래 루트 `test-results/task025-c01-pr/` 및 이 작업 사본의 `test-results/task025-c01-pr/`에 보존한다.
+
+## C-01 추가 폼 지원 — 2026-11-25
+
+- 사용자 승인: `c-01 추가 폼 진행해줘`, 범위 확인 후 `공통·상세·비교 포함`으로 명시 승인했다. TASK-025 / C-01, 구현 Codex. 기존 소유자: 성윤우(실전 세팅), 김형균(공통·인덱스·비교), 임지섭(상세). 소유권은 재배정하지 않는다.
+- 요구사항: FR-10~12·17~18·24~25, DR-04·08 / TC-04·06·08·09·11. 지원 대상: 아르세우스 비노말 17타입, 실버디 비노말 17타입, 그우린차 걸작 1폼 = 35개. 기존 1,025종·326개 pokemon 변형을 유지하며 인덱스 폼은 361개가 된다. Arceus-Unknown은 현재 지원 18타입 밖이므로 이번 범위가 아니다.
+- **CR-025-C01-COMMON / PR 설명용 변경 요청 본문**: PokéAPI의 이 35폼은 species.varieties의 별도 pokemon이 아니라 기본 pokemon의 forms가 참조하는 pokemon-form이다. 기존 인덱스는 varieties만 수집하므로 선택·매핑 경로가 없다. 일반 `/pokemon/arceus-fire`, `/pokemon/silvally-fairy`, `/pokemon/sinistcha-masterpiece`는 실측 HTTP 404였다. 인덱스의 선택적 `resource: { kind: 'pokemon-form', name }` 계약을 추가하고 생성 스크립트·상세·비교가 이를 함께 읽도록 한다. 스키마 version 2와 기존 326폼의 리소스 방식은 유지한다. 폼 타입·이미지는 pokemon-form, 종족값·키·몸무게·특성·울음소리는 연결된 기본 pokemon에서 가져오며 서로 다른 종의 응답은 병합하지 않는다. 공통 설정의 Smogon 활성 세대(CR-025)는 이번 변경과 별개다.
+- 인수 조건: 35폼을 상세·비교에서 선택·URL 공유·새로고침 가능, 실제 타입·폼 이미지·기본 종족값 표시, 정확한 Smogon 키 연결, 세팅 부재/폼 요청 실패 시 다른 폼으로 임의 대체 금지, 기존 폼·파밀리쥐 동작 유지, 원본 캐시 비변형. 추가 폼 반영 시 기존 인덱스의 다른 종·필드를 보존한다.
+- **허용 경로**: `src/shared/models/pokemon.ts`, `src/shared/api/{index.ts,pokemon-forms.ts}`, `scripts/{build-pokedex-index.mjs,lib/pokemon-form-extensions.mjs,lib/pokemon-form-extensions.d.mts}`, `public/data/pokedex-index.json`, `src/features/pokemon-detail/{hooks/useDetailQueries.ts,pages/PokemonDetailPage.tsx}`, `src/features/compare/{api/pokemon.ts,hooks/useCompareStats.ts,pages/ComparePage.tsx}`, `tests/unit/shared/{forms.test.ts,pokemon-form-extensions.test.ts,pokemon-forms.test.ts}`, `tests/unit/battle-tools/{forms.test.ts,additionalForms.test.ts}`, `tests/integration/shared/additional-form-fixtures.ts`, `tests/integration/pokemon-detail/AdditionalForms.test.tsx`, `tests/integration/compare/AdditionalForms.test.tsx`, `tests/e2e/pokemon-detail/additional-forms.spec.ts`, 이 기록. 검증용 생성물은 test-results에 둔다.
+- **CR-025-C01-TEST**: 위 신규 회귀 검사·fixture와 기존 인덱스 수량 검사(326 기존 변형 + 35 추가 폼, other 138 + 35)를 이번 승인 범위에서 갱신한다. 외부 API 검증의 varieties 최소 326개 기준은 다른 집합이므로 유지한다. 정책 문서·테스트 계획·패키지/설정·app/라우터·다른 feature 파일은 수정하지 않는다.
+- **로컬 E2E 검증 구성**: 이전 Windows 검증의 npm/cmd 서버 종료 지연을 피하기 위해, 이번 빌드의 vite preview를 직접 실행·종료하고 test-results/task025-c01의 임시 구성에서 원래 Playwright 설정을 상속한다. CI=1의 forbidOnly·재시도·브라우저 설정과 테스트 집합을 유지하고, 자체 관리 서버·검증용 포트·분리된 결과 경로만 사용한다. 저장소 Playwright/CI 설정은 바꾸지 않으며 기존 QA 생성물도 삭제하지 않는다.
+- 착수 점검: git fetch origin develop 완료. 현재 루트의 선행 D-02~05 미커밋 수정을 유지한다. 두 별도 작업 사본은 점검 시 clean이었고 C-01 대상의 진행 중 변경은 없었다. 최신 develop과의 전체 통합·독립 QA·각 오너 사람 승인·정식 TASK/ADR 문서 갱신·커밋/푸시/병합은 별도 단계다.
+
+### C-01 구현·자체 검증 결과
+
+- 구현: 인덱스에 `pokemon-form` 리소스 계약을 선택적으로 추가하고 아르세우스 17·실버디 17·그우린차 걸작 1폼을 수집했다. 상세·비교는 기본 pokemon 요청·종족값을 공유하면서 선택 폼의 타입·이미지를 사용한다. URL·새로고침·기존 폼 경로를 유지하며 폼 조회 실패를 기본 폼으로 대체하지 않는다. Smogon 기존 정규화 규칙으로 35폼의 정확한 키를 연결했다.
+- 변경 파일은 위 승인 경로의 **22개**다. 제품·생성기·데이터 12개: `src/shared/models/pokemon.ts`, `src/shared/api/{index.ts,pokemon-forms.ts}`, `scripts/{build-pokedex-index.mjs,lib/pokemon-form-extensions.mjs,lib/pokemon-form-extensions.d.mts}`, `public/data/pokedex-index.json`, `src/features/pokemon-detail/{hooks/useDetailQueries.ts,pages/PokemonDetailPage.tsx}`, `src/features/compare/{api/pokemon.ts,hooks/useCompareStats.ts,pages/ComparePage.tsx}`. 테스트·fixture 9개: `tests/unit/shared/{forms.test.ts,pokemon-form-extensions.test.ts,pokemon-forms.test.ts}`, `tests/unit/battle-tools/{forms.test.ts,additionalForms.test.ts}`, `tests/integration/shared/additional-form-fixtures.ts`, `tests/integration/pokemon-detail/AdditionalForms.test.tsx`, `tests/integration/compare/AdditionalForms.test.tsx`, `tests/e2e/pokemon-detail/additional-forms.spec.ts`. 나머지 1개는 이 기록이다. 앞선 D-02~05 수정도 유지했다.
+
+| 명령·검증 | 결과 |
+|---|---|
+| `npm.cmd run build:index -- --extend-forms` | 종료 0, 1,025종·361폼. 기존 인덱스와 대조해 #493·773·1013의 forms와 generatedAt만 변경 확인 |
+| `npm.cmd test` | 종료 0, 전체 55파일·461/461 통과. 기존 jsdom scrollTo 미구현 안내 있음 |
+| `npm.cmd test -- tests/unit/shared/pokemon-form-extensions.test.ts tests/unit/shared/pokemon-forms.test.ts tests/unit/shared/forms.test.ts tests/unit/battle-tools/additionalForms.test.ts tests/unit/battle-tools/forms.test.ts tests/integration/pokemon-detail/AdditionalForms.test.tsx tests/integration/compare/AdditionalForms.test.tsx` | 최종 fixture의 Node 런타임 의존성 제거 후 종료 0, 7파일·105/105 통과 |
+| `npm.cmd run typecheck` | 최종 재검증 종료 0 |
+| `npm.cmd run lint` | 최종 재검증 종료 0, 모듈 경계 통과. 기존 QA·다른 작업 사본의 StatFilter 경고 4개 |
+| `npm.cmd run build` | 종료 0, JS 752.95kB 청크 크기 경고 있음 |
+| 실제 PokéAPI·Smogon 대조용 `node --input-type=module` 인라인 검증 | 종료 0, 35개 폼 응답·35개 PNG HTTP 200, 35폼 × 4세대 = 140개 조회·캐시 불변 확인 |
+| CI=1·원래 설정 상속·이번 빌드의 별도 preview 서버로 전체 Playwright 실행 | 네트워크 허용 환경 재실행 종료 0, **71개 통과·3개 SKIPPED**. C-01 신규 4개 포함. 3개는 CR-025-SMOGON-SCOPE 대기 중인 다중 세대 검사이며 PASS로 세지 않음 |
+| `node test-results/task025-c01/verify-browser.mjs` | 종료 0, 실제 폼 응답·이미지·Smogon 원본을 사용한 1280px·320px × 3종 = 6개 상세→비교 경로 통과. 타입·이미지·표·URL·폼 선택·가로 넘침 없음·페이지 JS 오류 없음 확인 |
+| `git diff --check` | 종료 0 |
+| `claude auth status` | 종료 1, `loggedIn: false`. 독립 QA 미실행 |
+
+- 실제 세팅 보유 폼 수는 gen9 18/35·gen8 22/35·gen7 34/35·gen6 17/35였다(2026-11-25 원본 기준). 나머지는 부재로 처리하며 다른 폼으로 대체하지 않는다. 브라우저 확인에서는 **검증 브라우저에만** [9,8,7,6]을 주입해 아르세우스 불꽃·그우린차 걸작의 gen9, 실버디 페어리의 gen8 화면을 확인했다. 저장소의 실제 공통 설정은 여전히 gen6이므로 다중 세대 실제 설정의 인수 PASS를 뜻하지 않는다.
+- 검증 산출물: `test-results/task025-c01/{live-report.json,live-fixtures.json,browser-report.json,verify-browser.mjs,e2e-network-run.json,e2e-network.log}` 및 PC·320px 상세/비교 스크린샷 12장. 대표 PC 아르세우스 상세·320px 실버디 상세·320px 그우린차 비교 화면도 직접 시각 검토했다. 관리 preview는 종료했고 기존 개발 서버 `http://127.0.0.1:5173/pokefile/` HTTP 200을 확인했다.
+- 실패 이력: 최초 typecheck는 새 JS 생성기 선언 누락·E2E Buffer 타입 때문에 실패해 선언을 추가하고 SVG 문자열 fixture로 수정했다. 비교 통합 검사의 이미지 role 선택자 2건도 실제 빈 alt 이미지에 맞게 수정했다. 최초 E2E 로더는 fixture가 앱의 JSON 설정을 런타임 import해 실패했으며 fixture를 독립 데이터로 바꾼 뒤 재검증했다. 전체 E2E 첫 실행의 외부 PokéAPI 요청은 trace에서 status -1로 확인됐고 9건 실패했다. 네트워크 허용 환경에서 원래 테스트 집합을 그대로 재실행해 위 71/3 결과를 확보했다. 수동 브라우저 검증의 링크 선택자·정상 포맷 선택 안내를 로딩으로 오인한 대기 조건도 검증 스크립트에서 정정했다. 실패 실행을 PASS로 기록하지 않는다.
+- 미검증: 1,025종 전체 인덱스의 원본 재생성은 실행하지 않았다(추가 폼 수집·보존 갱신 모드와 생성기 테스트는 통과). 최신 develop 전체 통합·배포 origin·다른 브라우저/스크린리더·Claude/다른 팀원의 독립 QA·공통/상세/비교 오너 사람 승인은 남아 있다. **구현·자체 검증 상태이며 QA_PASS/DONE이 아니다.** 정책 문서·공통 Smogon 설정·패키지/설정·다른 작업 사본은 수정하지 않았고 커밋·푸시·PR 갱신·병합·배포도 하지 않았다.
+
+
 ## 커밋·푸시·초안 PR 제출 준비 — 2026-11-18
 
 - 사용자 지시 `rp 푸시`를 PR 생성 및 브랜치 푸시 요청으로 해석해 현재 검증한 18개 파일을 커밋·푸시하고 develop 대상 초안 PR로 제출한다. 기존 커밋·푸시 미실행 기록은 이전 단계의 이력이며 이번 지시로 제출 작업이 승인됐다. 병합·배포·정식 TASK 상태 변경은 포함하지 않는다.

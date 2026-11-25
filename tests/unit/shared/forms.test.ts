@@ -52,10 +52,11 @@ describe('폼 키·분류·한국어 이름 규칙 (ADR-016)', () => {
 describe('검색 인덱스의 폼 (ADR-016)', () => {
   const forms = index.pokemon.flatMap((p) => p.forms)
 
-  it('기본 폼이 아닌 폼 326개를 분류별로 모두 담는다', () => {
+  it('기존 pokemon 변형 326개와 C-01 추가 폼 35개를 분류별로 담는다', () => {
     const count = (c: string) => forms.filter((f) => f.category === c).length
-    expect(forms).toHaveLength(326)
-    expect([count('mega'), count('gmax'), count('regional'), count('other')]).toEqual([97, 34, 57, 138])
+    expect(forms).toHaveLength(361)
+    expect([count('mega'), count('gmax'), count('regional'), count('other')]).toEqual([97, 34, 57, 173])
+    expect(forms.filter((form) => form.resource?.kind === 'pokemon-form')).toHaveLength(35)
   })
 
   it('모든 폼 키가 URL ?form= 형식이고 종 안에서 겹치지 않으며, 한국어 이름이 겹치지 않는다', () => {

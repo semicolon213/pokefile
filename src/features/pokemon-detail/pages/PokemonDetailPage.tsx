@@ -56,9 +56,9 @@ function PokemonDetail({ pokemonId }: { pokemonId: PokemonId }) {
   const formKey: FormKey | null =
     parseFormKey(formParam) === 'default' ? 'default' : forms ? resolveFormKey(formParam, forms) : null
 
-  const formQuery = usePokemonForm(pokemonId, formKey, speciesQuery.data?.name)
   const isAltForm = formKey !== null && formKey !== 'default'
   const formInfo = isAltForm ? summary?.forms.find((form) => form.key === formKey) : undefined
+  const formQuery = usePokemonForm(pokemonId, formKey, speciesQuery.data?.name, formInfo?.resource)
 
   const species = speciesQuery.data
   const baseName = species ? displayName(species) : summary ? displayName(summary) : `포켓몬 #${pokemonId}`

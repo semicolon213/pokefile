@@ -1,5 +1,6 @@
-import { useQueries, useQuery } from '@tanstack/react-query'
-import type { FormKey, PokemonId } from '@/shared/models'
+import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query'
+import { fetchPokemonFormOverride } from '@/shared/api'
+import type { FormKey, PokemonForm, PokemonId } from '@/shared/models'
 import {
   fetchAbility,
   fetchEncounters,
@@ -44,13 +45,24 @@ export function useSpecies(id: PokemonId) {
  * 폼 단위 데이터. 메가는 species 이름이 있어야 리소스 이름을 만들 수 있다.
  * formKey가 null이면(폼 확정 전) 요청하지 않는다.
  */
-export function usePokemonForm(id: PokemonId, formKey: FormKey | null, speciesName: string | undefined) {
-  const resource = formKey === 'default' ? id : formKey && speciesName ? pokemonResourceName(speciesName, formKey) : null
+export function usePokemonForm(id: PokemonId, formKey: FormKey | null, speciesName: string | undefined, formResource?: PokemonForm['resource']) {
+  const client = useQueryClient()
+  const resource = formKey === 'default' || formResource ? id : formKey && speciesName ? pokemonResourceName(speciesName, formKey) : null
   return useQuery({
     queryKey: pokemonDetailQueryKeys.pokemon(id, formKey ?? 'default'),
-    queryFn: () => fetchPokemon(resource!),
-    // 기본이 아닌 폼은 이미지가 없으면 기본 폼 이미지로 대신한다 (ADR-016)
-    select: (raw) => toFormDetail(raw, formKey === 'default' ? undefined : id),
+    queryFn: async ({ signal }) => {
+      if (!formResource) return fetchPokemon(resource!)
+      // C-01: 같은 기본 pokemon 요청을 여러 폼이 공유한다.
+      const base = await client.fetchQuery({
+        queryKey: pokemonDetailQueryKeys.pokemon(id, 'default'),
+        queryFn: () => fetchPokemon(id),
+        staleTime: Infinity,
+      })
+      const form = await fetchPokemonFormOverride(formResource.name, base.name, signal)
+      return { ...base, name: form.name, types: form.types, sprites: form.sprites,
+        forms: [{ name: form.name, url: '' }] }
+    },
+    select: (raw) => toFormDetail(raw, formKey === 'default' || formResource ? undefined : id),
     enabled: resource !== null,
   })
 }
