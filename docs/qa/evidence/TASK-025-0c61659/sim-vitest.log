@@ -1,0 +1,13 @@
+
+ RUN  v5.0.5 C:/Users/admin/AppData/Local/Temp/claude/D--Code--------------------pokefile/e15df3c6-0a7a-4cab-8793-4c00e214e172/scratchpad/qa025
+
+
+ Test Files  13 passed (13)
+      Tests  112 passed (112)
+   Start at  09:41:42
+   Duration  7.17s (environment 63%, import 14%, setup 13%, tests 6%, transform 4%, worker 1%)
+
+Environment  jsdom was created 13 times · 38.87s total, 63% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

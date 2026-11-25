@@ -1,0 +1,19 @@
+
+> pokefile@0.0.0 build
+> tsc -b && vite build
+
+[36mvite v8.3.5 [32mbuilding client environment for production...[36m[39m
+transforming...
+✓ 786 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   1.43 kB │ gzip:   0.85 kB
+dist/assets/index-8NYfmQFB.css   52.33 kB │ gzip:   8.77 kB
+dist/assets/index-CSIMXvmd.js   788.34 kB │ gzip: 243.70 kB
+
+[33m[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[32m✓ built in 378ms[39m
