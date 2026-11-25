@@ -545,4 +545,12 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
     within(basic).getByRole('img', { name: '리자몽' }).dispatchEvent(new Event('error'))
     expect(await within(basic).findByRole('img', { name: '리자몽 이미지 없음' })).toBeInTheDocument()
   })
+
+  it('움직임 줄이기에서도 GIF만 있는 폼은 기본 폼 정적 이미지로 바뀌지 않는다 (#44 QA, ADR-016)', async () => {
+    vi.stubGlobal('matchMedia', (query: string) => ({ matches: query.includes('reduce'), media: query, addEventListener() {}, removeEventListener() {} }))
+    const gifOnly = { ...pokemon(10034, 'charizard-mega-x', ['fire', 'dragon'], ['tough-claws'], [78, 130, 111, 130, 85, 100]), sprites: { front_default: null, other: { showdown: { front_default: 'charizard-mega-x.gif' } } } }
+    mockFetch({ '/pokemon/charizard-mega-x': Response.json(gifOnly) })
+    renderAt('/pokemon/6?form=mega-x')
+    expect(await screen.findByRole('img', { name: '메가리자몽X' })).toHaveAttribute('src', 'charizard-mega-x.gif')
+  })
 })
