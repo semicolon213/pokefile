@@ -31,6 +31,14 @@
 - 증거: 원래 루트 `test-results/task025-c01-pr/pr48-{before,focused,focused-final,all-tests}.json`, 이 작업 사본 `test-results/pr48-integration/{e2e-run.json,e2e.log,browser-report.json,pokemon-with-moves.json,verify-browser.mjs}` 및 실제 화면 스크린샷 6장. PC 실버디·320px 그우린차 화면을 직접 검토했다. fixture 검증과 실제 응답/이미지 검증을 구분한다.
 - 한계: 이번 통합 수정은 자체 검증이며 독립 QA PASS가 아니다. 기존 C-01 F-01과 #48 자체의 과거 기술 분류·내 게임 왕복 결함, 다중 세대 설정, 각 오너 사람 인수는 별도다. QA 원문·정식 TASK 상태·배포는 변경하지 않는다.
 
+### PR #48 최신 `0cc50a3` 추가 통합·최종 재검증
+
+- 제출 직전 #48이 `0cc50a3f46c3cf35c614320ea9bb62504f074257`로 갱신돼 통합 수정 `4085252` 후 정상 merge했다(`13ff3cc`). #48의 과거 기술 분류 보완과 내 게임 왕복 선택 초기화 코드를 그대로 유지하며, MovesSection에는 폼 resource 전달 차이만 추가된다. 위 #48 자체의 두 결함 설명은 이전 `5dc5046` 검증 시점의 이력이고 최신 독립 재QA 판정으로 대체하지 않는다.
+- 최종 `npm.cmd test`(JSON reporter 포함) → 종료 0, **59파일 525/525 통과**. `npm.cmd run lint` → 종료 0, 기존 StatFilter 경고 1개·경계 통과. `npm.cmd run build`(tsc 포함) → 종료 0, JS 802.53kB·기술 데이터 108.34kB, 기존 청크 크기 경고.
+- 최종 전체 E2E → 종료 0, **81개 통과·1개 flaky(재시도 통과)·3개 SKIPPED**. flaky는 기존 `pokedex/list-return.spec.ts:24`의 상세 진입 직후 스크롤 0 단정이며 해당 제품·테스트 코드를 변경하지 않았다. 추가 폼·기술 표·실패 후 재시도 검사는 통과했다. SKIPPED는 다중 세대 설정 대기 3건이다.
+- 최종 빌드의 실제 전체 pokemon 응답·폼 이미지로 PC/320px 6개 경로를 재검증해 종료 0. 3종 기술머신 114/50/31행, 폼 타입·이미지·새로고침·비교 선택 유지, 잘못된 추가 폼 pokemon 요청 0, 페이지 JS 오류·문서 가로 넘침 없음 확인. 최신 생성물은 `test-results/pr48-latest/`, 전체 테스트 JSON은 원래 루트 `test-results/task025-c01-pr/pr48-latest-tests.json`이다. 이전 `pr48-integration` 증거도 보존했다.
+- 기존 QA 원문 SHA-256은 유지하며 최신 통합 수정의 독립 QA·사람 인수는 남긴다. C-01 비교 오류 F-01·공통 Smogon 설정은 이 변경에서 수정하지 않았다. 원래 루트 추적 변경·미추적 C-01 파일을 보존하고 #54 브랜치만 갱신한다.
+
 ## C-01 새 PR 제출 — 2026-11-25
 
 - 사용자 지시: `새로운 pr 작성해서 올려줘`, `폼체인지 작업한거`, `C-01 구현 코드와 QA 결과를 함께 새 PR로 올리기`. C-01 구현·검증·QA 보고서 사본의 커밋·브랜치 푸시·새 PR 생성을 승인한 것으로 처리한다. 병합·배포는 포함하지 않는다.
