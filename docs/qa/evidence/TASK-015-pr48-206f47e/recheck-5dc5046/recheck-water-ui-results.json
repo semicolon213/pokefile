@@ -1,0 +1,14 @@
+{
+  "at": "2026-11-25T06:04:29.862Z",
+  "commit": "5dc5046b529388eb8e3d7f28e20a015ba5bc7ad2",
+  "results": [],
+  "failures": [
+    {
+      "name": "D-015-01-browser-water-shuriken",
+      "result": "FAIL",
+      "error": "Error: expect(received).toContain(expected) // indexOf\n\nExpected substring: \"물리\"\nReceived string:    \"Lv.36\t물수리검\t물\t특수\t15\t100\t20\"",
+      "stack": "Error: expect(received).toContain(expected) // indexOf\n\nExpected substring: \"물리\"\nReceived string:    \"Lv.36\t물수리검\t물\t특수\t15\t100\t20\"\n    at captureRawStack (D:\\claude\\pokefile\\node_modules\\playwright-core\\lib\\coreBundle.js:9282:17)\n    at callMatcherAsStep (D:\\claude\\pokefile\\node_modules\\playwright\\lib\\matchers\\expect.js:13316:57)\n    at Object.toContain (D:\\claude\\pokefile\\node_modules\\playwright\\lib\\matchers\\expect.js:13308:23)\n    at D:\\claude\\pokefile\\.qa\\pr48-5dc5046\\recheck.mjs:44:565\n    at async run (D:\\claude\\pokefile\\.qa\\pr48-5dc5046\\recheck.mjs:15:112)\n    at async file:///D:/claude/pokefile/.qa/pr48-5dc5046/recheck.mjs:44:2"
+    }
+  ],
+  "waterShurikenUi": "Lv.36\t물수리검\t물\t특수\t15\t100\t20"
+}

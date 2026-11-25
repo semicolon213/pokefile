@@ -1,5 +1,7 @@
 # QA 보고서 — TASK-015 / PR #48
 
+> 최신 재검증: `5dc5046` **FAIL** — 원 재현은 수정됐으나 물수리검 분류·내 게임 왕복 전환 사례가 남음. 상세 결과는 §6.
+
 - 대상 TASK: TASK-015 — 상세 화면의 게임별 기술 섹션
 - 요구사항 ID: FR-26·FR-27, TC-12; 보조 검증 NFR-01~04·07~08, TC-08·09·10
 - 기준 문서: `docs/SRS.md`, `docs/DESIGN.md`, `docs/OWNERSHIP.md`, `docs/TASKS.md`, `docs/TEST_PLAN.md`, `docs/WORKFLOW.md`, ADR-020(제안)
@@ -101,3 +103,69 @@ tests/unit/pokemon-detail/moves.test.ts
 - 다음 검증: 구현 담당자가 D-015-01·02·03을 반영한 새 PR HEAD를 제공하면 해당 결함과 영향을 받는 테스트를 재검증한다.
 
 - 보고서 PR 범위: 담당 성윤우(`yoonwoo2002`), 허용 경로 `docs/qa/QA_TASK-015_PR-48.md` 및 `docs/qa/evidence/TASK-015-pr48-206f47e/**`. 인수 조건은 검증 커밋·FAIL 판정·재현 절차·실행 로그·미검증 항목을 보존하고 모든 증거 링크가 저장소에서 열리는 것이다. 이번 문서 PR 생성은 사용자가 명시적으로 요청했다.
+
+
+## 6. 수정 커밋 `5dc5046` 재검증 — 2026-11-25
+
+- 대상: PR #48 `5dc5046b529388eb8e3d7f28e20a015ba5bc7ad2`, 구현 Claude Code / 독립 재검증 Codex.
+- 결과: **FAIL — 원 재현 사례는 수정됐지만 D-015-01·02의 추가 사례가 남아 있다.** D-015-03은 PASS.
+- 검증 환경: Windows, Node v24.19.0, 정확한 수정 커밋을 별도 사본 `.qa/pr48-5dc5046/source`에 추출해 실행함. 기존 미커밋 제품 코드는 검증에 섞거나 수정하지 않음.
+- 보고서 인코딩: `ab34bd8`에서 마지막 범위 문장을 정상 한국어로 다시 작성한 것을 Git blob과 작업 파일에서 확인했다. 해당 수정은 PR #52를 통해 develop `28fa33a`에 이미 병합됐다. 깨진 문자열을 역변환하지 않았고, 이 재검증에서도 정상 문장을 그대로 보존한다.
+- 위 §1~5 및 최초 증거는 `206f47e`의 역사적 FAIL 기록이다. 아래는 `5dc5046`에 대한 새 결과이며, 두 실행의 증거를 섞어 PASS로 처리하지 않는다.
+
+### 6.1 결함별 결과
+
+| 항목 | 재검증 결과 | 판정 |
+|---|---|---|
+| D-015-01 원 재현 — 레드·블루 화염방사 | 실제 브라우저 행이 `Lv.46 / 화염방사 / 불꽃 / 특수 / 95 / 100 / 15`로 수정됨. API의 `past_values`와 일치 | PASS(원 사례) |
+| D-015-01 이전 값·타입 표본 | 화염방사 95→90, 하이드로펌프 120→110, 물기의 노말→악, 저주의 ???→고스트, 번개펀치의 3세대 특수→4세대 물리를 확인. 6개 기술의 저장된 `past_values`를 실제 API와 대조 | PASS(표본) |
+| D-015-01-R1 — 6세대 물수리검 분류 | X·Y 개굴닌자의 물수리검이 **물리** 대신 **특수**로 표시됨. 최신 분류를 그대로 사용하며 4세대 이후 개별 기술의 분류 변경을 처리하지 않음 | **FAIL / Major** |
+| D-015-02 원 재현 — 수동 SV 선택 후 내 게임 실드 | 새 내 게임 소드·실드로 표가 전환되고 `내 게임 실드 기준입니다.` 안내를 확인 | PASS(원 사례) |
+| D-015-02-R1 — 내 게임 왕복 | 레드에서 수동 SV 선택 → 실드 → 다시 레드로 바꾸면 과거 SV 수동 선택이 되살아남. 헤더·URL은 레드, 기술 표는 SV | **FAIL / Major** |
+| D-015-03 — OQ 기록 위치 | OQ-18은 `OPEN`으로 복원되고 기술 표의 ADR-020 제안은 OQ-23에 기록됨. 팀 확인 대기 상태 유지 | PASS |
+
+### 6.2 남은 재현 사례와 근거
+
+**D-015-01-R1 — 6세대 물수리검의 물리/특수 분류**
+
+1. `#/pokemon/658?game=x`로 이동한다.
+2. 기술 섹션의 X·Y 레벨업 표에서 `Lv.36 물수리검`을 확인한다.
+3. 기대 분류는 **물리**, 실제 행은 `Lv.36 / 물수리검 / 물 / 특수 / 15 / 100 / 20`이다. Lv.75 행에도 같은 분류가 표시된다.
+
+Pokémon Showdown의 [6세대 원본 데이터](https://github.com/smogon/pokemon-showdown/blob/master/data/mods/gen6/moves.ts)는 `watershuriken: { inherit: true, category: "Physical" }`로 해당 세대의 분류를 명시한다. 현재 PokéAPI `/move/water-shuriken`의 최신 분류는 `special`이며 `past_values`에는 분류 변경 필드가 없어, 이 배열만으로는 해당 이력을 복구할 수 없다.
+
+위치: [moves.ts:111](https://github.com/semicolon213/pokefile/blob/5dc5046b529388eb8e3d7f28e20a015ba5bc7ad2/src/features/pokemon-detail/model/moves.ts#L111). 현재 로직은 3세대까지의 타입별 분류만 바꾸고 4세대 이후에는 최신 `damageClass`를 유지한다. 선택 게임별 분류 변경 이력의 처리 방법을 보완하고 6세대 물수리검을 회귀 사례에 포함해 주세요. 제품 수정은 구현 담당자에게 요청하며 QA가 직접 수정하지 않았다.
+
+증거: [화면](evidence/TASK-015-pr48-206f47e/recheck-5dc5046/screenshots/water-shuriken-xy.png), [UI 관측값](evidence/TASK-015-pr48-206f47e/recheck-5dc5046/recheck-water-ui-results.json), [Showdown 조회 원문](evidence/TASK-015-pr48-206f47e/recheck-5dc5046/data/showdown-gen6-moves.ts.txt), [PokéAPI 원문](evidence/TASK-015-pr48-206f47e/recheck-5dc5046/data/water-shuriken.json).
+
+**D-015-02-R1 — 내 게임을 이전 값으로 되돌릴 때 수동 선택 부활**
+
+1. `#/pokemon/6?game=red`로 진입한다.
+2. 기술 섹션에서 게임을 스칼렛·바이올렛으로 수동 변경한다.
+3. 상단 내 게임을 실드로 바꾼다. 이 단계는 소드·실드로 정상 전환된다.
+4. 상단 내 게임을 다시 레드로 바꾼다.
+5. 기대: 레드·블루 표. 실제: 헤더는 레드, URL은 `?game=red`, 표는 스칼렛·바이올렛이며 안내는 `내 게임은 레드입니다.`다.
+
+위치: [MovesSection.tsx:35~44](https://github.com/semicolon213/pokefile/blob/5dc5046b529388eb8e3d7f28e20a015ba5bc7ad2/src/features/pokemon-detail/components/MovesSection.tsx#L35). `chosen.myVersion`을 현재 값과 비교하지만 내 게임 전환 시 이전 `chosen` 자체를 해제하지 않으므로, 이전 버전으로 돌아오면 다시 유효해진다. 내 게임 변경 시 수동 선택의 유효성을 실제로 해제하거나 변경 회차별로 관리해 주세요. 왕복·선택 해제 후 재선택 검증을 추가하는 것이 좋다.
+
+증거: [화면](evidence/TASK-015-pr48-206f47e/recheck-5dc5046/screenshots/my-game-roundtrip.png), [관측값](evidence/TASK-015-pr48-206f47e/recheck-5dc5046/recheck-results.json)의 `myGame.first` 및 `myGame.returned`.
+
+### 6.3 실행한 검증
+
+| 명령 | 결과 | 증거 |
+|---|---|---|
+| `npm.cmd run lint` | 종료 0. 기존 StatFilter 경고 1건, 모듈 경계 통과 | [lint.log](evidence/TASK-015-pr48-206f47e/recheck-5dc5046/lint.log) |
+| `npm.cmd run typecheck` | 종료 0 | [typecheck.log](evidence/TASK-015-pr48-206f47e/recheck-5dc5046/typecheck.log) |
+| `npm.cmd test` | 종료 0, 49개 파일 **398/398** 통과 | [vitest.log](evidence/TASK-015-pr48-206f47e/recheck-5dc5046/vitest.log) |
+| `npm.cmd run build` | 종료 0, 기존 청크 크기 경고 | [build.log](evidence/TASK-015-pr48-206f47e/recheck-5dc5046/build.log) |
+| `CI=1 npm.cmd run test:e2e -- --workers=4` | 종료 0, **72/72** 통과, 41.3초 | [playwright.log](evidence/TASK-015-pr48-206f47e/recheck-5dc5046/playwright.log) |
+| `node .qa/pr48-5dc5046/recheck.mjs` | 종료 1. 과거 값·원 화염방사·OQ 위치 3검사 통과, 물수리검 모델 분류·내 게임 왕복 실패. 물수리검 UI 검사는 같은 기술의 두 레벨 행이 잡혀 QA 선택자 오류로 실패 | [recheck.log](evidence/TASK-015-pr48-206f47e/recheck-5dc5046/recheck.log), [관측 JSON](evidence/TASK-015-pr48-206f47e/recheck-5dc5046/recheck-results.json) |
+| `QA_CASE=browser-water-shuriken QA_REPORT=recheck-water-ui-results.json node .qa/pr48-5dc5046/recheck.mjs` | Lv.36 행으로 선택자를 보정하고 해당 UI 검사만 재실행. 종료 1, `특수` 표시가 확인되어 실제 분류 오류로 실패. 선택자 오류를 제품 결함으로 세지 않음 | [recheck-water-ui.log](evidence/TASK-015-pr48-206f47e/recheck-5dc5046/recheck-water-ui.log) |
+
+스크린샷 3장(화염방사 수정 확인·남은 두 사례)을 저장하고 남은 두 사례 화면을 육안 검토했다. 이 회차에서는 이전 320·390px×테마 전체 행렬을 반복하지 않았으며 기존 E2E의 390px 검사는 통과했다. 모든 기술·게임 이력 전수 검증, 실기기·다른 브라우저·배포 origin·ADR-020 팀 확인은 여전히 미완료다.
+
+### 6.4 결론
+
+- **재검증 FAIL:** D-015-03과 D-015-01·02의 최초 재현은 해결됐으나, 같은 게임별 정확성·내 게임 동기화 요구에 해당하는 D-015-01-R1 및 D-015-02-R1이 남아 있다.
+- 사람 승인·TASK 상태 변경·제품 코드 수정·PR #48 병합은 수행하지 않았다. 자동 테스트 통과와 기존 보고서 PR #52의 병합을 기능 QA PASS로 취급하지 않는다.
+- 후속 수정 커밋에서 위 두 사례와 영향을 받는 테스트를 재검증해야 한다.

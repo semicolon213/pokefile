@@ -1,0 +1,5 @@
+D-015-01-browser-water-shuriken FAIL Error: expect(received).toContain(expected) // indexOf
+
+Expected substring: "물리"
+Received string:    "Lv.36	물수리검	물	특수	15	100	20"
+completed 0 passed 1 failed

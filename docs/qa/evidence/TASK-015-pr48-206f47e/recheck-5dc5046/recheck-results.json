@@ -1,0 +1,196 @@
+{
+  "at": "2026-11-25T06:03:14.395Z",
+  "commit": "5dc5046b529388eb8e3d7f28e20a015ba5bc7ad2",
+  "results": [
+    {
+      "name": "D-015-01-api-and-boundaries",
+      "result": "PASS",
+      "findings": [
+        {
+          "name": "flamethrower",
+          "old": {
+            "power": 95,
+            "type": "fire",
+            "damageClass": "special"
+          },
+          "xy": {
+            "power": 90,
+            "damageClass": "special"
+          },
+          "sv": {
+            "power": 90,
+            "damageClass": "special"
+          },
+          "past": [
+            [
+              "x-y",
+              null,
+              95,
+              null,
+              null
+            ]
+          ]
+        },
+        {
+          "name": "hydro-pump",
+          "old": {
+            "power": 120,
+            "type": "water",
+            "damageClass": "special"
+          },
+          "xy": {
+            "power": 110,
+            "damageClass": "special"
+          },
+          "sv": {
+            "power": 110,
+            "damageClass": "special"
+          },
+          "past": [
+            [
+              "x-y",
+              null,
+              120,
+              null,
+              null
+            ]
+          ]
+        },
+        {
+          "name": "thunder-punch",
+          "old": {
+            "power": 75,
+            "type": "electric",
+            "damageClass": "special"
+          },
+          "xy": {
+            "power": 75,
+            "damageClass": "physical"
+          },
+          "sv": {
+            "power": 75,
+            "damageClass": "physical"
+          },
+          "past": []
+        },
+        {
+          "name": "bite",
+          "old": {
+            "power": 60,
+            "type": "normal",
+            "damageClass": "physical"
+          },
+          "xy": {
+            "power": 60,
+            "damageClass": "physical"
+          },
+          "sv": {
+            "power": 60,
+            "damageClass": "physical"
+          },
+          "past": [
+            [
+              "gold-silver",
+              "normal",
+              null,
+              null,
+              null
+            ]
+          ]
+        },
+        {
+          "name": "curse",
+          "old": {
+            "power": null,
+            "type": "unknown",
+            "damageClass": "status"
+          },
+          "xy": {
+            "power": null,
+            "damageClass": "status"
+          },
+          "sv": {
+            "power": null,
+            "damageClass": "status"
+          },
+          "past": [
+            [
+              "black-white",
+              "unknown",
+              null,
+              null,
+              null
+            ]
+          ]
+        },
+        {
+          "name": "water-shuriken",
+          "old": {
+            "power": 15,
+            "type": "water",
+            "damageClass": "special"
+          },
+          "xy": {
+            "power": 15,
+            "damageClass": "special"
+          },
+          "sv": {
+            "power": 15,
+            "damageClass": "special"
+          },
+          "past": []
+        }
+      ]
+    },
+    {
+      "name": "D-015-03-document-rows",
+      "result": "PASS",
+      "oq18": "| OQ-18 | **출현 장소 한국어 이름 없음**: 1~5세대 지역 location은 en/fr/de만 제공한다(칼로스 지역은 ko 있음). 영문 표시를 허용할지, 자체 번역표를 만들지 | 상세 담당 + 전원 | OPEN |",
+      "oq23": "| OQ-23 | 기술 표(FR-27) 범위: 레벨업·기술머신 외에 교배 기술·기술 가르침을 포함할지, 기술 상세(위력·명중·분류)를 표시할지 | 상세 담당 + 전원 | **제안 적용, 팀 확인 대기** → ADR-020 (2026-11-25 담당자 제안: 게임별 이전 위력·명중·PP·타입과 3세대까지의 타입별 물리·특수 반영, 레벨업·폼 변경·기술머신·기술 가르침 포함, 교배 기술 제외, 타입·분류·위력·명중·PP 표시, 정적 기술 데이터는 상세 feature 안 A안) |"
+    },
+    {
+      "name": "D-015-01-browser-flamethrower",
+      "result": "PASS",
+      "row": "Lv.46\t화염방사\t불꽃\t특수\t95\t100\t15"
+    }
+  ],
+  "failures": [
+    {
+      "name": "D-015-01-water-shuriken-gen6",
+      "result": "FAIL",
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'special'\n- 'physical'\n",
+      "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'special'\n- 'physical'\n\n    at file:///D:/claude/pokefile/.qa/pr48-5dc5046/recheck.mjs:38:10\n    at async run (file:///D:/claude/pokefile/.qa/pr48-5dc5046/recheck.mjs:14:45)\n    at async file:///D:/claude/pokefile/.qa/pr48-5dc5046/recheck.mjs:33:2"
+    },
+    {
+      "name": "D-015-02-header-roundtrip",
+      "result": "FAIL",
+      "error": "Error: expect(locator).toHaveValue(expected) failed\n\nLocator:  getByRole('region', { name: '기술', exact: true }).getByRole('combobox', { name: '게임', exact: true })\nExpected: \"red-blue\"\nReceived: \"scarlet-violet\"\nTimeout:  5000ms\n\nCall log:\n  - Expect \"toHaveValue\" getByRole('region', { name: '기술', exact: true }).getByRole('combobox', { name: '게임', exact: true }) with timeout 5000ms\n  - waiting for getByRole('region', { name: '기술', exact: true }).getByRole('combobox', { name: '게임', exact: true })\n    14 × locator resolved to <select id=\"_r_0_\">…</select>\n       - unexpected value \"scarlet-violet\"\n",
+      "stack": "Error: expect(locator).toHaveValue(expected) failed\n\nLocator:  getByRole('region', { name: '기술', exact: true }).getByRole('combobox', { name: '게임', exact: true })\nExpected: \"red-blue\"\nReceived: \"scarlet-violet\"\nTimeout:  5000ms\n\nCall log:\n  - Expect \"toHaveValue\" getByRole('region', { name: '기술', exact: true }).getByRole('combobox', { name: '게임', exact: true }) with timeout 5000ms\n  - waiting for getByRole('region', { name: '기술', exact: true }).getByRole('combobox', { name: '게임', exact: true })\n    14 × locator resolved to <select id=\"_r_0_\">…</select>\n       - unexpected value \"scarlet-violet\"\n\n    at captureRawStack (D:\\claude\\pokefile\\node_modules\\playwright-core\\lib\\coreBundle.js:9282:17)\n    at callMatcherAsStep (D:\\claude\\pokefile\\node_modules\\playwright\\lib\\matchers\\expect.js:13316:57)\n    at Object.toHaveValue (D:\\claude\\pokefile\\node_modules\\playwright\\lib\\matchers\\expect.js:13308:23)\n    at D:\\claude\\pokefile\\.qa\\pr48-5dc5046\\recheck.mjs:42:1004\n    at async run (D:\\claude\\pokefile\\.qa\\pr48-5dc5046\\recheck.mjs:14:45)\n    at async file:///D:/claude/pokefile/.qa/pr48-5dc5046/recheck.mjs:42:2"
+    },
+    {
+      "name": "D-015-01-browser-water-shuriken",
+      "result": "FAIL",
+      "error": "Error: expect(locator).toBeVisible() failed\n\nLocator: getByRole('region', { name: '기술', exact: true }).getByRole('row', { name: /みずしゅりけん|물수리검/ })\nExpected: visible\nError: strict mode violation: getByRole('region', { name: '기술', exact: true }).getByRole('row', { name: /みずしゅりけん|물수리검/ }) resolved to 2 elements:\n    1) <tr>…</tr> aka getByRole('row', { name: 'Lv.36 물수리검 물 특수 15 100' })\n    2) <tr>…</tr> aka getByRole('row', { name: 'Lv.75 물수리검 물 특수 15 100' })\n\nCall log:\n  - Expect \"toBeVisible\" getByRole('region', { name: '기술', exact: true }).getByRole('row', { name: /みずしゅりけん|물수리검/ }) with timeout 5000ms\n  - waiting for getByRole('region', { name: '기술', exact: true }).getByRole('row', { name: /みずしゅりけん|물수리검/ })\n",
+      "stack": "Error: expect(locator).toBeVisible() failed\n\nLocator: getByRole('region', { name: '기술', exact: true }).getByRole('row', { name: /みずしゅりけん|물수리검/ })\nExpected: visible\nError: strict mode violation: getByRole('region', { name: '기술', exact: true }).getByRole('row', { name: /みずしゅりけん|물수리검/ }) resolved to 2 elements:\n    1) <tr>…</tr> aka getByRole('row', { name: 'Lv.36 물수리검 물 특수 15 100' })\n    2) <tr>…</tr> aka getByRole('row', { name: 'Lv.75 물수리검 물 특수 15 100' })\n\nCall log:\n  - Expect \"toBeVisible\" getByRole('region', { name: '기술', exact: true }).getByRole('row', { name: /みずしゅりけん|물수리검/ }) with timeout 5000ms\n  - waiting for getByRole('region', { name: '기술', exact: true }).getByRole('row', { name: /みずしゅりけん|물수리검/ })\n\n    at captureRawStack (D:\\claude\\pokefile\\node_modules\\playwright-core\\lib\\coreBundle.js:9282:17)\n    at callMatcherAsStep (D:\\claude\\pokefile\\node_modules\\playwright\\lib\\matchers\\expect.js:13316:57)\n    at Object.toBeVisible (D:\\claude\\pokefile\\node_modules\\playwright\\lib\\matchers\\expect.js:13308:23)\n    at D:\\claude\\pokefile\\.qa\\pr48-5dc5046\\recheck.mjs:43:356\n    at async run (D:\\claude\\pokefile\\.qa\\pr48-5dc5046\\recheck.mjs:14:45)\n    at async file:///D:/claude/pokefile/.qa/pr48-5dc5046/recheck.mjs:43:2"
+    }
+  ],
+  "waterShuriken": {
+    "source": "https://github.com/smogon/pokemon-showdown/blob/master/data/mods/gen6/moves.ts",
+    "block": "watershuriken: {\n\t\tinherit: true,\n\t\tcategory: \"Physical\",\n\t}",
+    "actual": "special",
+    "expected": "physical"
+  },
+  "myGame": {
+    "first": {
+      "header": "shield",
+      "table": "sword-shield",
+      "notice": "내 게임 실드 기준입니다."
+    },
+    "returned": {
+      "header": "red",
+      "table": "scarlet-violet",
+      "notice": "내 게임은 레드입니다.",
+      "url": "http://127.0.0.1:4198/pokefile/#/pokemon/6?game=red"
+    }
+  }
+}
