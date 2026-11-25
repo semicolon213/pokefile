@@ -101,6 +101,7 @@ export const normalizeGen6SmogonSets = normalizeSmogonSets
 
 // PokéAPI와 Showdown의 이름 차이. pkmn/smogon 세대 파일과 Showdown pokedex의 이름을 대조한다.
 const FORM_NAMES: Readonly<Record<string, string>> = {
+  mausholdfamilyofthree: 'Maushold',
   darmanitangalarstandard: 'Darmanitan-Galar',
   darmanitangalarzen: 'Darmanitan-Galar-Zen',
   taurospaldeacombatbreed: 'Tauros-Paldea-Combat',
@@ -125,8 +126,12 @@ function smogonFormName({ speciesName, formKey }: SmogonIdentity): string {
   return FORM_NAMES[toShowdownId(name)] ?? name
 }
 
-function isMegaRayquazaSet(format: string, set: SmogonSet): boolean {
-  return format.toLowerCase() === 'anythinggoes'
+function isMegaRayquazaSet(format: string, set: SmogonSet, generation: number): boolean {
+  // D-03 / TC-06: 8세대 일반 AG는 유지하고 National Dex AG의 메가 후보만 분리한다.
+  const megaFormat = generation === 8
+    ? format.toLowerCase() === 'dlc1nationaldexag'
+    : (generation === 6 || generation === 7) && format.toLowerCase() === 'anythinggoes'
+  return megaFormat
     && set.moves.some((slot) => slot.some((move) => toShowdownId(move) === 'dragonascent'))
 }
 
@@ -141,7 +146,9 @@ export function findSpeciesSmogonSets(data: SmogonSpecies[], speciesName: string
 export function selectSmogonSets(data: SmogonSpecies[], identity: SmogonIdentity, generation = 6): SmogonFormat[] {
   const { speciesName, formKey } = identity
   if (!supportsSmogonForm(generation, formKey)) return []
-  const base = findSpeciesSmogonSets(data, speciesName)
+  // D-04: PokéAPI의 기본 파밀리쥐는 네 식구지만 Smogon의 Maushold는 세 식구다.
+  const baseName = formKey === 'default' && toShowdownId(speciesName) === 'maushold' ? 'Maushold-Four' : speciesName
+  const base = findSpeciesSmogonSets(data, baseName)
   const merged = new Map<string, SmogonSet[]>()
   const fingerprints = new Map<string, Set<string>>()
   const add = (format: string, set: SmogonSet) => {
@@ -155,8 +162,7 @@ export function selectSmogonSets(data: SmogonSpecies[], identity: SmogonIdentity
 
   if (formKey === 'default') {
     for (const { format, sets } of base) for (const set of sets) {
-      if (toShowdownId(speciesName) === 'rayquaza' && (generation === 6 || generation === 7)
-        && isMegaRayquazaSet(format, set)) continue
+      if (toShowdownId(speciesName) === 'rayquaza' && isMegaRayquazaSet(format, set, generation)) continue
       const items = set.items.filter((item) => !isGen6MegaStone(item))
       if (set.items.length > 0 && items.length === 0) continue
       add(format, { ...set, items })
@@ -164,7 +170,7 @@ export function selectSmogonSets(data: SmogonSpecies[], identity: SmogonIdentity
   } else if (isMegaForm(formKey)) {
     if (toShowdownId(speciesName) === 'rayquaza' && formKey === 'mega') {
       for (const { format, sets } of base) for (const set of sets) {
-        if (isMegaRayquazaSet(format, set)) add(format, {
+        if (isMegaRayquazaSet(format, set, generation)) add(format, {
           ...set,
           moves: set.moves.map((slot) => slot.some((move) => toShowdownId(move) === 'dragonascent')
             ? slot.filter((move) => toShowdownId(move) === 'dragonascent') : slot),

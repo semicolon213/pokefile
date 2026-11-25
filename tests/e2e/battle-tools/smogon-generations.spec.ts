@@ -55,7 +55,11 @@ test('일부 세대 실패와 복구를 부재와 구분한다 (TASK-025 / TC-09
   await expect(section.getByText('Gen 8 attacker', { exact: true })).toBeVisible()
   fails = false
   await section.getByRole('button', { name: '9세대 다시 시도' }).click()
-  await expect(section.getByRole('tab', { name: '9세대' })).toHaveAttribute('aria-selected', 'true')
+  await expect(section.getByRole('tab', { name: '9세대' })).toHaveAttribute('aria-selected', 'false')
+  await expect(section.getByRole('tab', { name: '8세대' })).toHaveAttribute('aria-selected', 'true')
+  await expect(section.getByRole('combobox')).toHaveValue('ou')
+  await expect(section.getByRole('article', { name: 'Gen 8 attacker' })).toBeVisible()
+  await expect(section.getByRole('article', { name: 'Gen 9 attacker' })).toHaveCount(0)
   await expect(section.getByRole('alert')).toHaveCount(0)
 })
 

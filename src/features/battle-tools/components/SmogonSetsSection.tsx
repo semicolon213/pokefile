@@ -45,28 +45,30 @@ function SmogonSetsData({ identity }: { identity: SmogonIdentity }) {
   const selected = available.find(({ generation }) => generation === selectedGeneration) ?? available[0]
   const pending = queries.some(({ query }) => query.isPending)
   const failed = queries.filter(({ query }) => query.isError)
-
-  if (pending && available.length === 0 && failed.length === 0) {
-    return <LoadingState message="실전 세팅을 불러오는 중입니다." />
-  }
+  // D-02 / TC-09: 더 최신 세대가 아직 대기 중이면 기본 세대를 확정하지 않는다.
+  const waitingForLatest = selectedGeneration === null && queries.some(({ generation, query }) =>
+    query.isPending && (!selected || generation > selected.generation))
+  const visible = waitingForLatest ? undefined : selected
 
   return (
     <>
-      {pending && <LoadingState message="다른 세대의 실전 세팅을 불러오는 중입니다." />}
+      {pending && <LoadingState message={visible
+        ? '다른 세대의 실전 세팅을 불러오는 중입니다.'
+        : '실전 세팅을 불러오는 중입니다.'} />}
       {failed.map(({ generation, query }) => (
         <div className="smogon-error" key={generation}>
           <ErrorState message={`${generation}세대 실전 세팅을 불러오지 못했습니다.`} />
           <button type="button" onClick={() => void query.refetch()}>{generation}세대 다시 시도</button>
         </div>
       ))}
-      {selected ? (
+      {visible ? (
         <>
           <div className="smogon-generations" role="tablist" aria-label="실전 세팅 세대">
             {available.map(({ generation }, index) => (
               <button key={generation} type="button" role="tab"
                 id={`${id}-gen${generation}`} aria-controls={`${id}-panel`}
-                aria-selected={selected.generation === generation}
-                tabIndex={selected.generation === generation ? 0 : -1}
+                aria-selected={visible.generation === generation}
+                tabIndex={visible.generation === generation ? 0 : -1}
                 onClick={() => setSelectedGeneration(generation)}
                 onKeyDown={(event) => {
                   let next = index
@@ -82,9 +84,10 @@ function SmogonSetsData({ identity }: { identity: SmogonIdentity }) {
               >{generation}세대</button>
             ))}
           </div>
-          <div role="tabpanel" id={`${id}-panel`} aria-labelledby={`${id}-gen${selected.generation}`}>
-            <p className="smogon-source">Smogon · {selected.generation}세대</p>
-            <SmogonFormats key={selected.generation} formats={selected.formats} />
+          <div role="tabpanel" id={`${id}-panel`} aria-labelledby={`${id}-gen${visible.generation}`}>
+            <p className="smogon-source">Smogon · {visible.generation}세대</p>
+            <SmogonFormats key={visible.generation} formats={visible.formats}
+              onSelectFormat={() => setSelectedGeneration(visible.generation)} />
           </div>
         </>
       ) : !pending && failed.length === 0 ? <EmptyState message="등록된 실전 세팅이 없습니다." /> : null}
@@ -92,7 +95,10 @@ function SmogonSetsData({ identity }: { identity: SmogonIdentity }) {
   )
 }
 
-function SmogonFormats({ formats }: { formats: ReturnType<typeof selectSmogonSets> }) {
+function SmogonFormats({ formats, onSelectFormat }: {
+  formats: ReturnType<typeof selectSmogonSets>
+  onSelectFormat: () => void
+}) {
   const [selectedFormat, setSelectedFormat] = useState('')
   const selected = formats.find((entry) => entry.format === selectedFormat)
 
@@ -101,7 +107,10 @@ function SmogonFormats({ formats }: { formats: ReturnType<typeof selectSmogonSet
     <>
       <label className="smogon-format">
         대전 포맷
-        <select value={selected?.format ?? ''} onChange={(event) => setSelectedFormat(event.target.value)}>
+        <select value={selected?.format ?? ''} onChange={(event) => {
+          setSelectedFormat(event.target.value)
+          onSelectFormat()
+        }}>
           <option value="">포맷을 선택하세요</option>
           {formats.map(({ format }) => <option key={format} value={format}>{format.toUpperCase()}</option>)}
         </select>

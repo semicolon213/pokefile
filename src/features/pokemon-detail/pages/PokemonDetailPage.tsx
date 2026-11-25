@@ -48,13 +48,15 @@ function PokemonDetail({ pokemonId }: { pokemonId: PokemonId }) {
 
   // 폼 목록·폼 이름은 정적 인덱스의 forms로 정한다(ADR-016). 인덱스 실패 시 기본 폼만 제공한다.
   const forms: FormOption[] | null = indexQuery.isSuccess
-    ? availableForms(summary?.forms ?? [])
+    ? availableForms(summary?.forms ?? [], pokemonId)
     : indexQuery.isError
-      ? availableForms([])
+      ? availableForms([], pokemonId)
       : null
   const formParam = searchParams.get('form')
+  // D-04: 파밀리쥐는 인덱스 확정 전 네 식구를 잠깐 표시하지 않는다.
   const formKey: FormKey | null =
-    parseFormKey(formParam) === 'default' ? 'default' : forms ? resolveFormKey(formParam, forms) : null
+    forms ? resolveFormKey(formParam, forms)
+      : pokemonId !== 925 && parseFormKey(formParam) === 'default' ? 'default' : null
 
   const formQuery = usePokemonForm(pokemonId, formKey, speciesQuery.data?.name)
   const isAltForm = formKey !== null && formKey !== 'default'
@@ -69,7 +71,7 @@ function PokemonDetail({ pokemonId }: { pokemonId: PokemonId }) {
     setSearchParams(
       (prev) => {
         const next = new URLSearchParams(prev)
-        if (form === 'default') next.delete('form')
+        if (form === (forms?.[0]?.key ?? 'default')) next.delete('form')
         else next.set('form', form)
         return next
       },

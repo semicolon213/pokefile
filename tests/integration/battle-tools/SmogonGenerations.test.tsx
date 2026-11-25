@@ -60,6 +60,96 @@ describe('실전 세팅 세대 탭 (TASK-025 / TC-06·08·09)', () => {
     client.clear()
   })
 
+  it('D-03: 기본 레쿠쟈는 8세대 National Dex AG를 숨기고 일반 AG 세팅을 제공한다', () => {
+    const { client, element } = setup({
+      9: {}, 7: {}, 6: {},
+      8: { Rayquaza: {
+        dlc1nationaldexag: { 'National Dex mega': { moves: ['Dragon Ascent'] } },
+        anythinggoes: { 'Dynamax Sweeper': { moves: ['Dragon Ascent'] } },
+      } },
+    })
+    render(element('rayquaza', 'default', 384))
+    expect(screen.getByRole('tab', { name: '8세대' })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getAllByRole('option').map((option) => (option as HTMLOptionElement).value))
+      .toEqual(['', 'anythinggoes'])
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'anythinggoes' } })
+    expect(screen.getByRole('article', { name: 'Dynamax Sweeper' })).toBeInTheDocument()
+    expect(screen.queryByRole('article', { name: 'National Dex mega' })).not.toBeInTheDocument()
+    client.clear()
+  })
+
+  it('D-03: 제외 대상 세팅만 있으면 빈 세대 탭 대신 부재를 안내한다', () => {
+    const { client, element } = setup({
+      9: {}, 7: {}, 6: {},
+      8: { Rayquaza: { dlc1nationaldexag: { 'National Dex mega': { moves: ['Dragon Ascent'] } } } },
+    })
+    render(element('rayquaza', 'default', 384))
+    expect(screen.getByText('등록된 실전 세팅이 없습니다.')).toBeInTheDocument()
+    expect(screen.queryByRole('tab')).not.toBeInTheDocument()
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument()
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+    client.clear()
+  })
+
+  it.each([
+    { label: '세팅 있음', response: raw('Gen 9'), expectedGeneration: 9 },
+    { label: '세팅 없음', response: {}, expectedGeneration: 8 },
+  ])('D-02: 최신 세대 응답($label)을 기다린 뒤 $expectedGeneration 세대를 기본으로 연다', async ({ response, expectedGeneration }) => {
+    let resolve!: (response: Response) => void
+    vi.stubGlobal('fetch', vi.fn(() => new Promise<Response>((done) => { resolve = done })))
+    const { client, element } = setup({ 8: raw('Gen 8'), 7: {}, 6: raw('Gen 6') })
+    render(element())
+    expect(screen.getByRole('status')).toHaveTextContent('실전 세팅을 불러오는 중입니다.')
+    expect(screen.queryByRole('tab')).not.toBeInTheDocument()
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument()
+    expect(screen.queryByText('등록된 실전 세팅이 없습니다.')).not.toBeInTheDocument()
+
+    await act(async () => resolve(Response.json(response)))
+    expect(await screen.findByRole('tab', { name: `${expectedGeneration}세대` })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByRole('combobox')).toHaveValue('')
+    expect(screen.queryByRole('article')).not.toBeInTheDocument()
+    client.clear()
+  })
+
+  it('D-02: 최신 세대가 비어 있어도 다음 세대가 대기 중이면 로딩을 유지한다', async () => {
+    const responses = new Map<number, (response: Response) => void>()
+    vi.stubGlobal('fetch', vi.fn((url: RequestInfo | URL) => new Promise<Response>((resolve) => {
+      responses.set(Number(/gen(\d+)\.json/.exec(String(url))?.[1]), resolve)
+    })))
+    const { client, element } = setup({ 7: {}, 6: raw('Gen 6') })
+    render(element())
+    expect(screen.queryByRole('tab')).not.toBeInTheDocument()
+    await act(async () => responses.get(9)!(Response.json({})))
+    await waitFor(() => expect(client.getQueryState(battleToolsQueryKeys.smogonSets(9))?.status).toBe('success'))
+    expect(screen.getByRole('status')).toHaveTextContent('실전 세팅을 불러오는 중입니다.')
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument()
+
+    await act(async () => responses.get(8)!(Response.json(raw('Gen 8'))))
+    expect(await screen.findByRole('tab', { name: '8세대' })).toHaveAttribute('aria-selected', 'true')
+    client.clear()
+  })
+
+  it('D-02: 최신 세대가 확정되면 이전 세대 로딩을 기다리지 않고 포맷을 선택할 수 있다', async () => {
+    const responses = new Map<number, (response: Response) => void>()
+    vi.stubGlobal('fetch', vi.fn((url: RequestInfo | URL) => new Promise<Response>((resolve) => {
+      responses.set(Number(/gen(\d+)\.json/.exec(String(url))?.[1]), resolve)
+    })))
+    const { client, element } = setup({ 9: raw('Gen 9'), 8: raw('Gen 8') })
+    render(element())
+    expect(screen.getByRole('tab', { name: '9세대' })).toHaveAttribute('aria-selected', 'true')
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'ou' } })
+    expect(screen.getByRole('article', { name: 'Gen 9' })).toBeInTheDocument()
+    await act(async () => {
+      responses.get(7)!(Response.json(raw('Gen 7')))
+      responses.get(6)!(Response.json(raw('Gen 6')))
+    })
+    await waitFor(() => expect(screen.getAllByRole('tab')).toHaveLength(4))
+    expect(screen.getByRole('tab', { name: '9세대' })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByRole('combobox')).toHaveValue('ou')
+    expect(screen.getByRole('article', { name: 'Gen 9' })).toBeInTheDocument()
+    client.clear()
+  })
+
   it('세대를 바꾸면 포맷을 초기화하고 방향키·Home·End로 탭을 이동한다', () => {
     const { client, element } = setup()
     render(element())
@@ -118,7 +208,7 @@ describe('실전 세팅 세대 탭 (TASK-025 / TC-06·08·09)', () => {
     client.clear()
   })
 
-  it('일부 세대 실패 중에도 성공한 세대를 보여 주고 실패한 세대만 재시도한다', async () => {
+  it('D-02: 최신 세대가 실패하면 다음 세대를 제공하고 재시도 성공 후에도 고른 포맷을 유지한다', async () => {
     let resolveRetry!: (response: Response) => void
     const fetch = vi.fn()
       .mockResolvedValueOnce(new Response('', { status: 503 }))
@@ -132,8 +222,11 @@ describe('실전 세팅 세대 탭 (TASK-025 / TC-06·08·09)', () => {
     fireEvent.click(screen.getByRole('button', { name: '9세대 다시 시도' }))
     expect(screen.getByRole('article', { name: 'Gen 8' })).toBeInTheDocument()
     await act(async () => resolveRetry(Response.json(raw('Gen 9'))))
-    expect(await screen.findByRole('tab', { name: '9세대' })).toHaveAttribute('aria-selected', 'true')
-    expect(screen.getByRole('combobox')).toHaveValue('')
+    expect(await screen.findByRole('tab', { name: '9세대' })).toHaveAttribute('aria-selected', 'false')
+    expect(screen.getByRole('tab', { name: '8세대' })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByRole('combobox')).toHaveValue('ou')
+    expect(screen.getByRole('article', { name: 'Gen 8' })).toBeInTheDocument()
+    expect(screen.queryByRole('article', { name: 'Gen 9' })).not.toBeInTheDocument()
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
     expect(fetch).toHaveBeenCalledTimes(2)
     client.clear()
@@ -141,15 +234,33 @@ describe('실전 세팅 세대 탭 (TASK-025 / TC-06·08·09)', () => {
 
   it('뒤늦게 최신 세대가 도착해도 사용자가 고른 세대를 바꾸지 않는다', async () => {
     let resolve!: (response: Response) => void
-    vi.stubGlobal('fetch', vi.fn(() => new Promise<Response>((done) => { resolve = done })))
+    vi.stubGlobal('fetch', vi.fn()
+      .mockResolvedValueOnce(new Response('', { status: 503 }))
+      .mockImplementationOnce(() => new Promise<Response>((done) => { resolve = done })))
     const { client, element } = setup({ 8: raw('Gen 8'), 7: {}, 6: raw('Gen 6') })
     render(element())
+    await screen.findByRole('alert')
     fireEvent.click(screen.getByRole('tab', { name: '6세대' }))
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'ou' } })
+    fireEvent.click(screen.getByRole('button', { name: '9세대 다시 시도' }))
     await act(async () => resolve(Response.json(raw('Gen 9'))))
     await waitFor(() => expect(screen.getAllByRole('tab')).toHaveLength(3))
     expect(screen.getByRole('tab', { name: '6세대' })).toHaveAttribute('aria-selected', 'true')
     expect(screen.getByRole('article', { name: 'Gen 6' })).toBeInTheDocument()
+    client.clear()
+  })
+
+  it('D-02: 아직 선택하지 않았다면 재시도 성공 후 최신 세대를 기본으로 연다', async () => {
+    vi.stubGlobal('fetch', vi.fn()
+      .mockResolvedValueOnce(new Response('', { status: 503 }))
+      .mockResolvedValueOnce(Response.json(raw('Gen 9'))))
+    const { client, element } = setup({ 8: raw('Gen 8'), 7: {}, 6: {} })
+    render(element())
+    await screen.findByRole('alert')
+    expect(screen.getByRole('tab', { name: '8세대' })).toHaveAttribute('aria-selected', 'true')
+    fireEvent.click(screen.getByRole('button', { name: '9세대 다시 시도' }))
+    expect(await screen.findByRole('tab', { name: '9세대' })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByRole('combobox')).toHaveValue('')
     client.clear()
   })
 

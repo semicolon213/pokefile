@@ -61,7 +61,9 @@ describe('세대별 폼 매핑 (TASK-025 / FR-17·18 / TC-06)', () => {
   it('전체 인덱스 폼을 조회할 때 세팅이 없으면 기본·알 수 없는 폼으로 대체하지 않는다', () => {
     let checked = 0
     for (const pokemon of pokemonIndex) {
-      const data = normalizeSmogonSets({ [pokemon.nameEn]: { ou: { Base: candidate } } })
+      // D-04: PokéAPI의 파밀리쥐 기본 폼은 Smogon의 Maushold-Four다.
+      const baseName = pokemon.id === 925 ? 'Maushold-Four' : pokemon.nameEn
+      const data = normalizeSmogonSets({ [baseName]: { ou: { Base: candidate } } })
       for (const form of pokemon.forms) {
         for (const generation of [9, 8, 7, 6]) {
           const identity = { speciesName: pokemon.nameEn, formKey: form.key }
@@ -89,6 +91,28 @@ describe('세대별 폼 매핑 (TASK-025 / FR-17·18 / TC-06)', () => {
     expect(selectSmogonSets(data, identity, 9)).toEqual([])
   })
 
+  it.each([
+    ['family-of-three', 'Three'],
+    ['default', 'Four'],
+  ])('D-04: 파밀리쥐 %s 폼에 %s 세팅만 연결한다', (formKey, expectedName) => {
+    const data = normalizeSmogonSets({
+      Maushold: { ou: { Three: candidate } },
+      'Maushold-Four': { ru: { Four: candidate } },
+    })
+    const original = JSON.stringify(data)
+    expect(selectSmogonSets(data, { speciesName: 'maushold', formKey }, 9)
+      .flatMap(({ sets }) => sets.map(({ name }) => name))).toEqual([expectedName])
+    expect(JSON.stringify(data)).toBe(original)
+  })
+
+  it.each([
+    ['default', 'Maushold'],
+    ['family-of-three', 'Maushold-Four'],
+  ])('D-04: %s 세팅이 없을 때 다른 가족 폼(%s)으로 대체하지 않는다', (formKey, otherName) => {
+    const data = normalizeSmogonSets({ [otherName]: { ou: { Other: candidate } } })
+    expect(selectSmogonSets(data, { speciesName: 'maushold', formKey }, 9)).toEqual([])
+  })
+
   it('메가레쿠쟈는 6·7세대 anythinggoes의 화룡점정 후보만 표시한다', () => {
     const data = normalizeSmogonSets({ Rayquaza: {
       anythinggoes: {
@@ -108,6 +132,29 @@ describe('세대별 폼 매핑 (TASK-025 / FR-17·18 / TC-06)', () => {
     }
     expect(selectSmogonSets(data, { speciesName: 'rayquaza', formKey: 'mega' }, 8)).toEqual([])
     expect(selectSmogonSets(data, { speciesName: 'rayquaza', formKey: 'default' }, 8)[0].sets).toHaveLength(2)
+    expect(JSON.stringify(data)).toBe(original)
+  })
+
+  it('D-03: 8세대 National Dex AG 화룡점정 후보만 기본 레쿠쟈에서 제외한다', () => {
+    const data = normalizeSmogonSets({ Rayquaza: {
+      dlc1nationaldexag: {
+        'Choice Band': { moves: ['Dragon Ascent', 'Extreme Speed', 'V-create', ['Earthquake', 'Outrage', 'Draco Meteor']] },
+        'Mixed Life Orb': { moves: [['Draco Meteor', 'Dragon Ascent'], 'V-create', 'Extreme Speed'] },
+        'Setup Sweeper': { moves: [['Dragon Dance', 'Swords Dance'], 'Dragon Ascent', 'Extreme Speed'] },
+        'Without Dragon Ascent': { moves: ['Outrage', 'Extreme Speed'] },
+      },
+      anythinggoes: { 'Dynamax Sweeper': { moves: [['Swords Dance', 'Dragon Dance'], 'Dragon Ascent', 'V-create'] } },
+      ubers: { 'Regular attacker': { moves: ['Dragon Ascent', 'Draco Meteor'] } },
+    } })
+    const original = JSON.stringify(data)
+    const result = selectSmogonSets(data, { speciesName: 'rayquaza', formKey: 'default' }, 8)
+    expect(result.map(({ format, sets }) => [format, sets.map(({ name }) => name)])).toEqual([
+      ['dlc1nationaldexag', ['Without Dragon Ascent']],
+      ['anythinggoes', ['Dynamax Sweeper']],
+      ['ubers', ['Regular attacker']],
+    ])
+    expect(selectSmogonSets(data, { speciesName: 'rayquaza', formKey: 'mega' }, 8)).toEqual([])
+    expect(selectSmogonSets(data, { speciesName: 'rayquaza', formKey: 'mega' }, 9)).toEqual([])
     expect(JSON.stringify(data)).toBe(original)
   })
 
