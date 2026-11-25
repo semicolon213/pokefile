@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { RawAbility, RawPokemon, RawSpecies } from '@/features/pokemon-detail/api/pokeapi'
 import { pickAbilityDescription, pickFlavorText, statTotal, toAbilityInfo, toFormDetail, toSpeciesDetail } from '@/features/pokemon-detail/model/detail'
-import { availableForms, pokemonResourceName, resolveFormKey } from '@/features/pokemon-detail/model/forms'
+import { availableForms, groupFormsByCategory, pokemonResourceName, resolveFormKey } from '@/features/pokemon-detail/model/forms'
 import type { PokemonForm } from '@/shared/models'
 
 const res = (name: string, url = '') => ({ name, url })
@@ -49,6 +49,24 @@ describe('toFormDetail (FR-11·12·14)', () => {
   it('이미지는 showdown GIF → PNG 순서이고 없는 값은 건너뛴다 (ADR-013)', () => {
     expect(toFormDetail(charizardMegaX).imageUrls).toEqual(['gif', 'png'])
     expect(toFormDetail({ ...charizardMegaX, sprites: { front_default: 'png' } }).imageUrls).toEqual(['png'])
+  })
+
+  it('HOME 일러스트를 PNG 다음에 두고, 폼 이미지가 있으면 기본 폼 이미지를 붙이지 않는다 (ADR-016, TASK-024)', () => {
+    const withHome = { ...charizardMegaX, sprites: { ...charizardMegaX.sprites, other: { ...charizardMegaX.sprites.other, home: { front_default: 'home' } } } }
+    expect(toFormDetail(withHome).imageUrls).toEqual(['gif', 'png', 'home'])
+    expect(toFormDetail(withHome, 6).imageUrls).toEqual(['gif', 'png', 'home'])
+    // #44 QA: 선택 폼에 GIF만 있어도 기본 폼 PNG를 후보에 넣지 않는다(움직임 줄이기에서 다른 모습이 먼저 나오지 않게)
+    const gifOnly = { ...charizardMegaX, sprites: { front_default: null, other: { showdown: { front_default: 'gif' }, home: { front_default: null } } } }
+    expect(toFormDetail(gifOnly, 6).imageUrls).toEqual(['gif'])
+    const base = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon'
+    // 코라이돈 변신 모습처럼 폼 이미지가 하나도 없으면 기본 폼 이미지만 남는다
+    const noImage = { ...charizardMegaX, sprites: { front_default: null, other: { showdown: { front_default: null }, home: { front_default: null } } } }
+    expect(toFormDetail(noImage, 1007).imageUrls).toEqual([`${base}/other/showdown/1007.gif`, `${base}/1007.png`, `${base}/other/home/1007.png`])
+  })
+
+  it('이로치 후보에 같은 폼의 HOME 이로치를 더하고 기본 폼 이미지는 넣지 않는다 (FR-23)', () => {
+    const withHome = { ...charizardMegaX, sprites: { ...charizardMegaX.sprites, other: { home: { front_default: 'home', front_shiny: 'home-shiny' } } } }
+    expect(toFormDetail(withHome, 6).shinyImageUrls).toEqual(['home-shiny'])
   })
 
   it('이로치는 같은 폼의 shiny GIF → PNG만 전달하고 누락 시 일반 이미지로 채우지 않는다 (FR-23)', () => {
@@ -123,12 +141,25 @@ describe('폼 결정 (ADR-011·016)', () => {
 
   it('기본 폼이 항상 먼저 오고, 메가는 짧게, 한국어 이름이 없으면 영문으로 표기한다', () => {
     expect(charizard).toEqual([
-      { key: 'default', label: '기본' },
-      { key: 'mega-x', label: '메가X' },
-      { key: 'mega-y', label: '메가Y' },
-      { key: 'gmax', label: 'gmax' },
+      { key: 'default', label: '기본', category: 'default' },
+      { key: 'mega-x', label: '메가X', category: 'mega' },
+      { key: 'mega-y', label: '메가Y', category: 'mega' },
+      { key: 'gmax', label: 'gmax', category: 'mega' },
     ])
-    expect(defaultOnly).toEqual([{ key: 'default', label: '기본' }])
+    expect(defaultOnly).toEqual([{ key: 'default', label: '기본', category: 'default' }])
+  })
+
+  it('선택 상자용으로 분류 순서(기본·메가·거다이맥스·리전폼·기타)대로 묶고 빈 분류는 뺀다 (TASK-024)', () => {
+    const of = (key: string, category: PokemonForm['category'], nameKo: string): PokemonForm => ({
+      key, nameKo, nameEn: key, category, types: ['electric'], battleOnly: false,
+    })
+    // 피카츄: 인덱스에서는 옷갈아입기·모자(기타)가 먼저, 거다이맥스가 마지막
+    const pikachu = availableForms([of('rock-star', 'other', '하드록 피카츄'), of('original-cap', 'other', '오리지널캡'), of('gmax', 'gmax', '거다이맥스')])
+    expect(groupFormsByCategory(pikachu).map((g) => [g.label, g.forms.map((f) => f.label)])).toEqual([
+      ['기본', ['기본']],
+      ['거다이맥스', ['거다이맥스']],
+      ['기타 폼', ['하드록 피카츄', '오리지널캡']],
+    ])
   })
 
   it.each([

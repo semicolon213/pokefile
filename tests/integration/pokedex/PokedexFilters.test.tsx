@@ -141,6 +141,41 @@ describe('PokedexPage 필터·정렬·URL 동기화 (TASK-004)', () => {
     expect(names()).toEqual(['님피아', '리자몽', '브케인', '파이리', '피카츄'])
   })
 
+  it('종족값 높은 순으로 정렬하고 하한 조건으로 거르며, 카드에 그 값을 보여 준다 (FR-34)', async () => {
+    const STATS: Record<number, PokemonSummary['stats']> = {
+      4: [39, 52, 43, 60, 50, 65],
+      6: [78, 84, 78, 109, 85, 100],
+      25: [35, 55, 40, 50, 50, 90],
+      155: [39, 52, 43, 60, 50, 65],
+      700: [95, 65, 65, 110, 130, 60],
+    }
+    stubIndex(BASE.map((p) => ({ ...p, stats: STATS[p.id] })))
+    const user = userEvent.setup()
+    renderAt()
+    await findCount('5마리의 포켓몬')
+    await user.selectOptions(screen.getByRole('combobox', { name: '정렬' }), 'speed')
+    expect(search()).toBe('?sort=speed')
+    expect(names()).toEqual(['리자몽', '피카츄', '파이리', '브케인', '님피아'])
+    expect(within(screen.getAllByRole('article')[0]).getByText('스피드 100')).toBeInTheDocument()
+
+    await user.selectOptions(screen.getByRole('combobox', { name: '종족값 조건 능력치' }), 'total')
+    // 처음 고르면 합계 500 이상
+    expect(search()).toBe('?sort=speed&min=total:500')
+    expect(names()).toEqual(['리자몽', '님피아'])
+    const input = screen.getByRole('spinbutton', { name: '합계 최솟값' })
+    await user.clear(input)
+    await user.type(input, '530{Enter}')
+    expect(search()).toBe('?sort=speed&min=total:530')
+    expect(names()).toEqual(['리자몽'])
+    // 범위 밖 값은 반영하지 않고 되돌린다
+    await user.clear(input)
+    await user.type(input, '0{Enter}')
+    expect(input).toHaveValue(530)
+
+    await user.selectOptions(screen.getByRole('combobox', { name: '종족값 조건 능력치' }), '')
+    expect(search()).toBe('?sort=speed')
+  })
+
   it('결과가 없으면 검색어·필터를 한 번에 초기화한다', async () => {
     stubIndex(BASE)
     const user = userEvent.setup()

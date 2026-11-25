@@ -18,7 +18,10 @@ export type RawPokemon = {
   sprites: {
     front_default: string | null
     front_shiny?: string | null
-    other?: { showdown?: { front_default: string | null; front_shiny?: string | null } }
+    other?: {
+      showdown?: { front_default: string | null; front_shiny?: string | null }
+      home?: { front_default: string | null; front_shiny?: string | null }
+    }
   }
   forms: NamedResource[]
   cries?: { latest?: string | null; legacy?: string | null }

@@ -16,6 +16,16 @@ const INDEX: PokemonSummary[] = [
   { id: 5, nameEn: 'Charmeleon', nameKo: '리자드', types: ['fire'], generation: 'generation-i', forms: [] },
   { id: 6, nameEn: 'Charizard', nameKo: '리자몽', types: ['fire', 'flying'], generation: 'generation-i', forms: [{ key: 'mega-x', nameKo: '메가리자몽X', nameEn: 'Mega Charizard X', category: 'mega', types: ['fire', 'dragon'], battleOnly: true }, { key: 'mega-y', nameKo: '메가리자몽Y', nameEn: 'Mega Charizard Y', category: 'mega', types: ['fire', 'flying'], battleOnly: true }] },
   { id: 128, nameEn: 'Tauros', nameKo: '켄타로스', types: ['normal'], generation: 'generation-i', forms: [] },
+  // 폼이 많은 종(TASK-024): 기본 포함 10개 → 선택 상자
+  {
+    id: 25, nameEn: 'Pikachu', nameKo: '피카츄', types: ['electric'], generation: 'generation-i',
+    forms: [
+      ...['rock-star', 'belle', 'pop-star', 'phd', 'libre', 'cosplay', 'original-cap', 'hoenn-cap'].map((key) => ({
+        key, nameKo: `${key} 피카츄`, nameEn: key, category: 'other' as const, types: ['electric' as const], battleOnly: false,
+      })),
+      { key: 'gmax', nameKo: '거다이맥스', nameEn: 'Gigantamax', category: 'gmax', types: ['electric'], battleOnly: true },
+    ],
+  },
 ]
 
 const stats = (values: number[]) =>
@@ -221,6 +231,37 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
     expect(await within(section('진화')).findByText('진화하지 않는 포켓몬입니다.')).toBeInTheDocument()
   })
 
+  it('폼이 많은 종은 분류별로 묶은 선택 상자로 폼을 고르고 URL ?form=에 반영한다 (TASK-024)', async () => {
+    mockFetch({
+      '/pokemon/25': Response.json(pokemon(25, 'pikachu', ['electric'], ['static'], [35, 55, 40, 50, 50, 90])),
+      '/pokemon/pikachu-gmax': Response.json(pokemon(10199, 'pikachu-gmax', ['electric'], ['static'], [35, 55, 40, 50, 50, 90])),
+      '/pokemon-species/25': Response.json({
+        id: 25,
+        name: 'pikachu',
+        names: [{ name: '피카츄', language: lang('ko') }],
+        genera: [],
+        flavor_text_entries: [],
+        evolution_chain: null,
+      }),
+      '/pokemon/25/encounters': Response.json([]),
+    })
+    const user = userEvent.setup()
+    const router = renderAt('/pokemon/25?form=belle')
+    const select = await screen.findByRole('combobox', { name: '폼 선택' })
+    expect(screen.queryByRole('group', { name: '폼 선택' })).not.toBeInTheDocument()
+    expect(select).toHaveValue('belle')
+    expect(screen.getByText('폼 10개')).toBeInTheDocument()
+    expect(within(select).getAllByRole('group').map((g) => g.getAttribute('label'))).toEqual(['기본', '거다이맥스', '기타 폼'])
+
+    await user.selectOptions(select, '거다이맥스')
+    expect(router.state.location.search).toBe('?form=gmax')
+    expect(await screen.findByText('거다이맥스 피카츄')).toBeInTheDocument()
+    expect(await screen.findByRole('img', { name: '거다이맥스 피카츄' })).toHaveAttribute('src', 'pikachu-gmax.gif')
+
+    await user.selectOptions(select, '기본')
+    expect(router.state.location.search).toBe('')
+  })
+
   it('진화 단계를 한국어 이름·레벨 조건과 함께 표시하고 현재 포켓몬을 표시한다 (FR-15)', async () => {
     mockFetch()
     renderAt('/pokemon/6')
@@ -270,7 +311,45 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
     expect(await within(evolution).findByText(/또는 ancient-power 배운 상태 · 레벨업/)).toBeInTheDocument()
   })
 
-  it('출현 장소를 게임별로 표시한다 (FR-16)', async () => {
+  it('게임마다 다른 진화 방법을 기록된 게임과 함께 모두 보여 주고, 내 게임을 고르면 그 방법만 보여 준다 (FR-28, QA D-016-01)', async () => {
+    // 가상 체인: 파이리 →(파이리와 통신교환[레드·블루] 또는 연결의끈 사용[LEGENDS 아르세우스]) 리자드
+    const chain = Response.json({
+      id: 2,
+      chain: {
+        species: { name: 'charmander', url: `${API}/pokemon-species/4/` },
+        evolution_details: [],
+        evolves_to: [
+          {
+            species: { name: 'charmeleon', url: `${API}/pokemon-species/5/` },
+            evolution_details: [
+              { min_level: null, trigger: res('trade'), trade_species: { name: 'charmander', url: `${API}/pokemon-species/4/` }, version_group: res('red-blue') },
+              { min_level: null, trigger: res('use-item'), item: res('linking-cord'), version_group: res('legends-arceus') },
+            ],
+            evolves_to: [],
+          },
+        ],
+      },
+    })
+    mockFetch({
+      '/evolution-chain/2': chain,
+      '/item/linking-cord': Response.json({ name: 'linking-cord', names: [{ name: '연결의끈', language: lang('ko') }] }),
+    })
+    const user = userEvent.setup()
+    localStorage.setItem('pokefile:my-game', 'red')
+    renderAt('/pokemon/6')
+    const evolution = section('진화')
+    // 내 게임(레드)에 기록된 방법만, 게임 이름 없이
+    expect(await within(evolution).findByText('파이리와 통신교환')).toBeInTheDocument()
+    expect(within(evolution).getByText('내 게임 레드 기준입니다.')).toBeInTheDocument()
+    expect(within(evolution).queryByText(/연결의끈/)).not.toBeInTheDocument()
+
+    await user.click(within(evolution).getByRole('button', { name: '모든 게임 보기' }))
+    expect(within(evolution).getByText('레드·블루')).toBeInTheDocument()
+    expect(await within(evolution).findByText('또는 연결의끈 사용')).toBeInTheDocument()
+    expect(within(evolution).getByText('LEGENDS 아르세우스')).toBeInTheDocument()
+  })
+
+  it('출현 장소를 게임별로 한국어 장소 이름·만나는 방법과 함께 표시한다 (FR-16)', async () => {
     mockFetch({
       '/pokemon/6/encounters': Response.json([
         {
@@ -280,16 +359,67 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
             { version: res('red-japan'), encounter_details: [{ min_level: 10, max_level: 12, method: res('walk') }] },
           ],
         },
+        {
+          location_area: { name: 'santalune-forest-area', url: '' },
+          version_details: [
+            {
+              version: res('x'),
+              encounter_details: [
+                { min_level: 3, max_level: 4, method: res('walk') },
+                { min_level: 5, max_level: 5, method: res('old-rod') },
+              ],
+            },
+          ],
+        },
       ]),
     })
+    const user = userEvent.setup()
+    renderAt('/pokemon/6')
+    const encounters = section('출현 정보')
+    // 게임 카드(이름·세대·장소 수)는 보이고 장소 목록은 접혀 있다
+    const x = await within(encounters).findByRole('region', { name: 'X 출현 장소' })
+    expect(within(x).getByText('6세대')).toBeInTheDocument()
+    expect(within(x).getByText('2곳')).toBeInTheDocument()
+    expect(within(x).getByText('백단숲')).not.toBeVisible()
+    const toggle = within(x).getByRole('button', { name: 'X 출현 정보 열기' })
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+    await user.click(toggle)
+    expect(within(x).getByRole('button', { name: 'X 출현 정보 닫기' })).toHaveAttribute('aria-expanded', 'true')
+    // 이름표에 없는 장소는 영문 표기
+    expect(within(x).getByText('Kalos Route 1')).toBeInTheDocument()
+    expect(within(x).getByText('Lv.10~12')).toBeInTheDocument()
+    const santalune = within(x).getByText('백단숲').closest('li')!
+    expect(within(santalune).getByText('풀숲·동굴 · 낡은낚싯대')).toBeInTheDocument()
+    expect(within(santalune).getByText('Lv.3~5')).toBeInTheDocument()
+    expect(within(encounters).queryAllByRole('region', { name: /출현 장소/ })).toHaveLength(1)
+    expect(within(encounters).queryByRole('region', { name: /japan/i })).not.toBeInTheDocument()
+    // 다시 닫으면 목록이 숨겨진다
+    await user.click(within(x).getByRole('button', { name: 'X 출현 정보 닫기' }))
+    expect(within(x).getByText('백단숲')).not.toBeVisible()
+  })
+
+  it('게임 카드마다 따로 열고 닫는다', async () => {
+    mockFetch({
+      '/pokemon/6/encounters': () =>
+        Response.json([
+          {
+            location_area: { name: 'santalune-forest-area', url: '' },
+            version_details: [
+              { version: res('x'), encounter_details: [{ min_level: 3, max_level: 4, method: res('walk') }] },
+              { version: res('y'), encounter_details: [{ min_level: 5, max_level: 6, method: res('old-rod') }] },
+            ],
+          },
+        ]),
+    })
+    const user = userEvent.setup()
     renderAt('/pokemon/6')
     const encounters = section('출현 정보')
     const x = await within(encounters).findByRole('region', { name: 'X 출현 장소' })
-    expect(within(x).getByText('6세대')).toBeInTheDocument()
-    expect(within(x).getByText('Kalos Route 1')).toBeInTheDocument()
-    expect(within(x).getByText('Lv.10~12')).toBeInTheDocument()
-    expect(within(encounters).queryAllByRole('region', { name: /출현 장소/ })).toHaveLength(1)
-    expect(within(encounters).queryByRole('region', { name: /japan/i })).not.toBeInTheDocument()
+    const y = within(encounters).getByRole('region', { name: 'Y 출현 장소' })
+    await user.click(within(y).getByRole('button', { name: 'Y 출현 정보 열기' }))
+    expect(within(y).getByText('낡은낚싯대')).toBeInTheDocument()
+    expect(within(x).getByText('백단숲')).not.toBeVisible()
+    expect(within(x).getByRole('button', { name: 'X 출현 정보 열기' })).toHaveAttribute('aria-expanded', 'false')
   })
 
   it('출현 데이터 없음과 요청 실패를 구분해 안내한다 (FR-18)', async () => {
@@ -414,5 +544,13 @@ describe('PokemonDetailPage (TASK-005·006)', () => {
     expect(await within(basic).findByRole('img', { name: '리자몽' })).toHaveAttribute('src', 'charizard.png')
     within(basic).getByRole('img', { name: '리자몽' }).dispatchEvent(new Event('error'))
     expect(await within(basic).findByRole('img', { name: '리자몽 이미지 없음' })).toBeInTheDocument()
+  })
+
+  it('움직임 줄이기에서도 GIF만 있는 폼은 기본 폼 정적 이미지로 바뀌지 않는다 (#44 QA, ADR-016)', async () => {
+    vi.stubGlobal('matchMedia', (query: string) => ({ matches: query.includes('reduce'), media: query, addEventListener() {}, removeEventListener() {} }))
+    const gifOnly = { ...pokemon(10034, 'charizard-mega-x', ['fire', 'dragon'], ['tough-claws'], [78, 130, 111, 130, 85, 100]), sprites: { front_default: null, other: { showdown: { front_default: 'charizard-mega-x.gif' } } } }
+    mockFetch({ '/pokemon/charizard-mega-x': Response.json(gifOnly) })
+    renderAt('/pokemon/6?form=mega-x')
+    expect(await screen.findByRole('img', { name: '메가리자몽X' })).toHaveAttribute('src', 'charizard-mega-x.gif')
   })
 })

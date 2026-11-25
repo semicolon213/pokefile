@@ -1,17 +1,23 @@
 import { describe, expect, it } from 'vitest'
 import type { RawEncounter, RawEvolutionDetail, RawEvolutionNode } from '@/features/pokemon-detail/api/pokeapi'
-import { formatLocationArea, toVersionEncounters } from '@/features/pokemon-detail/model/encounters'
+import { formatLocationArea, resolveLocation, toVersionEncounters } from '@/features/pokemon-detail/model/encounters'
 import {
   collectConditionRefs,
+  conditionsForGame,
   isSingleStage,
   pickEvolutionConditions,
   toEvolutionTree,
+  versionGroupsOf,
 } from '@/features/pokemon-detail/model/evolution'
+import type { GameCondition } from '@/features/pokemon-detail/model/evolution'
 
 const species = (name: string, id: number) => ({ name, url: `https://pokeapi.co/api/v2/pokemon-species/${id}/` })
 const res = (name: string) => ({ name, url: '' })
 const levelUp = (min_level: number | null) => ({ min_level, trigger: res('level-up') })
 const useItem = { min_level: null, trigger: res('use-item'), item: res('water-stone') }
+/** 게임 정보를 뺀 표시 조각만 비교할 때 */
+const partsOf = (conditions: readonly GameCondition[]) => conditions.map((c) => c.parts)
+const pick = (details: RawEvolutionDetail[]) => partsOf(pickEvolutionConditions(details))
 const detail = (fields: Omit<Partial<RawEvolutionDetail>, 'trigger'> & { trigger: string; version?: string }): RawEvolutionDetail => {
   const { trigger, version, ...rest } = fields
   return { min_level: null, ...rest, trigger: res(trigger), version_group: version ? res(version) : null }
@@ -31,8 +37,8 @@ describe('toEvolutionTree (FR-15, ADR-008)', () => {
     expect(tree.id).toBe(133)
     expect(tree.children.map((c) => c.id)).toEqual([134, 700])
     expect(tree.conditions).toEqual([])
-    expect(tree.children[0].conditions).toEqual([[[{ kind: 'item', name: 'water-stone' }, ' 사용']]])
-    expect(tree.children[1].conditions).toEqual([[['레벨업']]])
+    expect(partsOf(tree.children[0].conditions)).toEqual([[[{ kind: 'item', name: 'water-stone' }, ' 사용']]])
+    expect(partsOf(tree.children[1].conditions)).toEqual([[['레벨업']]])
   })
 
   it('지원 범위(#1025) 밖 진화형은 가지째 제외한다', () => {
@@ -48,7 +54,7 @@ describe('toEvolutionTree (FR-15, ADR-008)', () => {
       ],
     }
     const tree = toEvolutionTree(raw)!
-    expect(tree.children[0]).toEqual({ id: 625, speciesName: 'bisharp', conditions: [[['Lv.52']]], children: [] })
+    expect(tree.children[0]).toEqual({ id: 625, speciesName: 'bisharp', conditions: [{ parts: [['Lv.52']], versionGroups: [] }], children: [] })
   })
 
   it('진화하지 않는 종을 구분한다', () => {
@@ -59,23 +65,23 @@ describe('toEvolutionTree (FR-15, ADR-008)', () => {
 
 describe('pickEvolutionConditions (TASK-016, FR-28)', () => {
   it('친밀도·시간대처럼 레벨 없는 레벨업 조건은 끝에 레벨업을 붙인다 (에브이)', () => {
-    expect(pickEvolutionConditions([detail({ trigger: 'level-up', min_happiness: 160, time_of_day: 'day', version: 'gold-silver' })])).toEqual([
+    expect(pick([detail({ trigger: 'level-up', min_happiness: 160, time_of_day: 'day', version: 'gold-silver' })])).toEqual([
       [['친밀도 높음'], ['낮'], ['레벨업']],
     ])
   })
 
   it('통신교환, 도구를 지닌 통신교환, 특정 포켓몬과의 통신교환 (TC-13)', () => {
-    expect(pickEvolutionConditions([detail({ trigger: 'trade', version: 'red-blue' })])).toEqual([[['통신교환']]])
-    expect(pickEvolutionConditions([detail({ trigger: 'trade', held_item: res('metal-coat') })])).toEqual([
+    expect(pick([detail({ trigger: 'trade', version: 'red-blue' })])).toEqual([[['통신교환']]])
+    expect(pick([detail({ trigger: 'trade', held_item: res('metal-coat') })])).toEqual([
       [[{ kind: 'item', name: 'metal-coat' }, ' 지니고 통신교환']],
     ])
     const escavalier = detail({ trigger: 'trade', trade_species: { name: 'shelmet', url: 'https://pokeapi.co/api/v2/pokemon-species/616/' } })
-    expect(pickEvolutionConditions([escavalier])).toEqual([[[{ kind: 'species', id: 616, name: 'shelmet' }, '와(과) 통신교환']]])
+    expect(pick([escavalier])).toEqual([[[{ kind: 'species', id: 616, name: 'shelmet' }, { kind: 'josa', consonant: '과', vowel: '와' }, ' 통신교환']]])
   })
 
   it('장소·기술·타입·파티 조건을 이름 참조로 담는다', () => {
     expect(
-      pickEvolutionConditions([
+      pick([
         detail({ trigger: 'level-up', min_level: 32, party_type: res('dark') }),
         detail({ trigger: 'level-up', known_move: res('ancient-power') }),
       ]),
@@ -83,17 +89,50 @@ describe('pickEvolutionConditions (TASK-016, FR-28)', () => {
       [['Lv.32'], ['파티에 ', { kind: 'type', type: 'dark' }, '타입']],
       [[{ kind: 'move', name: 'ancient-power' }, ' 배운 상태'], ['레벨업']],
     ])
-    const runerigus = pickEvolutionConditions([detail({ trigger: 'take-damage', min_damage_taken: 49, location: res('dusty-bowl') })])
-    expect(runerigus).toEqual([[['데미지 49 이상 받은 뒤 바위 아치 통과'], [{ kind: 'location', name: 'dusty-bowl' }, '에서']]])
+    const runerigus = pick([detail({ trigger: 'take-damage', min_damage_taken: 49, location: res('dusty-bowl') })])
+    expect(runerigus).toEqual([[['데미지 49 이상 받은 뒤'], [{ kind: 'location', name: 'dusty-bowl' }, '의 아치 통과']]])
   })
 
-  it('게임마다 다르면 최신 게임 조건만 남긴다 (자포코일: 장소 → 천둥의돌)', () => {
+  it('게임마다 다른 방법을 모두 기록된 게임과 함께 남긴다 (자포코일: 장소 → 천둥의돌, 2026-11-18 결정)', () => {
     const magnezone = [
       detail({ trigger: 'level-up', location: res('mt-coronet'), version: 'diamond-pearl' }),
       detail({ trigger: 'use-item', item: res('thunder-stone'), version: 'sword-shield' }),
       detail({ trigger: 'level-up', location: res('new-mauville'), version: 'omega-ruby-alpha-sapphire' }),
+      detail({ trigger: 'use-item', item: res('thunder-stone'), version: 'brilliant-diamond-shining-pearl' }),
+      detail({ trigger: 'level-up', location: res('mt-coronet'), version: 'brilliant-diamond-shining-pearl' }),
     ]
-    expect(pickEvolutionConditions(magnezone)).toEqual([[[{ kind: 'item', name: 'thunder-stone' }, ' 사용']]])
+    const thunder = [{ kind: 'item', name: 'thunder-stone' }, ' 사용']
+    // 방법은 처음 기록된 게임 순, 게임은 출시 순. BDSP 판 이름(brilliant-diamond-shining-pearl)도 순서에 들어간다
+    expect(pickEvolutionConditions(magnezone)).toEqual([
+      { parts: [[{ kind: 'location', name: 'mt-coronet' }, '에서'], ['레벨업']], versionGroups: ['diamond-pearl', 'brilliant-diamond-shining-pearl'] },
+      { parts: [[{ kind: 'location', name: 'new-mauville' }, '에서'], ['레벨업']], versionGroups: ['omega-ruby-alpha-sapphire'] },
+      { parts: [thunder], versionGroups: ['sword-shield', 'brilliant-diamond-shining-pearl'] },
+    ])
+  })
+
+  it('후딘: 통신교환(레드·블루)과 연결의끈(LEGENDS 아르세우스)을 모두 보여 준다 (TC-13, QA D-016-01)', () => {
+    const alakazam = [
+      detail({ trigger: 'trade', version: 'red-blue' }),
+      detail({ trigger: 'use-item', item: res('linking-cord'), version: 'legends-arceus' }),
+    ]
+    expect(pickEvolutionConditions(alakazam)).toEqual([
+      { parts: [['통신교환']], versionGroups: ['red-blue'] },
+      { parts: [[{ kind: 'item', name: 'linking-cord' }, ' 사용']], versionGroups: ['legends-arceus'] },
+    ])
+  })
+
+  it('내 게임에 기록된 방법이 있으면 그것만, 없으면 전체를 쓴다 (FR-26)', () => {
+    const conditions = pickEvolutionConditions([
+      detail({ trigger: 'trade', version: 'red-blue' }),
+      detail({ trigger: 'use-item', item: res('linking-cord'), version: 'legends-arceus' }),
+    ])
+    expect(conditionsForGame(conditions, 'blue')).toEqual({ conditions: [conditions[0]], matched: true })
+    expect(conditionsForGame(conditions, 'legends-arceus')).toEqual({ conditions: [conditions[1]], matched: true })
+    expect(conditionsForGame(conditions, 'scarlet')).toEqual({ conditions, matched: false })
+    expect(conditionsForGame(conditions, null)).toEqual({ conditions, matched: false })
+    // DLC 판은 본편 버전에 함께 속한다
+    expect(versionGroupsOf('sword')).toEqual(['sword-shield', 'the-isle-of-armor', 'the-crown-tundra'])
+    expect(versionGroupsOf('legends-za')).toEqual(['legends-za', 'mega-dimension'])
   })
 
   it('리전폼 진화 조건은 빼고 기본 폼 조건을 쓴다 (region 또는 폼 이름으로 판별)', () => {
@@ -101,23 +140,23 @@ describe('pickEvolutionConditions (TASK-016, FR-28)', () => {
       detail({ trigger: 'use-item', item: res('fire-stone'), version: 'red-blue' }),
       detail({ trigger: 'use-item', item: res('ice-stone'), version: 'sun-moon', required_pokemon_form: res('vulpix-alola') }),
     ]
-    expect(pickEvolutionConditions(ninetales)).toEqual([[[{ kind: 'item', name: 'fire-stone' }, ' 사용']]])
+    expect(pick(ninetales)).toEqual([[[{ kind: 'item', name: 'fire-stone' }, ' 사용']]])
     const typhlosion = [
       detail({ trigger: 'level-up', min_level: 36, version: 'gold-silver' }),
       detail({ trigger: 'level-up', min_level: 36, version: 'legends-arceus', region: res('hisui') }),
     ]
-    expect(pickEvolutionConditions(typhlosion)).toEqual([[['Lv.36']]])
+    expect(pick(typhlosion)).toEqual([[['Lv.36']]])
     // 리전폼 조건뿐이면(가라르 나옹 → 나이킹) 그대로 쓴다
     const perrserker = [detail({ trigger: 'level-up', min_level: 28, required_pokemon_form: res('meowth-galar') })]
-    expect(pickEvolutionConditions(perrserker)).toEqual([[['Lv.28']]])
+    expect(pick(perrserker)).toEqual([[['Lv.28']]])
   })
 
   it('서로 다른 조건은 또는으로 모두, 같은 조건은 하나로, 양쪽 성별이면 성별을 뺀다', () => {
     const lycanroc = ['day', 'night', 'dusk'].map((time_of_day) => detail({ trigger: 'level-up', min_level: 25, time_of_day }))
-    expect(pickEvolutionConditions(lycanroc)).toEqual([[['Lv.25'], ['낮']], [['Lv.25'], ['밤']], [['Lv.25'], ['황혼']]])
+    expect(pick(lycanroc)).toEqual([[['Lv.25'], ['낮']], [['Lv.25'], ['밤']], [['Lv.25'], ['황혼']]])
     const meowstic = [1, 2].map((gender) => detail({ trigger: 'level-up', min_level: 25, gender }))
-    expect(pickEvolutionConditions(meowstic)).toEqual([[['Lv.25']]])
-    expect(pickEvolutionConditions([detail({ trigger: 'use-item', item: res('dawn-stone'), gender: 2 })])).toEqual([
+    expect(pick(meowstic)).toEqual([[['Lv.25']]])
+    expect(pick([detail({ trigger: 'use-item', item: res('dawn-stone'), gender: 2 })])).toEqual([
       [[{ kind: 'item', name: 'dawn-stone' }, ' 사용'], ['수컷']],
     ])
   })
@@ -126,11 +165,11 @@ describe('pickEvolutionConditions (TASK-016, FR-28)', () => {
     const alcremie = ['strawberry-sweet', 'love-sweet'].flatMap((sweet) =>
       ['day', 'night'].map((time_of_day) => detail({ trigger: 'spin', held_item: res(sweet), time_of_day })),
     )
-    expect(pickEvolutionConditions(alcremie)).toEqual([[['사탕공예를 지니고 회전']]])
+    expect(pick(alcremie)).toEqual([[['사탕공예를 지니고 회전']]])
   })
 
   it('조건이 없으면 빈 배열, 도구·기술·장소 이름 참조를 중복 없이 모은다', () => {
-    expect(pickEvolutionConditions([])).toEqual([])
+    expect(pick([])).toEqual([])
     const tree = toEvolutionTree({
       species: species('eevee', 133),
       evolution_details: [],
@@ -148,13 +187,13 @@ describe('pickEvolutionConditions (TASK-016, FR-28)', () => {
 })
 
 describe('toVersionEncounters (FR-16, ADR-016)', () => {
-  const encounter = (area: string, versions: [string, number, number][]): RawEncounter => ({
+  const encounter = (area: string, versions: [string, number, number][], method = 'walk'): RawEncounter => ({
     location_area: { name: area, url: '' },
     version_details: versions.map(([version, min, max]) => ({
       version: { name: version, url: '' },
       encounter_details: [
-        { min_level: min, max_level: min, method: { name: 'walk', url: '' } },
-        { min_level: max, max_level: max, method: { name: 'walk', url: '' } },
+        { min_level: min, max_level: min, method: { name: method, url: '' } },
+        { min_level: max, max_level: max, method: { name: method, url: '' } },
       ],
     })),
   })
@@ -168,13 +207,61 @@ describe('toVersionEncounters (FR-16, ADR-016)', () => {
         ['lets-go-pikachu', 3, 5],
         ['red-japan', 3, 5],
       ]),
-      encounter('power-plant-area', [['red', 21, 24]]),
+      encounter('unknown-place-area', [['red', 21, 24]]),
     ])
     expect(result.map((v) => v.version)).toEqual(['red', 'yellow', 'lets-go-pikachu', 'sword'])
     expect(result[0]).toMatchObject({ label: '레드', generation: 'generation-i' })
     expect(result[0].locations).toEqual([
-      { area: 'viridian-forest-area', label: 'Viridian Forest', minLevel: 3, maxLevel: 5 },
-      { area: 'power-plant-area', label: 'Power Plant', minLevel: 21, maxLevel: 24 },
+      { location: 'viridian-forest', label: '상록숲', minLevel: 3, maxLevel: 5, methods: ['풀숲·동굴'] },
+      // 이름표에 없는 장소는 영문 표기
+      { location: 'unknown-place', label: 'Unknown Place', minLevel: 21, maxLevel: 24, methods: ['풀숲·동굴'] },
+    ])
+  })
+
+  it('같은 장소의 구역은 한 줄로 합치고 레벨 범위·만나는 방법을 모은다 (TASK-006 재구현)', () => {
+    const result = toVersionEncounters([
+      encounter('mt-moon-1f', [['red', 7, 9]]),
+      encounter('mt-moon-b2f', [['red', 10, 12]]),
+      encounter('mt-moon-b1f', [['red', 8, 10]], 'rock-smash'),
+    ])
+    expect(result[0].locations).toEqual([
+      { location: 'mt-moon', label: '달맞이산', minLevel: 7, maxLevel: 12, methods: ['풀숲·동굴', '바위깨기'] },
+    ])
+  })
+
+  it('비슷한 방법은 하나로, 모르는 방법은 기타로 표시한다', () => {
+    const result = toVersionEncounters([
+      encounter('kanto-route-2-south-towards-viridian-city', [['red', 3, 5]], 'headbutt-low'),
+      encounter('kanto-route-2-north-towards-pewter-city', [['red', 4, 6]], 'headbutt-high'),
+      encounter('kanto-sea-route-20-area', [['red', 30, 30]], 'new-method'),
+    ])
+    expect(result[0].locations).toEqual([
+      { location: 'kanto-route-2', label: '2번도로', minLevel: 3, maxLevel: 6, methods: ['박치기(나무)'] },
+      { location: 'kanto-sea-route-20', label: '20번수로', minLevel: 30, maxLevel: 30, methods: ['기타'] },
+    ])
+  })
+
+  it('확장팩 버전 출현은 본편 게임에 합친다 (ADR-016, QA D-014-02 야돈 + 소드)', () => {
+    const result = toVersionEncounters([
+      encounter('fields-of-honor-area', [['the-isle-of-armor-sword', 60, 63], ['the-isle-of-armor-shield', 60, 63]], 'overworld'),
+      encounter('giants-bed-area', [['the-crown-tundra-sword', 65, 67]], 'dynamax-adventure'),
+      encounter('galar-route-3-area', [['sword', 10, 12]]),
+    ])
+    expect(result.map((v) => v.version)).toEqual(['sword', 'shield'])
+    expect(result[0].locations).toEqual([
+      { location: 'fields-of-honor', label: '인사의 들판', minLevel: 60, maxLevel: 63, methods: ['필드 심볼'] },
+      { location: 'giants-bed', label: '거인의 침소', minLevel: 65, maxLevel: 67, methods: ['다이맥스 어드벤처'] },
+      { location: 'galar-route-3', label: '3번도로', minLevel: 10, maxLevel: 12, methods: ['풀숲·동굴'] },
+    ])
+    expect(result[1].locations.map((l) => l.label)).toEqual(['인사의 들판'])
+  })
+
+  it('본편과 확장팩에 같은 장소가 있으면 한 줄로 합친다', () => {
+    const result = toVersionEncounters([
+      encounter('wedgehurst-area', [['sword', 5, 6], ['the-isle-of-armor-sword', 50, 52]], 'chase-water'),
+    ])
+    expect(result[0].locations).toEqual([
+      { location: 'wedgehurst', label: '브래시마을', minLevel: 5, maxLevel: 52, methods: ['필드 심볼(물 위, 쫓아옴)'] },
     ])
   })
 
@@ -183,7 +270,15 @@ describe('toVersionEncounters (FR-16, ADR-016)', () => {
     expect(toVersionEncounters([])).toEqual([])
   })
 
-  it('장소 식별자를 임의 번역 없이 영문 표기로 바꾼다 (OQ-18 임시)', () => {
+  it('구역 이름에서 가장 긴 장소 이름으로 장소를 찾는다', () => {
+    expect(resolveLocation('kanto-route-2-south-towards-viridian-city')).toEqual({ location: 'kanto-route-2', label: '2번도로' })
+    // 'motostoke'(엔진시티)가 'motostoke-riverbank'(엔진 리버사이드)를 삼키지 않는다
+    expect(resolveLocation('motostoke-riverbank-area')).toEqual({ location: 'motostoke-riverbank', label: '엔진 리버사이드' })
+    expect(resolveLocation('motostoke-area')).toEqual({ location: 'motostoke', label: '엔진시티' })
+    expect(resolveLocation('roaming-kanto-area')).toEqual({ location: 'roaming-kanto', label: '관동 각지 (배회)' })
+  })
+
+  it('이름표에 없는 장소 식별자는 영문 표기로 바꾼다', () => {
     expect(formatLocationArea('kanto-route-2-south-towards-viridian-city')).toBe('Kanto Route 2 South Towards Viridian City')
     expect(formatLocationArea('aquacorde-town-area')).toBe('Aquacorde Town')
   })

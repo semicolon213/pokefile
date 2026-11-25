@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router'
 import { DEFAULT_FILTERS, parseFilters, toSearchParams, type PokedexFilters } from '../model/filters'
 
 /** 필터가 쓰는 쿼리 키. 그 밖의 키(내 게임 `game` 등)는 건드리지 않는다 */
-const FILTER_KEYS = ['q', 'type', 'gen', 'sort']
+const FILTER_KEYS = ['q', 'type', 'gen', 'sort', 'min']
 
 function withFilters(base: URLSearchParams, filters: PokedexFilters): URLSearchParams {
   const next = new URLSearchParams(base)
@@ -14,7 +14,7 @@ function withFilters(base: URLSearchParams, filters: PokedexFilters): URLSearchP
   return merged
 }
 
-/** 검색어·필터·정렬을 URL 쿼리(/#/?q=&type=&gen=&sort=)와 동기화한다 (ADR-011) */
+/** 검색어·필터·정렬을 URL 쿼리(/#/?q=&type=&gen=&sort=&min=)와 동기화한다 (ADR-011) */
 export function usePokedexFilters() {
   const [params, setParams] = useSearchParams()
   const filters = useMemo(() => parseFilters(params), [params])

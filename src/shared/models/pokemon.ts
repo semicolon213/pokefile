@@ -83,4 +83,9 @@ export type PokemonSummary = {
   generation: Generation
   /** 기본 폼이 아닌 폼 (없으면 빈 배열, ADR-016) */
   forms: PokemonForm[]
+  /** 기본 폼 종족값 [HP, 공격, 방어, 특수공격, 특수방어, 스피드] (FR-34, TASK-027). 예전 인덱스에는 없을 수 있다 */
+  stats?: BaseStats
 }
+
+/** 종족값 6개: HP·공격·방어·특수공격·특수방어·스피드 순서 */
+export type BaseStats = [number, number, number, number, number, number]
