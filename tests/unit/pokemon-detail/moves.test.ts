@@ -114,9 +114,9 @@ describe('movesForGame', () => {
 })
 
 describe('movesForGame — 선택 게임 당시의 값 (QA D-015-01)', () => {
-  const GAMES = ['red-blue', 'crystal', 'ruby-sapphire', 'diamond-pearl', 'black-white', 'x-y', 'scarlet-violet']
+  const GAMES = ['red-blue', 'crystal', 'ruby-sapphire', 'diamond-pearl', 'black-white', 'x-y', 'sun-moon', 'scarlet-violet']
   const raw: RawPokemonMoves = {
-    moves: ['flamethrower', 'bite', 'crunch', 'curse', 'tackle'].map((move) => learn(move, GAMES.map((group) => [group, 'level-up', 1]))),
+    moves: ['flamethrower', 'bite', 'crunch', 'curse', 'tackle', 'water-shuriken'].map((move) => learn(move, GAMES.map((group) => [group, 'level-up', 1]))),
   }
   const data: MoveData = {
     moves: {
@@ -125,6 +125,8 @@ describe('movesForGame — 선택 게임 당시의 값 (QA D-015-01)', () => {
       crunch: ['깨물어부수기', 'dark', 'physical', 80, 100, 15],
       curse: ['저주', 'ghost', 'status', null, null, 10, [['black-white', 'unknown', null, null, null]]],
       // 여러 번 바뀐 기술: 2세대 전 30·명중 95, 2세대부터 50(명중 100), 6세대부터 지금 값 40·PP 35
+      // 4세대 이후 분류 변경 (Showdown): 물수리검은 6세대까지 물리
+      'water-shuriken': ['물수리검', 'water', 'special', 15, 100, 20, [['sun-moon', null, null, null, null, 'physical']]],
       tackle: ['몸통박치기', 'normal', 'physical', 40, 100, 35, [['x-y', null, 50, null, 35], ['gold-silver', null, 30, 95, null]]],
     },
     machines: {},
@@ -151,6 +153,12 @@ describe('movesForGame — 선택 게임 당시의 값 (QA D-015-01)', () => {
     expect(row('ruby-sapphire', 'crunch')).toMatchObject({ type: 'dark', damageClass: 'special' })
     expect(row('diamond-pearl', 'crunch')).toMatchObject({ type: 'dark', damageClass: 'physical' })
     expect(row('red-blue', 'flamethrower').damageClass).toBe('special')
+  })
+
+  it('4세대 이후 기술별 분류 변경도 선택 게임 기준 (QA D-015-01-R1 물수리검)', () => {
+    expect(row('x-y', 'water-shuriken').damageClass).toBe('physical')
+    expect(row('sun-moon', 'water-shuriken').damageClass).toBe('special')
+    expect(row('scarlet-violet', 'water-shuriken').damageClass).toBe('special')
   })
 
   it('2~4세대 저주는 ??? 타입(unknown), 변화 기술 분류는 그대로', () => {

@@ -20,8 +20,8 @@ export type RawPokemonMoves = {
 
 export type DamageClass = 'physical' | 'special' | 'status'
 
-/** 이전 게임의 값: [바뀐 판, 타입, 위력, 명중, PP]. 바뀐 판보다 앞선 게임에서 쓰던 값이고 null은 그대로인 항목 */
-export type PastMoveValue = [string, string | null, number | null, number | null, number | null]
+/** 이전 게임의 값: [바뀐 판, 타입, 위력, 명중, PP, 분류?]. 바뀐 판보다 앞선 게임에서 쓰던 값이고 null·없음은 그대로인 항목 */
+export type PastMoveValue = [string, string | null, number | null, number | null, number | null, DamageClass?]
 
 /** 정적 기술 데이터. moves 값은 [한국어 이름, 타입, 분류, 위력, 명중, PP, 이전 값(바뀐 적이 있을 때만)] — 값은 최신 게임 기준 */
 export type MoveData = {
@@ -114,12 +114,13 @@ function toRow(name: string, data: MoveData, game: string): MoveRow {
   const past = current[5] ?? []
   const rank = groupRank(game)
   // 선택 게임 뒤에 바뀐 값 중 가장 이른 변경의 이전 값이 그 게임의 값이다. 늦은 변경부터 덮어쓴다
-  for (const [group, pastType, pastPower, pastAccuracy, pastPp] of [...past].sort((a, b) => groupRank(b[0]) - groupRank(a[0]))) {
+  for (const [group, pastType, pastPower, pastAccuracy, pastPp, pastClass] of [...past].sort((a, b) => groupRank(b[0]) - groupRank(a[0]))) {
     if (rank >= groupRank(group)) continue
     type = pastType ?? type
     power = pastPower ?? power
     accuracy = pastAccuracy ?? accuracy
     pp = pastPp ?? pp
+    damageClass = pastClass ?? damageClass
   }
   if (rank < SPLIT_RANK && damageClass !== null && damageClass !== 'status' && isPokemonType(type))
     damageClass = PHYSICAL_TYPES.includes(type) ? 'physical' : 'special'
