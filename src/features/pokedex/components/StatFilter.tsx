@@ -17,9 +17,14 @@ const TYPING_DELAY = 300
  */
 export function StatFilter({ value, onChange }: Props) {
   const [draft, setDraft] = useState(value ? String(value.value) : '')
+  const [syncedValue, setSyncedValue] = useState(value)
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined)
-  // 주소가 바뀌면(뒤로 가기·초기화) 입력값도 맞춘다. 입력 중인 값과 같으면 그대로 둔다
-  useEffect(() => setDraft((d) => (value && Number(d) === value.value ? d : value ? String(value.value) : '')), [value])
+  // 주소가 바뀌면(뒤로 가기·초기화) 입력값도 맞춘다. 입력 중인 값과 같으면 그대로 둔다.
+  // 효과 안에서 맞추면 렌더가 한 번 더 일어나므로, 렌더 중에 이전 값과 비교해 맞춘다(React 권장 방식)
+  if (value !== syncedValue) {
+    setSyncedValue(value)
+    if (!(value && Number(draft) === value.value)) setDraft(value ? String(value.value) : '')
+  }
   useEffect(() => () => clearTimeout(timer.current), [])
 
   const valid = (text: string, stat: StatMin['stat']) => {
