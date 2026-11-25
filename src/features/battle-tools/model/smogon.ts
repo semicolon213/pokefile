@@ -1,6 +1,7 @@
 import { ApiError } from '@/shared/api'
 import type { FormKey } from '@/shared/models'
 import { isGen6MegaStone, megaStoneFor, toShowdownId } from '@/shared/utils'
+import { isMegaForm, supportsSmogonForm } from './generations'
 
 export type SmogonIdentity = { speciesName: string; formKey: FormKey }
 
@@ -24,6 +25,7 @@ export type SmogonSpecies = { speciesName: string; formats: SmogonFormat[] }
 // ADR-009에서 제외한 포맷. 일반 포맷의 표시 여부·우선순위는 OQ-19에서 결정한다.
 const NON_STANDARD_FORMATS = new Set([
   'balancedhackmons', 'purehackmons', 'almostanyability', 'stabmons', 'cap',
+  'mixandmega', 'godlygift', 'camomons', 'partnersincrime',
 ])
 
 function invalidData(): never {
@@ -76,7 +78,7 @@ function normalizeSet(name: string, value: unknown): SmogonSet {
 
 // API_SPEC §5: species → format → set name → fields.
 // 원문의 후보를 보존한다. 번역·기본 포맷·누락 값은 추정하지 않는다.
-export function normalizeGen6SmogonSets(value: unknown): SmogonSpecies[] {
+export function normalizeSmogonSets(value: unknown): SmogonSpecies[] {
   const speciesIds = new Set<string>()
   return Object.entries(record(value)).map(([speciesName, rawFormats]) => {
     const speciesId = toShowdownId(speciesName)
@@ -95,6 +97,44 @@ export function normalizeGen6SmogonSets(value: unknown): SmogonSpecies[] {
   })
 }
 
+export const normalizeGen6SmogonSets = normalizeSmogonSets
+
+// PokéAPI와 Showdown의 이름 차이. pkmn/smogon 세대 파일과 Showdown pokedex의 이름을 대조한다.
+const FORM_NAMES: Readonly<Record<string, string>> = {
+  mausholdfamilyofthree: 'Maushold',
+  darmanitangalarstandard: 'Darmanitan-Galar',
+  darmanitangalarzen: 'Darmanitan-Galar-Zen',
+  taurospaldeacombatbreed: 'Tauros-Paldea-Combat',
+  taurospaldeablazebreed: 'Tauros-Paldea-Blaze',
+  taurospaldeaaquabreed: 'Tauros-Paldea-Aqua',
+  indeedeefemale: 'Indeedee-F',
+  meowsticfemale: 'Meowstic-F',
+  meowsticmalemega: 'Meowstic-Mega',
+  meowsticfemalemega: 'Meowstic-F-Mega',
+  basculegionfemale: 'Basculegion-F',
+  oinkolognefemale: 'Oinkologne-F',
+  urshifusinglestrikegmax: 'Urshifu-Gmax',
+  necrozmadusk: 'Necrozma-Dusk-Mane',
+  necrozmadawn: 'Necrozma-Dawn-Wings',
+  ogerponwellspringmask: 'Ogerpon-Wellspring',
+  ogerponhearthflamemask: 'Ogerpon-Hearthflame',
+  ogerponcornerstonemask: 'Ogerpon-Cornerstone',
+}
+
+function smogonFormName({ speciesName, formKey }: SmogonIdentity): string {
+  const name = `${speciesName}-${formKey}`
+  return FORM_NAMES[toShowdownId(name)] ?? name
+}
+
+function isMegaRayquazaSet(format: string, set: SmogonSet, generation: number): boolean {
+  // D-03 / TC-06: 8세대 일반 AG는 유지하고 National Dex AG의 메가 후보만 분리한다.
+  const megaFormat = generation === 8
+    ? format.toLowerCase() === 'dlc1nationaldexag'
+    : (generation === 6 || generation === 7) && format.toLowerCase() === 'anythinggoes'
+  return megaFormat
+    && set.moves.some((slot) => slot.some((move) => toShowdownId(move) === 'dragonascent'))
+}
+
 /** species.name과 정확히 매핑된 후보. 폼 판별·메가스톤 병합·표시 포맷 선택은 수행하지 않는다. */
 export function findSpeciesSmogonSets(data: SmogonSpecies[], speciesName: string): SmogonFormat[] {
   const id = toShowdownId(speciesName)
@@ -103,9 +143,12 @@ export function findSpeciesSmogonSets(data: SmogonSpecies[], speciesName: string
 }
 
 /** ADR-009: 선택한 폼에 맞는 후보만 합친다. 원본 데이터와 다른 폼의 후보는 변경하지 않는다. */
-export function selectSmogonSets(data: SmogonSpecies[], identity: SmogonIdentity): SmogonFormat[] {
+export function selectSmogonSets(data: SmogonSpecies[], identity: SmogonIdentity, generation = 6): SmogonFormat[] {
   const { speciesName, formKey } = identity
-  const base = findSpeciesSmogonSets(data, speciesName)
+  if (!supportsSmogonForm(generation, formKey)) return []
+  // D-04: PokéAPI의 기본 파밀리쥐는 네 식구지만 Smogon의 Maushold는 세 식구다.
+  const baseName = formKey === 'default' && toShowdownId(speciesName) === 'maushold' ? 'Maushold-Four' : speciesName
+  const base = findSpeciesSmogonSets(data, baseName)
   const merged = new Map<string, SmogonSet[]>()
   const fingerprints = new Map<string, Set<string>>()
   const add = (format: string, set: SmogonSet) => {
@@ -119,20 +162,34 @@ export function selectSmogonSets(data: SmogonSpecies[], identity: SmogonIdentity
 
   if (formKey === 'default') {
     for (const { format, sets } of base) for (const set of sets) {
+      if (toShowdownId(speciesName) === 'rayquaza' && isMegaRayquazaSet(format, set, generation)) continue
       const items = set.items.filter((item) => !isGen6MegaStone(item))
       if (set.items.length > 0 && items.length === 0) continue
       add(format, { ...set, items })
     }
-  } else {
+  } else if (isMegaForm(formKey)) {
+    if (toShowdownId(speciesName) === 'rayquaza' && formKey === 'mega') {
+      for (const { format, sets } of base) for (const set of sets) {
+        if (isMegaRayquazaSet(format, set, generation)) add(format, {
+          ...set,
+          moves: set.moves.map((slot) => slot.some((move) => toShowdownId(move) === 'dragonascent')
+            ? slot.filter((move) => toShowdownId(move) === 'dragonascent') : slot),
+        })
+      }
+      return [...merged].map(([format, sets]) => ({ format, sets }))
+    }
     const stone = megaStoneFor(speciesName, formKey)
-    // 미지원 폼과 메가레쿠쟈를 기본 폼 데이터로 대체하지 않는다.
-    if (!stone) return []
     for (const { format, sets } of base) for (const set of sets) {
+      if (!stone) continue
       const items = set.items.filter((item) => toShowdownId(item) === toShowdownId(stone))
       if (items.length > 0) add(format, { ...set, items })
     }
-    const exactForm = findSpeciesSmogonSets(data, `${speciesName}-${formKey}`)
+    const exactForm = findSpeciesSmogonSets(data, smogonFormName(identity))
     for (const { format, sets } of exactForm) for (const set of sets) add(format, set)
+  } else {
+    for (const { format, sets } of findSpeciesSmogonSets(data, smogonFormName(identity))) {
+      for (const set of sets) add(format, set)
+    }
   }
   return [...merged].map(([format, sets]) => ({ format, sets }))
 }

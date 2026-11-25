@@ -11,6 +11,7 @@ afterEach(() => vi.unstubAllGlobals())
 
 function setup(data: unknown = SMOGON_FIXTURE) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false, staleTime: Infinity, gcTime: Infinity } } })
+  for (const generation of [9, 8, 7]) client.setQueryData(battleToolsQueryKeys.smogonSets(generation), [])
   if (data !== null) client.setQueryData(battleToolsQueryKeys.smogonSets(), normalizeGen6SmogonSets(data))
   const element = (formKey: FormKey = 'default', speciesName = 'charizard') => (
     <QueryClientProvider client={client}>
@@ -89,8 +90,8 @@ describe('실전 추천 세팅 화면 (TC-06·09)', () => {
     render(element())
     expect(screen.getByRole('status')).toHaveTextContent('실전 세팅을 불러오는 중입니다.')
     resolveFirst(new Response('', { status: 503 }))
-    expect(await screen.findByRole('alert')).toHaveTextContent('실전 세팅을 불러오지 못했습니다.')
-    fireEvent.click(screen.getByRole('button', { name: '다시 시도' }))
+    expect(await screen.findByRole('alert')).toHaveTextContent('6세대 실전 세팅을 불러오지 못했습니다.')
+    fireEvent.click(screen.getByRole('button', { name: '6세대 다시 시도' }))
     await waitFor(() => expect(screen.getByRole('combobox')).toBeInTheDocument())
     expect(fetch).toHaveBeenCalledTimes(2)
     client.clear()
