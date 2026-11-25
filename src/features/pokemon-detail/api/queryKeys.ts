@@ -10,4 +10,6 @@ export const pokemonDetailQueryKeys = {
   conditionName: (kind: 'item' | 'move' | 'location', name: string) => [kind, name] as const,
   encounters: (id: PokemonId) => ['encounters', id] as const,
   pokedexIndex: () => ['pokemon-detail', 'pokedex-index'] as const,
+  /** 기술 표 정적 데이터 (TASK-015) */
+  moveData: () => ['pokemon-detail', 'move-data'] as const,
 }
