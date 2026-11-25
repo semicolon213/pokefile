@@ -21,7 +21,7 @@ export function BasicInfoSection({ form, species, name }: Props) {
       <h2 id="detail-basic-title" className="detail-visually-hidden">
         기본 정보
       </h2>
-      <PokemonImageToggle key={form.resourceName} name={name} normalUrls={form.imageUrls} shinyUrls={form.shinyImageUrls} cryUrls={form.cryUrls} />
+      <PokemonImageToggle key={form.resourceName} name={name} normalUrls={form.imageUrls} isBaseImage={form.isBaseImage} shinyUrls={form.shinyImageUrls} cryUrls={form.cryUrls} />
       <dl className="detail-basic__facts">
         <div>
           <dt>분류</dt>

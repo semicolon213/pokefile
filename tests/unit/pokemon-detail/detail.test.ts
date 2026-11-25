@@ -59,9 +59,13 @@ describe('toFormDetail (FR-11·12·14)', () => {
     const gifOnly = { ...charizardMegaX, sprites: { front_default: null, other: { showdown: { front_default: 'gif' }, home: { front_default: null } } } }
     expect(toFormDetail(gifOnly, 6).imageUrls).toEqual(['gif'])
     const base = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon'
+    expect(toFormDetail(withHome, 6).isBaseImage).toBe(false)
+    expect(toFormDetail(withHome).isBaseImage).toBe(false)
+    expect(toFormDetail(gifOnly, 6).isBaseImage).toBe(false)
     // 코라이돈 변신 모습처럼 폼 이미지가 하나도 없으면 기본 폼 이미지만 남는다
     const noImage = { ...charizardMegaX, sprites: { front_default: null, other: { showdown: { front_default: null }, home: { front_default: null } } } }
     expect(toFormDetail(noImage, 1007).imageUrls).toEqual([`${base}/other/showdown/1007.gif`, `${base}/1007.png`, `${base}/other/home/1007.png`])
+    expect(toFormDetail(noImage, 1007).isBaseImage).toBe(true)
   })
 
   it('이로치 후보에 같은 폼의 HOME 이로치를 더하고 기본 폼 이미지는 넣지 않는다 (FR-23)', () => {
