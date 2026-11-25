@@ -51,13 +51,14 @@ describe('toFormDetail (FR-11·12·14)', () => {
     expect(toFormDetail({ ...charizardMegaX, sprites: { front_default: 'png' } }).imageUrls).toEqual(['png'])
   })
 
-  it('HOME 일러스트를 PNG 다음에, 기본이 아닌 폼은 마지막에 기본 폼 이미지를 둔다 (ADR-016, TASK-024)', () => {
+  it('HOME 일러스트를 PNG 다음에 두고, 폼 이미지가 있으면 기본 폼 이미지를 붙이지 않는다 (ADR-016, TASK-024)', () => {
     const withHome = { ...charizardMegaX, sprites: { ...charizardMegaX.sprites, other: { ...charizardMegaX.sprites.other, home: { front_default: 'home' } } } }
     expect(toFormDetail(withHome).imageUrls).toEqual(['gif', 'png', 'home'])
+    expect(toFormDetail(withHome, 6).imageUrls).toEqual(['gif', 'png', 'home'])
+    // #44 QA: 선택 폼에 GIF만 있어도 기본 폼 PNG를 후보에 넣지 않는다(움직임 줄이기에서 다른 모습이 먼저 나오지 않게)
+    const gifOnly = { ...charizardMegaX, sprites: { front_default: null, other: { showdown: { front_default: 'gif' }, home: { front_default: null } } } }
+    expect(toFormDetail(gifOnly, 6).imageUrls).toEqual(['gif'])
     const base = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon'
-    expect(toFormDetail(withHome, 6).imageUrls).toEqual([
-      'gif', 'png', 'home', `${base}/other/showdown/6.gif`, `${base}/6.png`, `${base}/other/home/6.png`,
-    ])
     // 코라이돈 변신 모습처럼 폼 이미지가 하나도 없으면 기본 폼 이미지만 남는다
     const noImage = { ...charizardMegaX, sprites: { front_default: null, other: { showdown: { front_default: null }, home: { front_default: null } } } }
     expect(toFormDetail(noImage, 1007).imageUrls).toEqual([`${base}/other/showdown/1007.gif`, `${base}/1007.png`, `${base}/other/home/1007.png`])

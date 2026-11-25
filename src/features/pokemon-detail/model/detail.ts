@@ -30,7 +30,7 @@ export type PokemonFormDetail = {
   types: PokemonType[]
   abilities: { name: string; hidden: boolean }[]
   stats: BaseStat[]
-  /** ADR-016: showdown GIF → PNG → HOME 일러스트 → (기본이 아닌 폼이면) 기본 폼 이미지. 대체 아이콘은 화면에서 처리 */
+  /** ADR-016: showdown GIF → PNG → HOME 일러스트. 기본이 아닌 폼에 이미지가 하나도 없으면 기본 폼 이미지. 대체 아이콘은 화면에서 처리 */
   imageUrls: string[]
   /** FR-23: 같은 폼의 이로치 후보. 일반 이미지로 대체하지 않는다. */
   shinyImageUrls: string[]
@@ -59,6 +59,16 @@ const presentUrls = (urls: readonly (string | null | undefined)[]): string[] => 
   ...new Set(urls.filter((url): url is string => !!url)),
 ]
 
+/**
+ * 폼 이미지 후보. 기본 폼 이미지는 선택한 폼의 이미지가 하나도 없을 때만 쓴다 (ADR-016, 예: 코라이돈 변신 모습).
+ * 폼 이미지가 하나라도 있으면 기본 폼 후보를 붙이지 않는다: 움직임 줄이기에서 정적 이미지를 앞으로 옮기면
+ * 선택 폼의 GIF보다 기본 폼 PNG가 먼저 나와 다른 모습을 보여 주게 된다 (#44 QA).
+ */
+function formImageUrls(own: (string | null | undefined)[], baseId: number | undefined): string[] {
+  const urls = presentUrls(own)
+  return urls.length === 0 && baseId !== undefined ? baseFormImageUrls(baseId) : urls
+}
+
 /** baseId: 기본이 아닌 폼이면 그 종의 번호. 폼 이미지가 모두 없을 때 기본 폼 이미지로 대신한다 (ADR-016) */
 export function toFormDetail(raw: RawPokemon, baseId?: number): PokemonFormDetail {
   const { showdown, home } = raw.sprites.other ?? {}
@@ -75,12 +85,7 @@ export function toFormDetail(raw: RawPokemon, baseId?: number): PokemonFormDetai
       const stat = raw.stats.find((s) => s.stat.name === key)
       return stat ? [{ key, label: STAT_LABELS[key], value: stat.base_stat }] : []
     }),
-    imageUrls: presentUrls([
-      showdown?.front_default,
-      raw.sprites.front_default,
-      home?.front_default,
-      ...(baseId !== undefined ? baseFormImageUrls(baseId) : []),
-    ]),
+    imageUrls: formImageUrls([showdown?.front_default, raw.sprites.front_default, home?.front_default], baseId),
     // 이로치는 같은 폼의 이미지만 쓴다(일반·기본 폼 이미지로 대체하지 않음, FR-23)
     shinyImageUrls: presentUrls([showdown?.front_shiny, raw.sprites.front_shiny, home?.front_shiny]),
     cryUrls: presentUrls([raw.cries?.latest, raw.cries?.legacy]),
